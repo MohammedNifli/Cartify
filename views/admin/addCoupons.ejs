@@ -1,0 +1,134 @@
+
+           
+     <%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Product</h2>
+                            <!-- <div>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                                <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Basic</h4>
+                            </div>
+                            <div class="card-body">
+                                <form id="couponForm" action="/admin/add-coupon" method="post">
+                                    <div class="mb-4">
+                                        <label for="couponCode" class="form-label">Coupon Code</label>
+                                        <input type="text" name="couponCode" placeholder="Enter coupon code" class="form-control" id="couponCode" required />
+                                        <div id="errorCouponCode" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="discountPercentage" class="form-label">Discount Percentage</label>
+                                        <input type="number" name="discountPercentage" placeholder="Enter discount percentage" class="form-control" id="discountPercentage" required />
+                                        <div id="errorDiscountPercentage" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="startingDate" class="form-label">Starting Date</label>
+                                        <input type="date" name="startingDate" class="form-control" id="startingDate" required />
+                                        <div id="errorStartingDate" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="expirationDate" class="form-label">Expiration Date</label>
+                                        <input type="date" name="expirationDate" class="form-control" id="expirationDate" required />
+                                        <div id="errorExpirationDate" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="minTotal" class="form-label">Minimum Total</label>
+                                        <input type="number" name="minTotal" placeholder="Enter minimum total" class="form-control" id="minTotal" required />
+                                        <div id="errorMinTotal" class="error-message" style="color: red;"></div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                        
+                       
+                    </div>
+                    
+                </div>
+            </section>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var form = document.getElementById('couponForm');
+            
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+            
+                        var couponCode = document.getElementById('couponCode').value;
+                        var discountPercentage = document.getElementById('discountPercentage').value;
+                        var startingDate = document.getElementById('startingDate').value;
+                        var expirationDate = document.getElementById('expirationDate').value;
+                        var minTotal = document.getElementById('minTotal').value;
+            
+                        var currentDate = new Date().toISOString().slice(0, 10); // Get current date in yyyy-mm-dd format
+            
+                        // Reset previous error messages
+                        var errorMessages = document.querySelectorAll('.error-message');
+                        errorMessages.forEach(function(element) {
+                            element.textContent = '';
+                        });
+            
+                        // Validate Coupon Code
+                        if (!couponCode.trim()) {
+                            document.getElementById('errorCouponCode').textContent = 'Coupon code is required';
+                            return;
+                        }
+            
+                        // Validate Discount Percentage
+                        if (!discountPercentage.trim()) {
+                            document.getElementById('errorDiscountPercentage').textContent = 'Discount percentage is required';
+                            return;
+                        } else if (isNaN(discountPercentage) || discountPercentage <= 0) {
+                            document.getElementById('errorDiscountPercentage').textContent = 'Discount percentage must be a positive number';
+                            return;
+                        }
+            
+                        // Validate Starting Date
+                        if (!startingDate.trim()) {
+                            document.getElementById('errorStartingDate').textContent = 'Starting date is required';
+                            return;
+                        } else if (startingDate < currentDate) {
+                            document.getElementById('errorStartingDate').textContent = 'Starting date must be today or a future date';
+                            return;
+                        }
+            
+                        // Validate Expiration Date
+                        if (!expirationDate.trim()) {
+                            document.getElementById('errorExpirationDate').textContent = 'Expiration date is required';
+                            return;
+                        } else if (expirationDate <= startingDate) {
+                            document.getElementById('errorExpirationDate').textContent = 'Expiration date must be after the starting date';
+                            return;
+                        }
+            
+                        // Validate Minimum Total
+                        if (!minTotal.trim()) {
+                            document.getElementById('errorMinTotal').textContent = 'Minimum total is required';
+                            return;
+                        } else if (isNaN(minTotal) || minTotal <= 0) {
+                            document.getElementById('errorMinTotal').textContent = 'Minimum total must be a positive number';
+                            return;
+                        }
+            
+                        // If all validations pass, submit the form
+                        form.submit();
+                    });
+                });
+            </script>
+            
+            
+            <!-- content-main end// -->
+
+            
+            
+            
+            <%- include('../adminLayout/adminFooter.ejs') %>

@@ -1,0 +1,91 @@
+<%- include('../layouts/header.ejs') %>
+		<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+				<!--start breadcrumb-->
+				<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
+					<div class="container">
+						<div class="page-breadcrumb d-flex align-items-center">
+							<h3 class="breadcrumb-title pe-3">Wishlist Grid</h3>
+							<div class="ms-auto">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb mb-0 p-0">
+										<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i> Home</a>
+										</li>
+										<li class="breadcrumb-item"><a href="javascript:;">Wishlist</a>
+										</li>
+										<li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end breadcrumb-->
+				<!--start Featured product-->
+				<section class="py-4">
+					<div class="container">
+						<div class="product-grid">
+							<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+								<% if (wishData.length > 0) { %>
+									<% wishData.forEach(product => { %>
+										
+											<div class="col">
+												<div class="card rounded-0 border">
+													<a href="product-details.html">
+														<img src="/products/<%= product.productDetails.productImages[0] %>" class="card-img-top" alt="Product Image">
+													</a>
+													<div class="card-body">
+														<div class="product-info">
+															<a href="javascript:;">
+																<p class="product-catergory font-13 mb-1"><%= product.productDetails.description %></p>
+															</a>
+															<a href="javascript:;">
+																<h6 class="product-name mb-2"><%= product.productDetails.productName %></h6>
+															</a>
+															<div class="d-flex align-items-center">
+																<div class="mb-1 product-price">
+																	
+																	<span class="fs-5"><%= product.productDetails.price %></span>
+																</div>
+																<div class="cursor-pointer ms-auto">
+																	<% for (let i = 0; i < product.rating; i++) { %>
+																		<i class="bx bxs-star text-warning"></i>
+																	<% } %>
+																</div>
+															</div>
+															<div class="product-action mt-2">
+																<div class="d-grid gap-2">
+																	<form action="/cart/add-to-cart/<%= product.productDetails._id %>" method="post">
+																		<button type="submit" class="btn btn-success btn-ecomm">
+																		  <i class="bx bxs-cart-add"></i> Add To Cart
+																		</button>
+																	  </form>
+																	  
+																	<a href="/remove-wishlist/<%=product.productDetails._id%>" class="btn btn-light btn-ecomm"><i class='bx bx-zoom-in'></i> Remove From List</a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+									<% }); %>
+								<% } else { %>
+									<p>Your wishlist is empty.</p>
+								<% } %>
+								
+								
+								
+								
+								
+							</div>
+							<!--end row-->
+						</div>
+					</div>
+				</section>
+				<!--end Featured product-->
+			</div>
+		</div>
+		<!--end page wrapper -->
+		<%- include('../layouts/footer.ejs') %>

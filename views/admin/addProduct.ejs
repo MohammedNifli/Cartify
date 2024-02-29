@@ -1,0 +1,158 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        <p style="color: red;"></p>
+                        <!-- <div>
+                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                            <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <form id="productForm" action="/admin/product/addproduct" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <!-- General info -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>1. General info</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <label class="form-label">Product title</label>
+                                            <input type="text" placeholder="Type here" class="form-control" id="productName" name="productName">
+                                            <span id="productNameError" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label">Description</label>
+                                            <textarea placeholder="Type here" class="form-control" rows="4" id="description" name="description"></textarea>
+                                            <span id="descriptionError" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mb-4 mt-0">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>2. Pricing</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <label class="form-label">Cost in INR</label>
+                                            <input type="number" min="0" placeholder="INR 0.00" class="form-control" id="price" name="price">
+                                            <span id="priceError" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mb-4 mt-0">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>3. Category</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <label class="form-label">Select Category</label>
+                                            <select class="form-control" name="category">
+                                                <% categories.forEach(category => { %>
+                                                <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mb-4 mt-0">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>4. Media</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <label class="form-label">Images</label>
+                                            <input class="form-control" type="file" multiple name="productImages">
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mb-4 mt-0">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>5. Stock and Color</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <label class="form-label">Count in Stock</label>
+                                            <input type="number" min="0" placeholder="Enter count" class="form-control" id="count" name="count">
+                                            <span id="countError" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+            
+            
+            
+            
+            </div>
+        </section> <!-- content-main end// -->
+
+
+        <script>
+            document.getElementById('productForm').addEventListener('submit', function(event) {
+                var productName = document.getElementById('productName').value.trim();
+                var description = document.getElementById('description').value.trim();
+                var price = parseFloat(document.getElementById('price').value);
+                var count = parseInt(document.getElementById('count').value);
+        
+                var productNameError = document.getElementById('productNameError');
+                var descriptionError = document.getElementById('descriptionError');
+                var priceError = document.getElementById('priceError');
+                var countError = document.getElementById('countError');
+        
+                if (productName === '') {
+                    productNameError.textContent = 'Please enter a product name.';
+                    event.preventDefault();
+                } else {
+                    productNameError.textContent = '';
+                }
+        
+                if (description === '') {
+                    descriptionError.textContent = 'Please enter a description.';
+                    event.preventDefault();
+                } else {
+                    descriptionError.textContent = '';
+                }
+        
+                if (price <= 0 || isNaN(price)) {
+                    priceError.textContent = 'Price must be a positive number.';
+                    event.preventDefault();
+                } else {
+                    priceError.textContent = '';
+                }
+        
+                if (count <= 0 || isNaN(count)) {
+                    countError.textContent = 'Stock count must be a positive integer.';
+                    event.preventDefault();
+                } else {
+                    countError.textContent = '';
+                }
+            });
+        </script>
+        
+
+       
+        
+        
+    
+    
+        
+        <%- include('../adminLayout/adminFooter.ejs') %>
+        

@@ -1,0 +1,87 @@
+<%- include('../layouts/header.ejs') %>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        padding: 20px;
+        max-width: 600px;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    p {
+        color: #666;
+    }
+
+    img.responsive-image {
+        max-width: 100px; /* Set the maximum width to the container width */
+        height: auto;    /* Maintain aspect ratio */
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+</style>
+
+<body>
+    <% orderView.forEach(order => { %>
+       
+        <div class="card">
+            <h1>Order Details</h1>
+            <p>Order ID: <%= order._id %> </p>
+            <p>Order Date: <%= order.createdAt %></p>
+            <p>Product Price: <%= order.items.price %></p>
+            <p>Quantity: <%= order.items.quantity %></p>
+            <p>Total Amount: <%= order.totalAmount %></p>
+            <p>Payment Method: <%= order.payment %></p>
+           
+        </div>
+
+        <div class="card">
+            <h1>Product Details</h1>
+            <p>Product ID: <%= order.product._id %> </p>
+            <p>Product Name: <%= order.product.productName %> </p>
+            <p>Price: <%= order.product.price %> </p>
+
+            <!-- Adding an image tag -->
+            <img src="/products/<%= order.product.productImages[0] %>" alt="Product Image" class="responsive-image">
+        </div>
+        <% }); %>
+        
+       
+
+    <div class="card">
+        <h2>Billing Address</h2>
+    <% if (userAddress) { %>
+        <% userAddress.Addresses.forEach(function(address) { %>
+            <div>
+                <p>Name: <%= address.name %></p>
+                <p>Villa Name: <%= address.villaName %></p>
+                <p>City Name: <%= address.cityName %></p>
+                <p>Zipcode: <%= address.zipcode %></p>
+                
+                
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No addresses found.</p>
+    <% } %>
+    </div>
+   
+
+    <!-- Add more details as needed -->
+</body>
+
+<%- include('../layouts/footer.ejs') %>
+
+
+

@@ -1,0 +1,565 @@
+<%- include('../layouts/header.ejs') %>
+
+
+		
+		<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+				<!--start breadcrumb-->
+				<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
+					<div class="container">
+						<div class="page-breadcrumb d-flex align-items-center">
+							<h3 class="breadcrumb-title pe-3">Checkout</h3>
+							<div class="ms-auto">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb mb-0 p-0">
+										<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i> Home</a>
+										</li>
+										<li class="breadcrumb-item"><a href="javascript:;">Shop</a>
+										</li>
+										<li class="breadcrumb-item active" aria-current="page">Checkout</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end breadcrumb-->
+				<!--start shop cart-->
+				<section class="py-4">
+					<div class="container">
+						<div class="shop-cart">
+							<div class="row">
+								<div class="col-12 col-xl-8">
+									<div class="checkout-details">
+										<div class="card bg-transparent rounded-0 shadow-none">
+											<div class="card-body">
+												<div class="steps steps-light">
+													<a class="step-item active" href="/cart/load-cart">
+														<div class="step-progress"><span class="step-count">1</span>
+														</div>
+														<div class="step-label"><i class='bx bx-cart'></i>Cart</div>
+													</a>
+													<a class="step-item active current" href="/cart/load-checkout">
+														<div class="step-progress"><span class="step-count">2</span>
+														</div>
+														<div class="step-label"><i class='bx bx-user-circle'></i>Details</div>
+													</a>
+													<!-- <a class="step-item" href="checkout-shipping.html">
+														<div class="step-progress"><span class="step-count">3</span>
+														</div>
+														<div class="step-label"><i class='bx bx-cube'></i>Shipping</div>
+													</a> -->
+													<a class="step-item" href="/order/thank-checkout">
+														<div class="step-progress"><span class="step-count">4</span>
+														</div>
+														<div class="step-label"><i class='bx bx-credit-card'></i>Payment</div>
+													</a>
+													<!-- <a class="step-item" href="checkout-review.html">
+														<div class="step-progress"><span class="step-count">5</span>
+														</div>
+														<div class="step-label"><i class='bx bx-check-circle'></i>Review</div>
+													</a> -->
+												</div>
+											</div>
+										</div>
+										<div class="card rounded-0">
+											<div class="card-body">
+												<% if (!addresses || addresses.length === 0) { %>
+													<!-- Display a message indicating that the user has not added any address -->
+													<div class="alert alert-warning" role="alert">
+													  You have not added any address yet. Please add an address to proceed with checkout.
+													</div>
+												  <% } else { %>
+													<!-- Display checkout details -->
+													<!-- Your existing code to display checkout details goes here -->
+												  <% } %>
+												
+												<div class="d-flex align-items-center mb-3">
+													<div class="">
+
+
+														
+													</div>
+													<div class="ms-2">
+														
+													</div>
+													<div class="container mt-5">
+														<!-- Button to trigger modal -->
+														<div class="text-end">
+														  <button type="button" class="btn btn-light btn-ecomm" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+															<i class="bx bx-edit"></i> Add Address
+														  </button>
+														</div>
+													
+														<!-- Modal -->
+														<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+														  <div class="modal-dialog">
+															<div class="modal-content">
+															  <div class="modal-header">
+																<h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+															  </div>
+															  <div class="modal-body">
+																<!-- Form to add address -->
+																<form action="/order/check-address" method="post" id="addAddressForm">
+																  <div class="mb-3">
+																	<label for="addressName" class="form-label">Name</label>
+																	<input type="text" class="form-control" id="addressName" name="name" required>
+																  </div>
+																  <div class="mb-3">
+																	<label for="villaName" class="form-label">Villa Name</label>
+																	<input type="text" class="form-control" id="villaName" name="villa" required>
+																  </div>
+																  <div class="mb-3">
+																	<label for="cityName" class="form-label">City Name</label>
+																	<input type="text" class="form-control" id="cityName" name="city" required>
+																  </div>
+																  <div class="mb-3">
+																	<label for="zipcode" class="form-label">Zipcode</label>
+																	<input type="text" class="form-control" id="zipcode" name="zip" required>
+																  </div>
+																  <button type="submit" class="btn btn-primary">Save Address</button>
+																</form>
+															  </div>
+															</div>
+														  </div>
+														</div>
+													  </div>
+													
+													
+													  
+												</div>
+												<div class="border p-3">
+													<h2 class="h5 mb-0">Address</h2>
+													<div class="my-3 border-bottom"></div>
+													<div class="form-body">
+														<form class="row g-3" id="orderForm" action="/order/add-order" method="post">
+															<div class="col-md-12">
+																<% if (addresses && addresses.length > 0) { %>
+																	<div>
+																		<label>Select Address:</label>
+																		<% addresses.forEach((address, index) => { %>
+																		<div class="form-check">
+																			<input type="radio" id="saddress<%= index %>" name="saddress" value="<%= address._id %>" class="form-check-input">
+																			<label for="saddress<%= index %>" class="form-check-label">
+																				<strong>Name:</strong> <%= address.name %><br>
+																				<strong>Villa:</strong> <%= address.villaName %><br>
+																				<strong>City:</strong> <%= address.cityName %><br>
+																				<strong>Zip Code:</strong> <%= address.zipcode %>
+																			</label>
+																		</div>
+																		<hr>
+																		<% }); %>
+																	</div>
+																	
+																<% } else { %>
+																<p>No addresses found. Please add an address.</p>
+																<% } %>
+															</div>
+														
+															<div class="col-md-12">
+																<h6 class="mb-0 h5">Payment Method</h6>
+																<div class="my-3 border-bottom"></div>
+																<div class="card-body">
+																	<ul class="nav nav-pills mb-3 border p-3" role="tablist">
+																		<li class="nav-item" role="presentation">
+																			<div class="form-check">
+																				<label for="razorpay" class="form-check-label">
+																					<input type="radio" class="form-check-input" id="razorpay" name="payment" value="razorpay" > Razorpay
+																				</label>
+																			</div>
+																		</li>
+																		<li class="nav-item" role="presentation">
+																			<div class="form-check">
+																				<label for="cod" class="form-check-label">
+																					<input type="radio" class="form-check-input" id="cod" name="payment" value="cod" > Cash on Delivery
+																				</label>
+																			</div>
+																		</li>
+																		<li class="nav-item" role="presentation">
+																			<div class="form-check">
+																				<label for="cod" class="form-check-label">
+																					<input type="radio" class="form-check-input" id="wallet" name="payment" value="wallet" > Wallet
+																				</label>
+																			</div>
+																		</li>
+																	</ul>
+																	
+																</div>
+															</div>
+															
+															<button type="submit" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#addressPaymentModal" onclick="handlePayment()">
+																Place Order
+															</button>
+															
+<!-- 															
+															<div class="col-md-6">
+																<div class="d-grid">
+																	<button type="submit" >Submit</button>
+																</div>
+															</div> -->
+															
+															<!-- <div class="col-md-6">
+																<div class="d-grid">
+																	<button id="submitButton" type="button" onclick="submitForm()">Submit</button>
+																</div>
+															</div> -->
+															
+
+															
+															<!-- <div class="d-grid">
+																<button type="button"  onclick="submitForm()">Submit</button>
+															</div>
+															 -->
+															
+														
+															<div class="col-md-6">
+																<div class="d-grid">
+																	<a href="/cart/load-cart" class="btn btn-light btn-ecomm"><i class='bx bx-chevron-left'></i>Back to Cart</a>
+																</div>
+															</div>
+														</form>
+														
+														
+														
+														
+													</div>
+												</div>
+												
+												<!-- Include the Razorpay Checkout script -->
+												
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-12 col-xl-4">
+									<div class="order-summary">
+										<div class="card rounded-0">
+											<div>
+												<% coupons.forEach(function(item) { %>
+													<p></p>
+												<li><%=item.discountPercentage%>%  Discount Coupon Available (Please check it in coupons) </li>
+												<% }); %>
+											</div>
+											<% if (couponApplied) { %>
+												<form action="/order/cancel-coupon" method="get">
+													<p style="color: red;">You already applied coupon . so you can access another coupon for next order. <br> Thanks for your Prarticipation </p>
+													<button type="submit" style="color: red;">Remove Coupon</button>
+		
+												</form>
+											<% } else { %>
+												<!-- <form action="/apply-coupon" method="POST">
+													<input type="text" name="couponCode" placeholder="Enter coupon code">
+													<button>Apply Coupon</button>
+												</form> -->
+												<form action="/order/apply-coupon" method="post" class="row g-3">
+													<div class="col-md-6">
+														<label for="couponCode" class="form-label">Coupon Code</label>
+														<input type="text" name="code" placeholder="Type here" class="form-control" id="couponCode">
+													</div>
+													<div class="col-md-6">
+														<button type="submit" class="btn btn-primary mt-4">Apply Coupon</button>
+													</div>
+												</form>
+		
+											<% } %>
+											<div class="card-body">
+												<div class="card rounded-0 border bg-transparent mb-0 shadow-none">
+													<div class="card-body">
+														<p class="fs-5">Order summary</p>
+														<p class="mb-2">Subtotal: <span class="float-end">0.00</span></p>
+														<p class="mb-2">Shipping: <span class="float-end">--</span></p>
+														<p class="mb-2">Taxes: <span class="float-end">0.00</span></p>
+														<p class="mb-0">Discount: <span class="float-end">--</span></p>
+														<div class="my-3 border-top"></div>
+														<% if (cartDetails && cartDetails.length > 0 && cartDetails[0].totalPrice) { %>
+															<!-- Show only one total price here -->
+															<h5 class="mb-0">Total Price: <span class="float-end"><%= cartDetails[0].totalPrice %></span></h5>
+														<% } else { %>
+															<h5 class="mb-0">Total Price: <span class="float-end">--</span></h5>
+														<% } %>
+													</div>
+													
+												</div>
+												<div class="card rounded-0 border bg-transparent shadow-none">
+													<div class="card-body">
+														
+														<div class="my-3 border-top"></div>
+														<% cartDetails.forEach(function(product) { %>
+														<div class="d-flex align-items-center">
+															<a class="d-block flex-shrink-0" href="javascript:;">
+																<img src="/products/<%= product.productDetails.productImages[0] %>" width="75" alt="Product">
+															</a>
+															<div class="ps-2">
+																<h6 class="mb-1"><a href="javascript:;" class="text-dark"><%= product.productDetails.productName %></a></h6>
+																<div class="widget-product-meta">
+																	<span class="me-2"><%= product.productDetails.price %></span>
+																	<span class="">x <%= product.items.quantity %></span>
+																</div>
+															</div>
+														</div>
+														<div class="my-3 border-top"></div>
+														<% }); %>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+									</div>
+									<br>
+
+									
+
+									<br>
+									
+									<br>
+
+									
+
+									
+
+								</div>
+							</div>
+							
+							
+							<!--end row-->
+						</div>
+					</div>
+				</section>
+				<!--end shop cart-->
+			</div>
+		</div>
+		<!--end page wrapper -->
+		<!--   -->
+		
+		
+		<!-- Include the Razorpay Checkout script -->
+
+		<!-- HTML content -->
+
+
+<!-- Include Razorpay Checkout script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+	function checkAddressSelection() {
+		// Check if any address is selected
+		const selectedAddress = document.querySelector('input[name="saddress"]:checked');
+	
+		if (!selectedAddress) {
+			// If no address is selected, show a message
+			alert('Please add/select an address.');
+		} else {
+			// If an address is selected, you can perform additional actions if needed
+			console.log('Address selected:', selectedAddress.value);
+		}
+	}
+	
+	function handlePayment() {
+	  event.preventDefault();  // Prevent default form submission behavior
+	
+	  const selectedAddress = document.querySelector('input[name="saddress"]:checked');
+	
+	if (!selectedAddress) {
+		// If no address is selected, show a message and return
+		alert('Please add/select an address before proceeding with the payment.');
+		return
+	}
+	
+			// Check if Razorpay option is selected
+			var razorpayOption = document.querySelector('input[name="payment"]:checked').value;
+	
+			if (razorpayOption === 'razorpay') {
+				// Razorpay option is selected, proceed with Razorpay payment
+				console.log("razzz");
+				confirmRazorpayPayment();
+			} else if (razorpayOption === 'cod') {
+				// COD option is selected, proceed with COD
+				console.log('Proceeding with COD...');
+				submitForm();
+			}else if(razorpayOption==='wallet'){
+				console.log('Proceeding with wallet...');
+				submitForm();
+			}
+		}
+		function confirmRazorpayPayment() {
+	
+	
+		 // Prevent default form submission behavior
+		 event.preventDefault();
+	
+		  // Fetch order details from the server
+	  
+		
+		  fetch('/order/get-payment', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			}
+		  })
+	   
+		  .then(response => response.json())
+		  .then(order => {
+		  console.log("kk")
+			// Log order details for debugging
+			console.log('Received order details:', order);
+			console.log("payment order created successfully....")
+			// Configure Razorpay button
+			var options = {
+			  key: 'rzp_test_m90tBYBDKu8GIf',
+			  amount: order.amount,
+			  currency: order.currency,
+			  order_id: order.id,
+			  name: 'Shopingo E-commerce',
+			  description: 'Order Payment',
+			  handler: function (response) {
+				// Handle successful payment
+				console.log('Razorpay payment success:', response);
+	  
+				// Call the create-order API after successful payment
+				createOrder(order.id); // Assuming order.id is the Razorpay order ID
+			  document.getElementById('orderForm').submit();
+		
+		},
+			  prefill: {
+				name: 'User Name',
+				email: 'user@example.com',
+				contact: '1234567890',
+			  },
+			  notes: {
+				address: 'User Address',
+			  },
+			  theme: {
+				color: '#012652',
+			  },
+			};
+	  
+			var rzp = new Razorpay(options);
+			rzp.open();
+		  })
+		  .catch(error => {
+			console.error('Error fetching Razorpay order:', error);
+			// Handle error
+		  });
+		}
+	
+	  function submitForm() {
+			// Manually submit the form
+			document.getElementById('orderForm').submit();
+		}
+	
+	  
+		function createOrder(razorpayOrderId) {
+		  // Call the /create-order API with the Razorpay order ID
+		  fetch('/order/add-order', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ selectedAddress: '<%= addresses._id %>', paymentMethod: 'Razorpay' }),
+		  })
+		  .then(response => response.json())
+		  .then(result => {
+			// Handle the response from the create-order API
+			console.log("ORder creating success......real product order")
+			console.log('Order creation response:', result);
+	  
+			
+			// Optionally, redirect to an order confirmation page
+			if(result.success){
+				console.log('Redirecting to order confirmation page...');
+			window.location.href = '/order/thank-checkout';
+			}else{
+				console.error("Error creating order: ", result.error)
+			}
+		  })
+		  .catch(error => {
+			console.error('Error creating order:', error);
+			// Handle error
+		  });
+		}
+	  </script>
+	
+	  <!-- Example client-side JavaScript code -->
+	<script>
+		// Example function to handle order placement
+		// Example function to handle order placement
+	function placeOrder() {
+	  // Your order data
+	  const data = {
+		payment: 'cod', // Example payment method
+		// Other necessary data
+	  };
+	
+	  // Perform the request
+	  fetch('/order/add-order', {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {
+		  'Content-Type': 'application/json'
+		}
+	  })
+	  .then(response => {
+		if (!response.ok) {
+		  return response.json().then(data => {
+			if (data && data.error) {
+			  // Display error message immediately
+			  alert(data.error); // Display error message if any
+			}
+			window.location.href='/order/load-checkout'
+		  });
+		} else {
+		  // Handle success, e.g., redirect to thank-you page
+		  window.location.href = '/order/thank-checkout';
+		}
+	  })
+	  .catch(error => {
+		console.error('Error:', error);
+		// Handle any errors that occur during the request
+		alert('An error occurred while processing your request. Please try again later.'); // Display generic error message
+	  });
+	}
+	
+	// Example: Attach the placeOrder function to a button click event
+	document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
+	
+	  </script>
+
+<% if (typeof error !== 'undefined' && error) { %>
+    <script>
+        // Display an alert with the error message
+        alert("<%= error %>");
+    </script>
+<% } %>
+
+  
+
+
+<script>
+	// Check if the payment method is 'cod' and totalPrice exceeds 2000
+	if ("<%= selectedPaymentMethod %>" === 'cod' && "<%= totalPrice %>" > 2000) {
+	  // Display an alert with the message
+	  alert('COD maximum limit is 2000');
+	}
+  </script>
+
+
+<script>
+    // Wait for the document to be ready
+    $(document).ready(function() {
+        // When the "Add Address" button is clicked
+        $("#openAddAddressModal").click(function(event) {
+            // Prevent the default behavior of the link
+            event.preventDefault();
+            // Show the modal by targeting its ID
+            $("#addAddressModal").modal("show");
+        });
+    });
+</script>
+
+
+
+		
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+		<%- include('../layouts/footer.ejs') %>

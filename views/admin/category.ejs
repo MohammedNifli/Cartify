@@ -1,0 +1,92 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Category</h2>
+                            <!-- <div>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                                <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Basic</h4>
+                            </div>
+                            <% if (typeof error !== 'undefined' && error !== null) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <%= error %>
+                                </div>
+                            <% } %>
+                            
+                            <div class="card-body">
+                                <form id="categoryForm" action="/admin/category/adding-category" method="post" enctype="multipart/form-data">
+                                    <div class="mb-4">
+                                        <label for="catname" class="form-label">Category title</label>
+                                        <input type="text" name="catname" placeholder="Type here" class="form-control" id="categoryName" />
+                                        <span id="categoryNameError" class="text-danger"></span>
+                                    </div>
+                                    <!-- <div class="mb-4">
+                                        <label class="form-label">Full description</label>
+                                        <textarea name="description" placeholder="Type here" class="form-control" rows="4" id="categoryDescription"></textarea>
+                                        <span id="categoryDescriptionError" class="text-danger"></span>
+                                    </div> -->
+                                    
+                                    <div class="col-lg-3">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h4>Media</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="input-upload">
+                                                    <img src="/imgs/theme/upload.svg" alt="" />
+                                                    <input class="form-control" type="file" name="catimage"  />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </section>
+
+            <script>
+                document.getElementById('categoryForm').addEventListener('submit', function(event) {
+                    var categoryName = document.getElementById('categoryName').value.trim();
+                    var categoryDescription = document.getElementById('categoryDescription').value.trim();
+            
+                    var categoryNameError = document.getElementById('categoryNameError');
+                    var categoryDescriptionError = document.getElementById('categoryDescriptionError');
+            
+                    if (categoryName === '') {
+                        categoryNameError.textContent = 'Please enter a category name.';
+                        event.preventDefault();
+                    } else if (!/\S/.test(categoryName)) {
+                        categoryNameError.textContent = 'Category name cannot be empty or contain only spaces.';
+                        event.preventDefault();
+                    } else {
+                        categoryNameError.textContent = '';
+                    }
+            
+                    if (categoryDescription === '') {
+                        categoryDescriptionError.textContent = 'Please enter a category description.';
+                        event.preventDefault();
+                    } else if (!/\S/.test(categoryDescription)) {
+                        categoryDescriptionError.textContent = 'Category description cannot be empty or contain only spaces.';
+                        event.preventDefault();
+                    } else {
+                        categoryDescriptionError.textContent = '';
+                    }
+                });
+            </script>
+           
+            <!-- content-main end// -->
+            <%- include('../adminLayout/adminFooter.ejs') %>

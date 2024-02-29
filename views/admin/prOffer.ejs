@@ -1,0 +1,178 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+
+
+
+                <div class="container">
+                    <div class="border p-4 rounded mt-5">
+                        <h1 class="text-center mb-4">Add Product Offer</h1>
+                        <form id="categoryForm" action="/admin/offer/addproffer" method="post" >
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="categorySelect" class="form-label">Select Product</label>
+                                    <select name="product" id="categorySelect" class="form-select" style="background-color: bisque;">
+                                        <% proData.forEach(pro => { %>
+                                            <option value="<%= pro._id %>"><%= pro.productName %></option>
+                                        <% }); %>
+                                        
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="discountPercentage" class="form-label">Discount Percentage</label>
+                                    <input type="number" name="discountPercentage" placeholder="Enter percentage" class="form-control" id="discountPercentage" style="background-color: bisque;" min="1" />
+                                    <span id="discountPercentageError" class="text-danger"></span>
+                                </div>
+                                
+                                
+                        
+                                <div class="col-md-6 mb-3">
+                                    <label for="offerStartDate" class="form-label">Offer Start Date</label>
+                                    <input type="date" name="validFrom" class="form-control" id="offerStartDate" style="background-color: bisque;"/>
+                                    <!-- You can style this input as needed -->
+                                </div>
+                        
+                                <div class="col-md-6 mb-3">
+                                    <label for="offerEndDate" class="form-label">Offer End Date</label>
+                                    <input type="date" name="validUntil" class="form-control" id="offerEndDate" style="background-color: bisque;"/>
+                                    <!-- You can style this input as needed -->
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+
+                <div class="card mb-4">
+                    
+
+                    <h2>Category</h2>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                       
+                                        
+                                        <th>#ID</th>
+                                        
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>countStock</th>
+                                       
+                                        
+                                        
+                                        <th class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <% prooo.forEach(pro => { %>
+                                   
+                                    <tr>
+                                        <td><%=pro.product._id%></td>
+                                        <td><%=pro.product.productName%></td>
+                                    
+                                        <td><%=pro.product.price%></td>
+                                        <td><%=pro.product.countStock%></td>
+                                       
+                                        
+                                        <td class="text-end">
+                                            <a href="/admin/offer/pro-of-delete?deleId=<%=pro._id%>&proId=<%=pro.product._id%>" class="btn btn-md rounded font-sm" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+                                        </td>
+                                        
+                                       
+                                    </tr>
+                                    <% }); %>
+                                   
+                                   
+                                    
+                                   
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive//end -->
+
+                        
+                    </div>
+
+                    
+                    <!-- card-body end// -->
+                </div>
+                <div class="pagination-area mt-30 mb-50">
+                    <nav aria-label="Product Page Navigation">
+                        <ul class="pagination justify-content-start">
+                            <% for (let i = 1; i <= totalProductPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                    
+                </div>
+            </section>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById('categoryForm').addEventListener('submit', function (event) {
+                        event.preventDefault(); // Prevent the form from submitting by default
+            
+                        // Validate the form fields
+                        let product = document.getElementById('categorySelect').value;
+                        let discountPercentage = document.getElementById('discountPercentage').value;
+                        let validFrom = document.getElementById('offerStartDate').value;
+                        let validUntil = document.getElementById('offerEndDate').value;
+            
+                        // Basic validation: Ensure all fields are filled
+                        if (product.trim() === '') {
+                            alert('Please select a product');
+                            return;
+                        }
+            
+                        if (discountPercentage.trim() === '' || isNaN(discountPercentage) || discountPercentage <= 0) {
+                            alert('Please enter a valid discount percentage');
+                            return;
+                        }
+            
+                        if (validFrom.trim() === '' || validUntil.trim() === '') {
+                            alert('Please select both start and end dates for the offer');
+                            return;
+                        }
+            
+                        // Ensure that the start date is a future date
+                        let currentDate = new Date();
+                        let startDate = new Date(validFrom);
+                        if (startDate <= currentDate) {
+                            alert('Offer start date should be a future date');
+                            return;
+                        }
+            
+                        // Ensure that the end date is after the start date
+                        let endDate = new Date(validUntil);
+                        if (endDate <= startDate) {
+                            alert('Offer end date should be after the start date');
+                            return;
+                        }
+            
+                        // If all fields are filled and validation passes, submit the form
+                        this.submit();
+                    });
+                });
+            </script>
+            
+            <%- include('../adminLayout/adminFooter.ejs') %>

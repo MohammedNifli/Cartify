@@ -1,0 +1,267 @@
+<%- include('../layouts/header.ejs') %>
+		<!--end top header wrapper-->
+		<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+				<!--start breadcrumb-->
+				<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
+					<div class="container">
+						<div class="page-breadcrumb d-flex align-items-center">
+							<h3 class="breadcrumb-title pe-3">My Orders</h3>
+							<div class="ms-auto">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb mb-0 p-0">
+										<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i> Home</a>
+										</li>
+										<li class="breadcrumb-item"><a href="javascript:;">Account</a>
+										</li>
+										<li class="breadcrumb-item active" aria-current="page">My Orders</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end breadcrumb-->
+				<!--start shop cart-->
+				<section class="py-4">
+
+					<!-- Add Address Modal Button Outside the Container -->
+
+
+
+
+
+
+					<div class="container">
+						<h3 class="d-none">Account</h3>
+						<div class="card">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="card shadow-none mb-3 mb-lg-0 border">
+											<div class="card-body">
+												<div class="list-group list-group-flush">	<a href="#" class="list-group-item  d-flex justify-content-between align-items-center ">Dashboard <i class='bx bx-tachometer fs-5'></i></a>
+													<a href="/user-profile" class="list-group-item active d-flex justify-content-between align-items-center ">Profile <i class='bx bx-cart-alt fs-5'></i></a>
+													<a href="/order/load-order" class="list-group-item  d-flex justify-content-between align-items-center ">Orders <i class='bx bx-cart-alt fs-5'></i></a>
+													<a href="#" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Downloads <i class='bx bx-download fs-5'></i></a>
+													<a href="/user-address" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Addresses <i class='bx bx-home-smile fs-5'></i></a>
+													<a href="/pass-page" class="list-group-item  d-flex justify-content-between align-items-center bg-transparent">Change Password <i class='bx bx-credit-card fs-5'></i></a>
+													<a href="/wallet/walletpg" class="list-group-item  d-flex justify-content-between align-items-center ">Wallet<i class='bx bx-cart-alt fs-5'></i></a>
+													<a href="/order/coupon" class="list-group-item  d-flex justify-content-between align-items-center">Coupons<i class='bx bx-user-circle fs-5'></i></a>
+													<a href="/refer-link" class="list-group-item  d-flex justify-content-between align-items-center">Refferal<i class='bx bx-user-circle fs-5'></i></a>
+
+													<a href="/logout" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Logout <i class='bx bx-log-out fs-5'></i></a>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									
+									
+									<div class="col-lg-8">
+										<div class="row mt-3" >
+											<div class="col-12">
+												<button class="btn btn-primary btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
+											</div>
+										</div>
+										
+										<div class="card-body">
+											<h6 class="mb-4">The following addresses will be used on the checkout page by default.</h6>
+											<div class="row">
+												<% addresses.forEach((address, addressIndex) => { %>
+													<% address.Addresses.forEach((singleAddress, index) => { %>
+														<div class="col-12 col-lg-6">
+															<h5 class="mb-3">Billing Address <%= index + 1 %></h5>
+															<address>
+																<strong>Name:</strong> <%= singleAddress.name %><br>
+																<strong>Villa:</strong> <%= singleAddress.villaName %><br>
+																<strong>City:</strong> <%= singleAddress.cityName %><br>
+																<strong>Zip Code:</strong> <%= singleAddress.zipcode %><br>
+															</address>
+															<form id="removeAddressForm_<%= singleAddress._id %>" action="/delete-address/<%= singleAddress._id %>" method="post">
+																<button class="btn btn-danger btn-sm remove-address-btn" type="button">Remove Address</button>
+															</form>
+															<br>
+															
+															<!-- <button id="openEditAddressModal_ class="btn btn-success open-edit-modal" type="button" data-bs-toggle="modal" data-bs-target="#editAddressModal">Edit Address</button> -->
+															<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAddressModal_<%= singleAddress._id %>">
+																Edit Address
+															</button>
+
+														</div>
+													<% }); %>
+												<% }); %>
+											</div>
+										</div>
+										
+										
+										
+										
+									</div>
+									
+									
+								</div>
+								<!--end row-->
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									
+									<form  action="/addaddress" method="post" id="addAddressForm">
+
+
+										<input type="hidden" name="user_Id" value="#">
+										
+
+										<div class="mb-3">
+											<label for="addressName" class="form-label">Name</label>
+											<input type="text" class="form-control" id="addressName" name="name"  required>
+										</div>
+										<div class="mb-3">
+											<label for="villaName" class="form-label">Villa Name</label>
+											<input type="text" class="form-control" id="villaName" name="villa" required>
+										</div>
+										<div class="mb-3">
+											<label for="cityName" class="form-label">City Name</label>
+											<input type="text" class="form-control" id="cityName" name="city" required>
+										</div>
+										<div class="mb-3">
+											<label for="zipcode" class="form-label">Zipcode</label>
+											<input type="text" class="form-control" id="zipcode" name="zip" required>
+										</div>
+										<button type="submit" class="btn btn-primary">Save Address</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<% addresses.forEach(address => { %>
+						<% address.Addresses.forEach((singleaddress, index) => { %>
+							<div class="modal fade" id="editAddressModal_<%= singleaddress._id %>" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									
+											<form  action="/edit-address/<%=singleaddress._id%>" method="post" id="editAddressForm">
+												<input type="hidden" name="user_Id" value="<%= singleaddress.user_Id %>">
+												<div class="mb-3">
+													<label for="addressName" class="form-label">Name</label>
+													<input type="text" class="form-control" id="addressName" name="name" value="<%= singleaddress.name %>">
+												</div>
+												<div class="mb-3">
+													<label for="villaName" class="form-label">Villa Name</label>
+													<input type="text" class="form-control" id="villaName" name="villa" value="<%= singleaddress.villaName %>">
+												</div>
+												<div class="mb-3">
+													<label for="cityName" class="form-label">City Name</label>
+													<input type="text" class="form-control" id="cityName" name="city" value="<%= singleaddress.cityName %>">
+												</div>
+												<div class="mb-3">
+													<label for="zipcode" class="form-label">Zipcode</label>
+													<input type="text" class="form-control" id="zipcode" name="zip" value="<%= singleaddress.zipcode %>">
+												</div>
+												<button type="submit" class="btn btn-primary">Save Address</button>
+											</form>
+											
+										
+								</div>
+							</div>
+						</div>
+					</div>
+					
+
+					<% }); %>
+					<% }); %>
+					
+					
+					
+					
+				</section>
+				<!--end shop cart-->
+			</div>
+		</div>
+		
+		
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+		<script>
+			// Get the remove address buttons
+			var removeAddressButtons = document.querySelectorAll('.remove-address-btn');
+		
+			// Add event listener to each remove address button
+			removeAddressButtons.forEach(function(button) {
+				button.addEventListener('click', function(event) {
+					// Prevent the default form submission behavior
+					event.preventDefault();
+		
+					// Display a confirmation dialog using SweetAlert
+					Swal.fire({
+						title: "Are you sure?",
+						text: "Do you want to remove this address?",
+						icon: "warning",
+						showCancelButton: true,
+						confirmButtonColor: "#3085d6",
+						cancelButtonColor: "#d33",
+						confirmButtonText: "Yes, remove it!"
+					}).then((result) => {
+						// If the user confirms the removal
+						if (result.isConfirmed) {
+							// Get the form corresponding to the clicked button
+							var formId = button.closest('form').id;
+							var form = document.getElementById(formId);
+							// Submit the form for address removal
+							form.submit();
+						}
+					});
+				});
+			});
+		</script>
+
+		
+<!-- <script>
+    $(document).ready(function() {
+        $('#openEditAddressModal').click(function() {
+            $('#editAddressModal').modal('show'); // Show the modal when the button is clicked
+        });
+    });
+</script> -->
+
+
+		<!-- <script>
+			function showEditForm() {
+				// Get the edit address form container
+				var editAddressFormContainer = document.getElementById('editAddressFormContainer');
+				
+				// Show the edit address form
+				editAddressFormContainer.style.display = 'block';
+			}
+		</script> -->
+<!-- 
+		<script>
+			const addAddressForm = document.getElementById('addAddressForm');
+addAddressForm.addEventListener('submit', function (event) {
+   event.preventDefault();
+   console.log('Form submitted');  // Add this line for debugging
+   const addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
+   addAddressModal.hide();
+});
+
+		</script> -->
+		
+
+		<!--end page wrapper -->
+		<!--start footer section-->
+<%- include('../layouts/footer.ejs') %>

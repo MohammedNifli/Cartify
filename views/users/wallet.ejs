@@ -1,0 +1,213 @@
+<%- include('../layouts/header.ejs') %>
+
+
+
+	<!--end top header wrapper-->
+	<!--start page wrapper -->
+	<div class="page-wrapper">
+		<div class="page-content">
+			<!--start breadcrumb-->
+			<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
+				<div class="container">
+					<div class="page-breadcrumb d-flex align-items-center">
+						<h3 class="breadcrumb-title pe-3">My Orders</h3>
+						<div class="ms-auto">
+							<nav aria-label="breadcrumb">
+								<ol class="breadcrumb mb-0 p-0">
+									<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+											Home</a>
+									</li>
+									<li class="breadcrumb-item"><a href="javascript:;">Account</a>
+									</li>
+									<li class="breadcrumb-item active" aria-current="page">My Orders</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!--end breadcrumb-->
+			<!--start shop cart-->
+			<section class="py-4">
+				<div class="container">
+					<h3 class="d-none">Account</h3>
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="card shadow-none mb-3 mb-lg-0 border">
+										<div class="card-body">
+											<div class="list-group list-group-flush">	<a href="#" class="list-group-item  d-flex justify-content-between align-items-center ">Dashboard <i class='bx bx-tachometer fs-5'></i></a>
+												<a href="/user-profile" class="list-group-item active d-flex justify-content-between align-items-center ">Profile <i class='bx bx-cart-alt fs-5'></i></a>
+												<a href="/order/load-order" class="list-group-item  d-flex justify-content-between align-items-center ">Orders <i class='bx bx-cart-alt fs-5'></i></a>
+												<a href="#" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Downloads <i class='bx bx-download fs-5'></i></a>
+												<a href="/user-address" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Addresses <i class='bx bx-home-smile fs-5'></i></a>
+												<a href="/pass-page" class="list-group-item  d-flex justify-content-between align-items-center bg-transparent">Change Password <i class='bx bx-credit-card fs-5'></i></a>
+												<a href="/wallet/walletpg" class="list-group-item  d-flex justify-content-between align-items-center ">Wallet<i class='bx bx-cart-alt fs-5'></i></a>
+												<a href="/order/coupon" class="list-group-item  d-flex justify-content-between align-items-center">Coupons<i class='bx bx-user-circle fs-5'></i></a>
+												<a href="/refer-link" class="list-group-item  d-flex justify-content-between align-items-center">Refferal<i class='bx bx-user-circle fs-5'></i></a>
+
+												<a href="/logout" class="list-group-item d-flex justify-content-between align-items-center bg-transparent">Logout <i class='bx bx-log-out fs-5'></i></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-8">
+									<div class="card shadow-none mb-0 border">
+										<div class="card-body">
+											
+											<div class="mb-3">
+												<h4>Current Balance:</h4>
+												<span id="walletAmount"
+													style="font-size: 24px; font-weight: bold; font-family: Arial, sans-serif;">&#8377;<%=balance%></span>
+											</div>
+											<br>
+											<br>
+											<!-- Toggle Buttons -->
+											<button id="addFundsButton" class="btn btn-primary btn-md btn-block mb-3"
+												style="background-image: linear-gradient(to right, #4e54c8, #8f94fb);"
+												onclick="showAddForm()">Add Amount</button>
+											<button id="withdrawFundsButton"
+												class="btn btn-danger btn-md btn-block mb-3"
+												style="background-image: linear-gradient(to right, #070808, #ff1212);"
+												onclick="showWithdrawForm()">Withdraw Amount</button>
+
+											<!-- Form for adding funds -->
+											<form id="addFundsForm" action="/wallet/add" method="post"
+												style="display: none;">
+												<div class="form-group">
+													<input type="number" id="addAmount" name="amount"
+														class="form-control" placeholder="Enter amount to add" required>
+												</div>
+												<br>
+												<button type="submit" id="addButton"
+													class="btn btn-primary btn-md btn-block">Add</button>
+											</form>
+
+											<!-- Form for withdrawing funds -->
+											<form id="withdrawFundsForm" action="/wallet/withdraw" method="post"
+												style="display: none;">
+												<div class="form-group">
+													<input type="number" id="withdrawAmount" name="amount"
+														class="form-control" placeholder="Enter amount to withdraw"
+														required>
+												</div>
+												<br>
+												<button type="submit" id="withdrawButton"
+													class="btn btn-danger btn-md btn-block">Withdraw</button>
+											</form>
+											<br>
+											<div>
+
+												<a href="/wallet/history" style="color: white; text-decoration: none;"><button type="button" id="showHistoryButton" class="btn btn-primary btn-md btn-block ml-5 mt-0" style="background-color: #007bff; border-color: #007bff; margin-left: 330px;">show history</button></a>
+
+											</div>
+												
+											
+											
+										</div>
+									</div>
+								</div>
+
+
+								<!-- The Add Funds Modal -->
+
+
+
+
+							</div>
+							<!--end row-->
+						</div>
+					</div>
+				</div>
+
+			</section>
+
+			<!--end shop cart-->
+		</div>
+	</div>
+	<!--end page wrapper -->
+	<!--start footer section-->
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<script>
+		// JavaScript functions to toggle between add and withdraw forms
+		function showAddForm() {
+			document.getElementById('addFundsForm').style.display = 'block';
+			document.getElementById('withdrawFundsForm').style.display = 'none';
+		}
+
+		function showWithdrawForm() {
+			document.getElementById('addFundsForm').style.display = 'none';
+			document.getElementById('withdrawFundsForm').style.display = 'block';
+		}
+
+		function openRazorpay(amount) {
+			fetch('/wallet/addrazor', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ amount: amount })
+			})
+				.then(response => response.json())
+				.then(order => {
+					var options = {
+						key: 'rzp_test_m90tBYBDKu8GIf',
+						amount: amount * 100, // Razorpay expects amount in paisa, so multiply by 100
+						currency: 'INR',
+						order_id: order.id,
+						"name": "Acme Corp", //your business name
+						"description": "Test Transaction",
+						handler: function (response) {
+                    // Handle successful payment
+                    console.log('Razorpay payment success:', response);
+                    // Optionally, you can submit the form after successful payment
+                    document.getElementById('addFundsForm').submit();
+                },
+						prefill: { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+							"name": "Gaurav Kumar", //your customer's name
+							"email": "gaurav.kumar@example.com",
+							"contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+						},
+						notes: {
+							"address": "Razorpay Corporate Office"
+						},
+						theme: {
+							"color": "#3399cc"
+						}
+					};
+					const rzp = new Razorpay(options);
+					var options = {
+						key: 'rzp_test_m90tBYBDKu8GIf',
+						amount: amount * 100, // Razorpay expects amount in paisa, so multiply by 100
+						currency: 'INR',
+						order_id: order.id,
+						// Add your Razorpay options here
+					};
+					rzp.open();
+				})
+				.catch(error => {
+					console.error('Error fetching Razorpay order:', error);
+					// Handle error
+				});
+		}
+
+		// Add event listener to the "Add" button
+		document.getElementById('addButton').addEventListener('click', function (event) {
+			event.preventDefault(); // Prevent default form submission behavior
+
+			// Get the amount from the input field
+			var amount = document.getElementById('addAmount').value;
+
+			// Call the openRazorpay function with the amount
+			openRazorpay(amount);
+		});
+
+
+
+
+
+
+
+	</script>
+	<%- include('../layouts/footer.ejs') %>

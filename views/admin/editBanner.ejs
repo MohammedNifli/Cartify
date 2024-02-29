@@ -1,0 +1,84 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Product</h2>
+                            <!-- <div>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                                <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Basic</h4>
+                            </div>
+                            
+                            
+                            <div class="card-body">
+                                <form action="/admin/banner/update-ban/<%=bannerData._id%>" method="post" enctype="multipart/form-data">
+                                    <div class="mb-4">
+                                        <label for="title" class="form-label">Product title</label>
+                                        <input type="text" name="title" placeholder="Type here" class="form-control" id="product_name" value="<%= bannerData.title %>">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Full description</label>
+                                        <textarea name="description" placeholder="Type here" class="form-control" rows="4"><%= bannerData.description %></textarea>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Start Date</label>
+                                        <input type="date" name="startDate" class="form-control" value="<%= bannerData.startDate%>">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">End Date</label>
+                                        <input type="date" name="endDate" class="form-control" value="<%= bannerData.endDate %>">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        
+                                        <div class="card mb-4">
+                                            <% if (bannerData.bannerImage) { %>
+                                                <label class="form-label" for="bannerImage">Existing Image</label>
+                                                <img src="/banner/<%= bannerData.bannerImage %>" alt="Existing Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" />
+                                              <% } %>
+                                           
+                                            <div class="card-header">
+                                                <h4>Media</h4>
+                                            </div>
+                                            <div class="card-body">
+                                               
+                                                <div class="input-upload">
+                                                    <img src="/imgs/theme/upload.svg" alt="">
+                                                    <input class="form-control" type="file" name="bannerImage">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                                
+                                
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </section>
+           
+            <script>
+                // Helper function to format dates as 'YYYY-MM-DD'
+                function formatDate(dateString) {
+                    if (!dateString) return ''; // Handle case when date is null or undefined
+                    const date = new Date(dateString);
+                    const year = date.getFullYear();
+                    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    let day = date.getDate().toString().padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+            </script>
+            
+            <!-- content-main end// -->
+            <%- include('../adminLayout/adminFooter.ejs') %>

@@ -1,0 +1,399 @@
+<%- include('../layouts/header.ejs') %>
+  <style>
+	.bx.bx-heart {
+    color: black; /* Change this to your default color */
+}
+
+/* Heart icon color when product is in the wishlist */
+.bx.bx-heart.in-wishlist::before {
+    color: red; /* Change this to your desired color */
+}
+  </style>
+
+		<!--end top header wrapper-->
+		<!--start slider section-->
+		<section class="slider-section mb-4">
+			<div class="first-slider p-0">
+
+				<div class="banner-slider owl-carousel owl-theme">
+					<!-- <div class="item">
+						<div class="position-relative">
+							<div class="position-absolute top-50 slider-content translate-middle">
+								 <h3 class="h3 fw-bold d-none d-md-block">New Trending</h3>
+								<h1 class="h1 fw-bold">Women Fashion</h1> -->
+								<!-- <p class="fw-bold text-dark d-none d-md-block"><i>Last call for upto 15%</i></p> -->
+								<!-- <div class="">
+									<a class="btn btn-light btn-ecomm px-4" href="shop-grid.html">Shop Now</a>
+								</div>
+								
+							  </div>
+							<a href="javascript:;">
+								<img src="/images/banners/gshockban1.webp" class="img-fluid" alt="...">
+							</a>
+						</div> -->
+					<!-- </div>  -->
+					<% ban.forEach(banner => { %>
+						<div class="item">
+							<div class="position-relative">
+								<div class="position-absolute top-50 slider-content translate-middle">
+									<h3 class="h3 fw-bold d-none d-md-block"><%= banner.title %></h3>
+									<h1 class="h1 fw-bold"><%= banner.description %></h1>
+									<p class="fw-bold text-dark d-none d-md-block"><i>Last call for upto 15%</i></p>
+									<div class=""><a class="btn btn-dark btn-ecomm px-4" href="#">Shop Now</a></div>
+								</div>
+								<a href="javascript:;">
+									<img src="/banner/<%= banner.bannerImage %>" class="img-fluid" alt="<%= banner.title %>">
+								</a>
+							</div>
+						</div>
+					<% }); %>
+					
+					
+				</div>
+
+			</div>
+		</section>
+		<!--end slider section-->
+		<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+				<!--start information-->
+				<section class="py-4">
+					<div class="container">
+
+						<div class="row row-cols-1 row-cols-lg-3 g-4">
+							<div class="col">
+								<div class="d-flex align-items-center justify-content-center p-3 border">
+									<div class="fs-1 text-content"><i class='bx bx-taxi'></i>
+									</div>
+									<div class="info-box-content ps-3">
+										<h6 class="mb-0 fw-bold">FREE SHIPPING &amp; RETURN</h6>
+										<p class="mb-0">Free shipping on all orders over $49</p>
+									</div>
+								</div>
+							</div>
+	
+							<div class="col"> 
+								<div class="d-flex align-items-center justify-content-center p-3 border">
+									<div class="fs-1 text-content"><i class='bx bx-dollar-circle'></i>
+									</div>
+									<div class="info-box-content ps-3">
+										<h6 class="mb-0 fw-bold">MONEY BACK GUARANTEE</h6>
+										<p class="mb-0">100% money back guarantee</p>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="d-flex align-items-center justify-content-center p-3 border">
+									<div class="fs-1 text-content"><i class='bx bx-support'></i>
+									</div>
+									<div class="info-box-content ps-3">
+										<h6 class="mb-0 fw-bold">ONLINE SUPPORT 24/7</h6>
+										<p class="mb-0">Awesome Support for 24/7 Days</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--end row-->
+					</div>
+				</section>
+				<!--end information-->
+				
+				<!--start Featured product-->
+				<section class="py-4">
+					<div class="container">
+						<div class="separator pb-4">
+							<div class="line"></div>
+							<h5 class="mb-0 fw-bold separator-title">FEATURED PRODUCTS</h5>
+							<div class="line"></div>
+						</div>
+				
+						<div class="product-grid">
+							<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-5 g-3 g-sm-4">
+								<% product.forEach(product => { %>
+									<% if (!product.isDeleted) { %>
+
+									<div class="col">
+										<div class="card">
+											<div class="position-relative overflow-hidden">
+												<div class="add-cart position-absolute top-0 end-0 mt-3 me-3">
+													<a href="javascript:;"><i class='bx bx-cart-add'></i></a>
+												</div>
+												<div class="quick-view position-absolute start-0 bottom-0 end-0">
+													<a href="javascript:;" data-bs-toggle="modal" data-bs-target="#QuickViewProduct">Quick View</a>
+												</div>
+												<a href="/home-pro/<%=product._id %>">
+													<img src="/products/<%= product.productImages[0] %>" class="img-fluid" alt="Product Image">
+												</a>
+											</div>
+											<div class="card-body px-0">
+												<div class="d-flex align-items-center justify-content-between">
+													<div class="">
+														<p class="mb-1 product-short-name">Top</p>
+														<h6 class="mb-0 fw-bold product-short-title"><%= product.productName %></h6>
+													</div>
+													<div class="icon-wishlist">
+														<% if (wishlist && wishlist.products.some(wishItem => wishItem.product_id.toString() === product._id.toString())) { %>
+															<!-- Product is in the wishlist, display heart icon in red color -->
+															<a href="#" class="remove-from-wishlist" data-product-id="<%= product._id %>"><i class="bx bx-heart in-wishlist"></i></a>
+														<% } else { %>
+															<!-- Product is not in the wishlist, display default heart icon -->
+															<a href="#" class="add-to-wishlist" data-product-id="<%= product._id %>"><i class="bx bx-heart"></i></a>
+														<% } %>
+													</div>
+													
+												</div>
+												<!-- <div class="cursor-pointer rating mt-2">
+													<i class="bx bxs-star text-warning"></i>
+													<i class="bx bxs-star text-warning"></i>
+													<i class="bx bxs-star text-warning"></i>
+													<i class="bx bxs-star text-warning"></i>
+													<i class="bx bxs-star text-warning"></i>
+												</div> -->
+												<div class="product-price d-flex align-items-center justify-content-start gap-2 mt-2">
+													<% if (product.CatOffer && product.PrOffer) { %>
+														<% if (product.CatOffer.catOfferPrice < product.PrOffer.prodOfferPrice) { %>
+															<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through">Rs <%= product.price %></div>
+															<div class="h6 fw-bold">Rs <%= product.CatOffer.catOfferPrice %></div>
+															<% if (product.CatOffer.catDiscount > 0) { %>
+																<div class="h6 fw-bold">Off: <%= product.CatOffer.catDiscount %>%</div>
+															<% } %>
+														<% } else { %>
+															<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through">Rs <%= product.price %></div>
+															<div class="h6 fw-bold">Rs <%= product.PrOffer.prodOfferPrice %></div>
+															<% if (product.PrOffer.prodDiscount > 0) { %>
+																<div class="h6 fw-bold">Off: <%= product.PrOffer.prodDiscount %>%</div>
+															<% } %>
+														<% } %>
+													<% } else if (product.CatOffer) { %>
+														<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through">Rs <%= product.price %></div>
+														<div class="h6 fw-bold">Rs <%= product.CatOffer.catOfferPrice %></div>
+														<% if (product.CatOffer.catDiscount > 0) { %>
+															<div class="h6 fw-bold">Off: <%= product.CatOffer.catDiscount %>%</div>
+														<% } %>
+													<% } else if (product.PrOffer) { %>
+														<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through">Rs <%= product.price %></div>
+														<div class="h6 fw-bold">Rs <%= product.PrOffer.prodOfferPrice %></div>
+														<% if (product.PrOffer.prodDiscount > 0) { %>
+															<div class="h6 fw-bold">Off: <%= product.PrOffer.prodDiscount %>%</div>
+														<% } %>
+													<% } else { %>
+														<div class="h6 fw-bold">Rs <%= product.price %></div>
+													<% } %>
+												</div>
+												
+												
+ 												
+												
+											</div>
+										</div>
+									</div>
+									<% } %>
+								<% }); %>
+							</div><!--end row-->
+						</div>
+					</div>
+				</section>
+				
+				
+				<!--end Featured product-->
+
+				<!--start categories-->
+				<section class="py-4">
+					<div class="container">
+						<div class="separator pb-4">
+							<div class="line"></div>
+							<h5 class="mb-0 fw-bold separator-title">Browse Catergory</h5>
+							<div class="line"></div>
+						 </div>
+
+						<div class="product-grid">
+							<div class="browse-category owl-carousel owl-theme">
+								<% category.forEach(category=> { %>
+									<% if (!category.isDeleted) { %>
+
+								<div class="item">
+									<div class="card rounded-0">
+										<div class="card-body p-0">
+											<img src="/category/<%= category.categoryImage %>" class="img-fluid" alt="...">
+										</div>
+										<div class="card-footer text-center bg-transparent border">
+											<h6 class="mb-0 text-uppercase fw-bold"><%= category.categoryName%></h6>
+											<!-- <p class="mb-0 font-12 text-uppercase">10 Products</p> -->
+										</div>
+									</div>
+								</div>
+								<% } %>
+								<% }); %>
+
+							
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end categories-->
+				<!--start support info-->
+				<section class="py-5 bg-light">
+					<div class="container">
+						<div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+							<div class="col">
+								<div class="text-center border p-3 bg-white">
+									<div class="font-50 text-dark"><i class='bx bx-cart-add' ></i>
+									</div>
+									<h5 class="fs-5 text-uppercase mb-0 fw-bold">Free delivery</h5>
+									<p class="text-capitalize">Free delivery over $199</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec vestibulum magna, et dapib.</p>
+								</div>
+							</div>
+							<div class="col">
+								<div class="text-center border p-3 bg-white">
+									<div class="font-50 text-dark"><i class='bx bx-credit-card'></i>
+									</div>
+									<h5 class="fs-5 text-uppercase mb-0 fw-bold">Secure payment</h5>
+									<p class="text-capitalize">We possess SSL / Secure сertificate</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec vestibulum magna, et dapib.</p>
+								</div>
+							</div>
+							<div class="col">
+								<div class="text-center border p-3 bg-white">
+									<div class="font-50 text-dark">	<i class='bx bx-dollar-circle'></i>
+									</div>
+									<h5 class="fs-5 text-uppercase mb-0 fw-bold">Free returns</h5>
+									<p class="text-capitalize">We return money within 30 days</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec vestibulum magna, et dapib.</p>
+								</div>
+							</div>
+							<div class="col">
+								<div class="text-center border p-3 bg-white">
+									<div class="font-50 text-dark">	<i class='bx bx-support'></i>
+									</div>
+									<h5 class="fs-5 text-uppercase mb-0 fw-bold">Customer Support</h5>
+									<p class="text-capitalize">Friendly 24/7 customer support</p>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nec vestibulum magna, et dapib.</p>
+								</div>
+							</div>
+						</div>
+						<!--end row-->
+					</div>
+				</section>
+				<!--end support info-->
+				
+
+				<!--start brands-->
+				<!-- <section class="py-4">
+					<div class="container">
+						<h3 class="d-none">Brands</h3>
+						<div class="brand-grid">
+							<div class="brands-shops owl-carousel owl-theme border">
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/01.png" class="img-fluid" alt="...">
+										</a>
+									</div>
+								</div>
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/02.png" class="img-fluid" alt="...">
+										</a>
+									</div>
+								</div>
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/03.png" class="img-fluid" alt="...">
+										</a>
+									</div>
+								</div>
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/04.png" class="img-fluid" alt="...">
+										</a>
+									</div>
+								</div>
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/05.png" class="img-fluid" alt="...">
+										</a>
+									</div>
+								</div>
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/06.png" class="img-fluid" alt="...">
+										</a>
+									</div>
+								</div>
+								<div class="item border-end">
+									<div class="p-4">
+										<a href="javascript:;">
+											<img src="/images/brands/07.png" class="img-fluid" alt="..."
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section> -->
+				<!--end brands-->
+				
+				
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				// Assuming you have initialized toastMixin somewhere else in your code
+				
+				// Add event listener to the button with class .second
+				document.querySelector(".second").addEventListener('click', function(){
+					// Trigger the toast notification
+					toastMixin.fire({
+						animation: true,
+						title: 'Signed in Successfully'
+					});
+				});
+			});
+			$(document).ready(function() {
+				$('.add-to-wishlist, .remove-from-wishlist').on('click', function(e) {
+					e.preventDefault();
+					var productId = $(this).data('product-id');
+					var isRemoveAction = $(this).hasClass('remove-from-wishlist');
+					var url = isRemoveAction ? '/remove-wishlist/' + productId : '/addwish/' + productId;
+		
+					$.ajax({
+						type: 'GET', // Use POST for changing server-side state
+						url: url,
+						success: function(response) {
+							// Update UI based on response
+							if (isRemoveAction) {
+								// Product removed from wishlist
+								$(e.target).removeClass('in-wishlist');
+							} else {
+								// Product added to wishlist
+								$(e.target).addClass('in-wishlist');
+							}
+						},
+						error: function(xhr, status, error) {
+							console.error(error);
+							// Handle errors
+						}
+					});
+				});
+			});
+		</script>
+		
+		<!--end page wrapper -->
+		<!--start footer section-->
+
+		
+
+		
+		
+
+		<%- include('../layouts/footer.ejs') %>

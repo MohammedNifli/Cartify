@@ -1,0 +1,92 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Order List</h2>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <form action="/admin/salespg?start=<%=startDate%>&end=<%=endDate%>" method="get">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="startDate" class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="startDate" name="start"  value="<%=startDate%>">
+                                </div>
+                                <br>
+                                <div class="col">
+                                    <label for="endDate" class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="endDate" name="end"  value="<%=endDate%>">
+                                </div>
+                                <br>
+                                <div class="col align-self-end">
+                                    <button type="submit" class="btn btn-primary">Generate Report</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    
+                        <table id="salesTable" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Order ID</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Order Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% salesReportData.forEach((order, index) => { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= order._id %></td>
+                                        <td><%= order.productInfo.name %></td>
+                                        <td><%= order.items.quantity %></td>
+                                        <td><%= order.totalAmount %></td>
+                                        <td><%= order.createdAt.toLocaleDateString() %></td>
+                                        <!-- Add more cells if needed -->
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                        
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+
+                    <a href="/admin/sales-excel">Download Excel</a>
+                    <a href="/admin/sales-pdf">Download PDF</a>
+                    
+
+                    
+                    <!-- card-body end// -->
+                </div>
+                <!-- card end// -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+            <!-- Include the jsPDF library -->
+           
+
+            <%- include('../adminLayout/adminFooter.ejs') %>

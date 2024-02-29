@@ -1,0 +1,197 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Product</h2>
+                        <!-- <div>
+                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                            <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <form action="/admin/product/update-pro/<%= product._id %>" method="post" enctype="multipart/form-data" id="productForm">
+                    <input type="hidden" name="id" value="<%= product._id %>" />
+                    <!-- General Info -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>1. General info</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <!-- Placeholder for Product Title -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Product title</label>
+                                            <input type="text" placeholder="Type here" class="form-control" id="productName" name="productName" value="<%= product.productName %>">
+                                            <span id="productNameError" class="text-danger"></span>
+                                        </div>
+                                        <!-- Placeholder for Description -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Description</label>
+                                            <textarea placeholder="Type here" class="form-control" rows="4" id="description" name="description"><%= product.description %></textarea>
+                                            <span id="descriptionError" class="text-danger"></span>
+                                        </div>
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pricing -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>2. Pricing</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <!-- Placeholder for Cost in USD -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Cost in USD</label>
+                                            <input type="text" placeholder="$00.0" class="form-control" id="price" name="price" value="<%= product.price %>">
+                                            <span id="priceError" class="text-danger"></span>
+                                        </div>
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Category -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>3. Category</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <!-- Placeholder for Select Category -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Select Category</label>
+                                            <select class="form-control" name="category" >
+                                                <option value="<%= product.category_id%>">Digital Watch</option>
+                                                <option value="<%=product.category_id%>">Analog Watch</option>
+                                                <option value="<%= product.category_id %>">Sports Watch</option>
+                                                <!-- Add other categories as needed -->
+                                            </select>
+                                        </div>
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Images -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <!-- Placeholder for Existing Image and File Input -->
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <% if (product.productImages && product.productImages.length > 0) { %>
+                                            <label class="form-label" for="catimage">Existing Images</label>
+                                            <div class="row">
+                                                <% product.productImages.forEach(image => { %>
+                                                    <div class="col-md-3 mb-3">
+                                                        <img src="/products/<%= image %>" alt="Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" />
+                                                        <!-- <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0" onclick="deleteImage('', '', '')">Delete</button> -->
+                                                    </div>
+
+                                                <% }); %>
+                                            </div>
+                                        <% } %>
+                                        <div class="input-upload mt-3">
+                                            <img src="/imgs/theme/upload.svg" alt="" />
+                                            <input class="form-control" type="file" multiple name="image" />
+                                            
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Stock and Color -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h6>3. Stock and Color</h6>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <!-- Placeholder for Count in Stock -->
+                                        <div class="mb-4">
+                                            <label class="form-label">Count in Stock</label>
+                                            <input type="number" placeholder="Enter count" class="form-control" name="count" value="<%= product.countStock %>">
+
+                                            <span id="countError" class="text-danger"></span>
+                                        </div>
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Submit Button -->
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+            
+        </section> <!-- content-main end// -->
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('productForm').addEventListener('submit', function(event) {
+                    var productName = document.getElementById('productName').value.trim();
+                    var description = document.getElementById('description').value.trim();
+                    var price = parseFloat(document.getElementById('price').value);
+                    var count = parseInt(document.getElementById('count').value);
+        
+                    var productNameError = document.getElementById('productNameError');
+                    var descriptionError = document.getElementById('descriptionError');
+                    var priceError = document.getElementById('priceError');
+                    var countError = document.getElementById('countError');
+        
+                    if (productName === '') {
+                        productNameError.textContent = 'Please enter a product name.';
+                        event.preventDefault();
+                    } else {
+                        productNameError.textContent = '';
+                    }
+        
+                    if (description === '') {
+                        descriptionError.textContent = 'Please enter a description.';
+                        event.preventDefault();
+                    } else {
+                        descriptionError.textContent = '';
+                    }
+        
+                    if (isNaN(price) || price <= 0) {
+                        priceError.textContent = 'Price must be a positive number.';
+                        event.preventDefault();
+                    } else {
+                        priceError.textContent = '';
+                    }
+        
+                    if (isNaN(count) || count <= 0 || !Number.isInteger(count)) {
+                        countError.textContent = 'Stock count must be a positive integer.';
+                        event.preventDefault();
+                    } else {
+                        countError.textContent = '';
+                    }
+                });
+            });
+        </script>
+        
+        <%- include('../adminLayout/adminFooter.ejs') %>

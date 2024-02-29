@@ -1,0 +1,79 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Product</h2>
+                            <!-- <div>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                                <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Basic</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="/admin/category/edit-cat/<%= category._id %>" method="post" enctype="multipart/form-data" id="editCategoryForm">
+                                    <input type="hidden" name="id" value="<%= category._id %>" />
+                                
+                                    <div class="mb-4">
+                                        <label for="product_name" class="form-label">Category name</label>
+                                        <input type="text" name="catname" placeholder="Type here" class="form-control" id="product_name" value="<%= category.categoryName %>" />
+                                        <span id="categoryNameError" class="text-danger"></span>
+                                    </div>
+                                   
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <% if (category.categoryImage) { %>
+                                                <label class="form-label" for="catimage">Existing Image</label>
+                                                <img src="/category/<%= category.categoryImage %>" alt="Existing Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" />
+                                            <% } %>
+                                            <div class="input-upload mt-3">
+                                                <img src="/imgs/theme/upload.svg" alt="" />
+                                                <input class="form-control" type="file" name="image" />
+                                                <span id="imageError" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                      
+                             
+                       
+            </section>
+            <script>
+                document.getElementById('editCategoryForm').addEventListener('submit', function(event) {
+                    var categoryName = document.getElementById('product_name').value.trim();
+                    var image = document.querySelector('input[type="file"]').files[0];
+            
+                    var categoryNameError = document.getElementById('categoryNameError');
+                    // var imageError = document.getElementById('imageError');
+            
+                    if (categoryName === '') {
+                        categoryNameError.textContent = 'Please enter a category name.';
+                        event.preventDefault();
+                    } else if (!/\S/.test(categoryName)) {
+                        categoryNameError.textContent = 'Category name cannot be empty or contain only spaces.';
+                        event.preventDefault();
+                    } else {
+                        categoryNameError.textContent = '';
+                    }
+            
+                    // if (!image) {
+                    //     imageError.textContent = 'Please select an image to upload.';
+                    //     event.preventDefault();
+                    // } else {
+                    //     imageError.textContent = '';
+                    // }
+                });
+            </script>
+            <!-- content-main end// -->
+            <%- include('../adminLayout/adminFooter.ejs') %>

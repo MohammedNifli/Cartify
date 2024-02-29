@@ -1,0 +1,76 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+
+            <section class="content-main">
+                <!-- <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Order List</h2>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                    </div>
+                </div> -->
+                <div class="card mb-4">
+                    
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                       
+                                        <th>#ID</th>
+                                        <th scope="col">Signup Bonus</th>
+                                        <th scope="col">Refferal Bonus</th>
+                                        <!-- <th scope="col">Price Range</th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">Expiry Date</th> -->
+                                        <!-- <th scope="col" class="text-end">Action</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% referalData.forEach(function(element) { %>
+                                   
+                                    <tr>
+                                       
+
+                                       
+                                        <td>0901</td>
+                                        <td><%=element.signupBonus%></td>
+                                        <td><%=element.refferalBonus%></b></td>
+                                        
+                                       
+                                        <!-- <td class="text-end">
+                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                            <div class="dropdown">
+                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">View detail</a>
+                                                    <a class="dropdown-item" href="#">Edit info</a>
+                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                             dropdown //end -->
+                                        <!-- </td> -->
+                                      
+                                        
+                                    </tr>
+                                    <% }); %>
+                                    
+                                   
+                                     
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+                <!-- card end// -->
+                <div class="pagination-area mt-15 mb-50">
+                   
+                </div>
+            </section>
+            <%- include('../adminLayout/adminFooter.ejs') %>

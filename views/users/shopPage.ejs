@@ -1,0 +1,385 @@
+<%- include('../layouts/header.ejs') %>
+<style>
+	.category-item {
+    display: block;
+    margin-bottom: 5px; /* Adjust margin as needed */
+}
+
+</style>
+		<!--start page wrapper -->
+		<div class="page-wrapper">
+			<div class="page-content">
+				<!--start breadcrumb-->
+				<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
+					<div class="container">
+						<div class="page-breadcrumb d-flex align-items-center">
+							<h3 class="breadcrumb-title pe-3">Shop Grid Left Sidebar</h3>
+							<div class="ms-auto">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb mb-0 p-0">
+										<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i> Home</a>
+										</li>
+										<li class="breadcrumb-item"><a href="javascript:;">Shop</a>
+										</li>
+										<li class="breadcrumb-item active" aria-current="page">Shop Left Sidebar</li>
+									</ol>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</section>
+				<!--end breadcrumb-->
+				<!--start shop area-->
+				<section class="py-4">
+					<div class="container">
+						<div class="btn btn-dark btn-ecomm d-xl-none position-fixed top-50 start-0 translate-middle-y z-index-1"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarFilter"><span><i class='bx bx-filter-alt me-1'></i>Filters</span></div>
+						<div class="row">
+							<div class="col-12 col-xl-3 filter-column">
+								<nav class="navbar navbar-expand-xl flex-wrap p-0">
+								  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarFilter" aria-labelledby="offcanvasNavbarFilterLabel">
+									<div class="offcanvas-header">
+									  <h5 class="offcanvas-title mb-0 fw-bold" id="offcanvasNavbarFilterLabel">Filters</h5>
+									  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+									</div>
+									<div class="offcanvas-body">
+									  <div class="filter-sidebar">
+										<div class="card rounded-0 shadow-none border">
+										  <div class="card-header d-none d-xl-block bg-transparent">
+											  <h5 class="mb-0 fw-bold">Filters</h5>
+										  </div>
+										  <div class="card-body">
+											<h6 class="p-1 fw-bold bg-light">Categories</h6>
+											<div class="categories">
+												<div class="categories-wrapper height-1 p-1">
+													<form id="categoryForm">
+														<% catData.forEach(function(cat) { %>
+															<div class="category-item">
+																<input type="checkbox" class="category-checkbox" id="<%= cat._id %>" value="<%= cat._id %>">
+																<label for="<%= cat._id %>"><%= cat.categoryName %></label>
+															</div>
+														<% }); %>
+														<button type="button" id="filterButton">Apply Filter</button>
+													</form>
+													
+													
+												</div>
+											</div>
+											
+											
+											<hr>
+											<!-- <div class="brands">
+											  <h6 class="p-1 fw-bold bg-light">Brands</h6>
+											   <div class="brands-wrapper height-1 p-1">
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand1">
+												  <label class="form-check-label" for="chekBrand1">
+													<span>Samsung</span><span class="product-number">(1548)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand2">
+												  <label class="form-check-label" for="chekBrand2">
+													<span>Sony</span><span class="product-number">(478)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand3">
+												  <label class="form-check-label" for="chekBrand3">
+													<span>Microsoft</span><span class="product-number">(689)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand4">
+												  <label class="form-check-label" for="chekBrand4">
+													<span>Reebok</span><span class="product-number">(987)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand5">
+												  <label class="form-check-label" for="chekBrand5">
+													<span>Adidas</span><span class="product-number">(358)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand6">
+												  <label class="form-check-label" for="chekBrand6">
+													<span>Puma</span><span class="product-number">(5682)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand7">
+												  <label class="form-check-label" for="chekBrand7">
+													<span>Ajio</span><span class="product-number">(5712)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand8">
+												  <label class="form-check-label" for="chekBrand8">
+													<span>Motorola</span><span class="product-number">(657)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand9">
+												  <label class="form-check-label" for="chekBrand9">
+													<span>amazon</span><span class="product-number">(984)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand10">
+												  <label class="form-check-label" for="chekBrand10">
+													<span>Canon</span><span class="product-number">(524)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand11">
+												  <label class="form-check-label" for="chekBrand11">
+													<span>Apple</span><span class="product-number">(168)</span>
+												  </label>
+												</div>
+												<div class="form-check">
+												  <input class="form-check-input" type="checkbox" value="" id="chekBrand12">
+												  <label class="form-check-label" for="chekBrand12">
+													<span>Philips</span><span class="product-number">(279)</span>
+												  </label>
+												</div>
+											   </div>
+											</div> -->
+											<hr>
+											<div class="Price">
+											  <h6 class="p-1 fw-bold bg-light">Price</h6>
+											   <div class="Price-wrapper p-1">
+												<div class="input-group">
+													<input type="text" class="form-control rounded-0" placeholder="Initial Price" id="initialPriceInput">
+													<span class="input-group-text bg-section-1 border-0">-</span>
+													<input type="text" class="form-control rounded-0" placeholder="Upper Price" id="upperPriceInput">
+													<button type="button" id="sortButton" class="btn btn-outline-dark rounded-0 ms-2"><i class='bx bx-chevron-right me-0'></i></button>
+												</div>
+												
+												
+											   </div>
+											 </div>
+											 <hr>
+											
+										</div>
+									  </div>
+									</div>
+								  </div>
+							  </nav>
+							</div>
+							<div class="col-12 col-xl-9">
+								<div class="product-wrapper">
+									
+									<div class="product-grid">
+										<div id="productContainer" class="row row-cols-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-3 g-3 g-sm-4">
+											
+											<% proData.forEach(function(pro) { %>
+												<div class="col">
+													<div class="card">
+														<div class="position-relative overflow-hidden">
+															<div class="add-cart position-absolute top-0 end-0 mt-3 me-3">
+																<a href="javascript:;"><i class='bx bx-cart-add' ></i></a>
+															</div>
+															<div class="quick-view position-absolute start-0 bottom-0 end-0">
+																<a href="#" data-bs-toggle="modal" data-bs-target="#QuickViewProduct">Quick View</a>
+															</div>
+															<a href="/home-pro/<%=pro._id%>">
+																<img src="products/<%=pro.productImages[0]%>" class="img-fluid" alt="...">
+															</a>
+														</div>
+														<div class="card-body px-0">
+															<div class="d-flex align-items-center justify-content-between">
+																<div class="">
+																	<p class="mb-1 product-short-name"><%=pro.categoryName%></p>
+																	<h6 class="mb-0 fw-bold product-short-title"><%=pro.productName%></h6>
+																</div>
+																<div class="icon-wishlist">
+																	<a href="javascript:;"><i class="bx bx-heart"></i></a>
+																</div>
+															</div>
+															<!-- <div class="cursor-pointer rating mt-2">
+																<i class="bx bxs-star text-warning"></i>
+																<i class="bx bxs-star text-warning"></i>
+																<i class="bx bxs-star text-warning"></i>
+																<i class="bx bxs-star text-warning"></i>
+																<i class="bx bxs-star text-warning"></i>
+															</div> -->
+															<div class="product-price d-flex align-items-center justify-content-start gap-2 mt-2">
+																<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through"></div>
+																<div class="h6 fw-bold"><%=pro.price%></div>
+															</div>
+														</div>
+													</div>
+												</div>
+											<% }); %>
+										
+										</div><!--end row-->
+									</div>
+									<div id="productContainer" class="row">
+										<!-- Products will be dynamically rendered here -->
+									</div>
+									
+									
+									<hr>
+									<nav class="d-flex justify-content-between" aria-label="Page navigation">
+										<ul class="pagination">
+											<li class="page-item"><a class="page-link" href="javascript:;"><i class='bx bx-chevron-left'></i> Prev</a>
+											</li>
+										</ul>
+										<ul class="pagination">
+											<li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="visually-hidden">(current)</span></span>
+											</li>
+											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">2</a>
+											</li>
+											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">3</a>
+											</li>
+											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">4</a>
+											</li>
+											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">5</a>
+											</li>
+										</ul>
+										<ul class="pagination">
+											<li class="page-item"><a class="page-link" href="javascript:;" aria-label="Next">Next <i class='bx bx-chevron-right'></i></a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+						<!--end row-->
+					</div>
+				</section>
+				<!--end shop area-->
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const filterButton = document.getElementById('filterButton');
+				const sortButton = document.getElementById('sortButton');
+		
+				filterButton.addEventListener('click', async function() {
+					try {
+						const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(checkbox => checkbox.value);
+		
+						// Construct the URL parameters string
+						const queryParams = new URLSearchParams();
+						selectedCategories.forEach(category => {
+							queryParams.append('categories', category);
+						});
+		
+						// Fetch with multiple category parameters
+						const response = await fetch(`/filter?${queryParams.toString()}`);
+						const products = await response.json();
+						renderProducts(products);
+					} catch (error) {
+						console.error('Error fetching filtered products:', error);
+					}
+				});
+		
+				sortButton.addEventListener('click', async function() {
+					try {
+						const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(checkbox => checkbox.value);
+		
+						// Construct the URL parameters string
+						const queryParams = new URLSearchParams();
+						selectedCategories.forEach(category => {
+							queryParams.append('categories', category);
+						});
+		
+						// Fetch with multiple category parameters
+						const response = await fetch(`/filter?${queryParams.toString()}`);
+						let products = await response.json();
+		
+						// Sort products by price
+						
+						// Sort products by price
+
+		
+						renderProducts(products);
+					} catch (error) {
+						console.error('Error fetching filtered products:', error);
+					}
+				});
+		
+				function renderProducts(products) {
+					const productContainer = document.getElementById('productContainer');
+					productContainer.innerHTML = '';
+		
+					products.forEach(product => {
+						const productCard = `
+							<div class="col">
+								<div class="position-relative overflow-hidden">
+										<div class="add-cart position-absolute top-0 end-0 mt-3 me-3">
+											<a href="javascript:;"><i class='bx bx-cart-add'></i></a>
+										</div>
+										<div class="quick-view position-absolute start-0 bottom-0 end-0">
+											<a href="#" data-bs-toggle="modal" data-bs-target="#QuickViewProduct">Quick View</a>
+										</div>
+										<a href="/home-pro/${product._id}">
+											<img src="products/${product.productImages[0]}" class="img-fluid" alt="...">
+										</a>
+									</div>
+									<div class="card-body px-0">
+										<div class="d-flex align-items-center justify-content-between">
+											<div>
+												<p class="mb-1 product-short-name">${product.categoryName}</p>
+												<h6 class="mb-0 fw-bold product-short-title">${product.productName}</h6>
+											</div>
+											<div class="icon-wishlist">
+												<a href="javascript:;"><i class="bx bx-heart"></i></a>
+											</div>
+										</div>
+										
+										<div class="product-price d-flex align-items-center justify-content-start gap-2 mt-2">
+											<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through"></div>
+											<div class="h6 fw-bold">${product.price}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						`;
+						productContainer.innerHTML += productCard;
+					});
+				}
+			});
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+    const sortButton = document.getElementById('sortButton');
+
+    sortButton.addEventListener('click', async function() {
+        try {
+            const initialPrice = parseFloat(document.getElementById('initialPriceInput').value);
+            const upperPrice = parseFloat(document.getElementById('upperPriceInput').value);
+
+            const queryParams = new URLSearchParams();
+            if (!isNaN(initialPrice)) {
+                queryParams.append('initialPrice', initialPrice);
+            }
+            if (!isNaN(upperPrice)) {
+                queryParams.append('upperPrice', upperPrice);
+            }
+
+            const response = await fetch(`/pricefilter?${queryParams.toString()}`);
+            const productData = await response.json();
+
+            if (productData.length === 0) {
+                alert('No products available within the specified price range.');
+            } else {
+                renderProducts(productData);
+            }
+        } catch (error) {
+            console.error('Error fetching and filtering products by price range:', error);
+        }
+    });
+});
+
+
+		</script>
+			
+		
+		
+		
+		<!--end page wrapper -->
+		<%- include('../layouts/footer.ejs') %>
+		

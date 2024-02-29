@@ -1,0 +1,86 @@
+          <%- include('../adminLayout/adminHeader.ejs') %>
+          
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Products grid</h2>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div>
+                        <a href="#" class="btn btn-light rounded font-md">Export</a>
+                        <a href="#" class="btn btn-light rounded font-md">Import</a>
+                        <a href="#" class="btn btn-primary btn-sm rounded">Create new</a>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input type="text" placeholder="Search..." class="form-control" />
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>All category</option>
+                                    <option>Electronics</option>
+                                    <option>Clothings</option>
+                                    <option>Something else</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Latest added</option>
+                                    <option>Cheap first</option>
+                                    <option>Most viewed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+                            <% product.forEach(product => { %>
+                                <% if (!product.isDeleted) { %>
+                                <div class="col">
+                                    <div class="card card-product-grid">
+                                        <a href="#" class="img-wrap"> 
+                                            <img src="/products/<%= product.productImages[0] %>" alt="<%= product.productName %>" />
+                                        </a>
+                                        <div class="info-wrap">
+                                            <a href="#" class="title text-truncate"><%= product.productName %></a>
+                                            <div class="price mb-2"><%= product.price %> INR</div>
+                                            <div class="buttons">
+                                                <a href="/admin/product/edit-pro?id=<%= product._id %>" class="btn btn-sm font-sm rounded btn-brand"> 
+                                                    <i class="material-icons md-edit"></i> Edit 
+                                                </a>
+                                                <a href="/admin/product/delete-pro?id=<%= product._id %>" class="btn btn-sm font-sm btn-light rounded"> 
+                                                    <i class="material-icons md-delete_forever"></i> unlist 
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- card-product end// -->
+                                </div>
+                                <% } %>
+                            <% }); %>
+                        </div>
+                    </div>
+                    <!-- card-body end// -->
+                    
+                </div>
+                <!-- card end// -->
+
+
+                <div class="pagination-area mt-30 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+            <!-- content-main end// -->
+            <%- include('../adminLayout/adminFooter.ejs') %>

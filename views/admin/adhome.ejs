@@ -1,0 +1,145 @@
+           <%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Dashboard</h2>
+                        <p>Whole data about your business here</p>
+                    </div>
+                    <div>
+                        <a href="/admin/salespg" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Revenue</h6>
+                                    <span><%=Revenue%> INR</span>
+                                    <span class="text-sm"> Shipping fees are not included </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Orders</h6>
+                                    <span><%=orderCount%></span>
+                                    <span class="text-sm"> Excluding orders in transit </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Products</h6>
+                                    <span><%=productCount%></span>
+                                    <span class="text-sm"> In <%=totalCategory%> Categories </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-3">
+                        <div class="card card-body mb-4">
+                            <article class="icontext">
+                                <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                                <div class="text">
+                                    <h6 class="mb-1 card-title">Monthly Earning</h6>
+                                    <span> INR</span>
+                                    <span class="text-sm"> Based in your local time. </span>
+                                </div>
+                            </article>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="row" >
+                    
+                    <div class="col-xl-4 col-lg-12">
+                       
+                        <div class="card mb-4 ">
+                            <!-- <article class="card-body chart-container"> -->
+                              <h5 class="card-title">Sale statistics</h5>
+                              <!-- Add a select element for the filter -->
+                              <label for="chartFilter">Select Chart Interval:</label>
+                              <select id="chartFilter" onchange="updateChart()" style="padding: .5em;">
+                                <option value="daily">Daily</option>
+                                <option value="monthly">Monthly</option>
+                              </select>
+                              <canvas id="maChart" ></canvas>
+                            <!-- </article> -->
+                          </div>
+                    </div>
+                </div>
+                 
+                <div class="pagination-area mt-30 mb-50">
+                    <!-- pagination Here -->
+                </div>
+            </section>
+            <!-- Include Chart.js library -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          
+
+
+            
+            <script>
+              const labels = <%- JSON.stringify(dailyLabels) %>;            
+              const data = <%- JSON.stringify(dailyData) %>;
+
+
+              
+            
+              // Create the chart initially
+              const ctx = document.getElementById('maChart').getContext('2d');
+              ctx.canvas.parentNode.style.height = '500x';
+ctx.canvas.parentNode.style.width = '900px';
+              const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Order Count',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  },
+                  
+                }
+              });
+            
+              // Function to update the chart based on the selected filter
+              function updateChart() {
+                const chartFilter = document.getElementById('chartFilter').value;
+            
+                // Update the data based on the selected filter
+                if (chartFilter === 'daily') {
+                  myChart.data.labels = <%- JSON.stringify(dailyLabels) %>;
+                  myChart.data.datasets[0].data = <%- JSON.stringify(dailyData) %>;
+                } else if (chartFilter === 'monthly') {
+                  myChart.data.labels = <%- JSON.stringify(monthlyLabels) %>;
+                  myChart.data.datasets[0].data = <%- JSON.stringify(monthlyData) %>;
+                }
+            
+                // Update the chart data and re-render
+                myChart.update();
+              }
+            </script>
+            
+
+            <!-- content-main end// -->
+            <%- include('../adminLayout/adminFooter.ejs') %>
+           

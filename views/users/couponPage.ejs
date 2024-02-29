@@ -1,0 +1,86 @@
+<%- include('../layouts/header.ejs') %>
+<style>
+   
+.card {
+  width: 350px;
+  padding: 10px;
+  border-radius: 20px;
+  background: orange;
+  border: none;
+  color: #fff;
+  height: 350px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .container {
+  height: 5vh;
+} */
+
+.card h1 {
+  font-size: 30px;
+  margin-bottom: -15px;
+}
+
+.card span {
+  font-size: 20px;
+}
+
+.image {
+  position: absolute;
+  opacity: .1;
+  left: 0;
+  top: 0;
+}
+
+.image2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: .1;
+}
+</style>
+
+    
+
+
+<section class="p-5 mt-2">
+    <div class="container-fluid p-5 mt-2">
+
+        <div class="row mb-2">
+           
+            <% coupon.forEach(couponItem => { %>
+                <div class="col-6 col-md-3 col-lg-3 mt-2 mb-2">
+                    <div class="d-flex justify-content-center align-items-center container mb-2" style="width: 250px; height: 250px; margin: 10px;">
+                        <div class="d-flex card text-center mt-2">
+                            <div class="image mb-2"><img src="https://i.imgur.com/DC94rZe.png" width="90"></div>
+                            <div class="image2 mb-2"><img src="https://i.imgur.com/DC94rZe.png" width="90"></div>
+                            <h2><%= couponItem.discountPercentage %> % OFF</h2>
+                            
+                            <span class="d-block">On Everything</span>
+                            <span class="d-block">Today</span>
+                            <div class="mt-4"><small>With Code: <%= couponItem.couponCode %> </small></div>
+                            <p>Valid From: <%= couponItem.startingDate %></p>
+                            <p>Valid To: <%= couponItem.expirationDate %></p>
+                            <div class="mt-4"><small>On purchase greater than: ₹<%= couponItem.minTotal %></small></div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+            
+            
+        </div>
+
+
+
+
+      
+    </div>
+</section>
+
+
+
+
+<%- include('../layouts/footer.ejs') %>

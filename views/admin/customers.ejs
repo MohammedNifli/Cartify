@@ -1,0 +1,84 @@
+             <%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Customer List</h2>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <!-- <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                    </div> -->
+                </div>
+                <div class="card mb-4">
+                  
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (users.length > 0) { %>
+                                        <% for (let i = 0; i < users.length; i++) { %>
+                                            <tr>
+                                                <td><%= users[i].firstName %></td>
+                                                <td><%= users[i].lastName %></td>
+                                                <td><%= users[i].email %></td>
+                    
+                                                <td>
+                                                    <% if (users[i].isOnline == false) { %>
+                                                        <span class="badge bg-warning text-dark">Offline</span>
+                                                    <% } else { %>
+                                                        <span class="badge bg-warning text-dark">Online</span>
+                                                    <% } %>
+                                                </td>
+                    
+                                                <td class="text-end">
+                                                    <% if (users[i].isBlocked) { %>
+                                                        <form action="/admin/unblock/<%= users[i]._id %>" method="post">
+                                                            <button type="submit" class="btn btn-success btn-sm">Unblock</button>
+                                                        </form>
+                                                    <% } else { %>
+                                                        <form action="/admin/block/<%= users[i]._id %>" method="post">
+                                                            <button type="submit" class="btn btn-danger btn-sm">Block</button>
+                                                        </form>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                        <% } %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="5" class="text-center">Users Not Found</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                    
+                <!-- card end// -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+                
+                
+            </section>
+            <!-- content-main end// -->
+            <%- include('../adminLayout/adminFooter.ejs') %>

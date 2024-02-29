@@ -1,0 +1,85 @@
+<%- include('../adminLayout/adminHeader.ejs') %>
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Product</h2>
+                            <!-- <div>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                                <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Basic</h4>
+                            </div>
+                            <div class="card-body">
+                                <form id="referralForm" action="/admin/add-refferal" method="post">
+                                    <div class="mb-4">
+                                        <label for="refBonus" class="form-label">Referral Bonus</label>
+                                        <input type="text" name="refBonus" placeholder="Enter referral bonus" class="form-control" required />
+                                        <div id="errorRefBonus" style="color: red;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="sbonus" class="form-label">Signup Bonus</label>
+                                        <input type="text" name="sbonus" placeholder="Enter signup bonus" class="form-control" required />
+                                        <div id="errorSbonus" style="color: red;"></div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success ml-2">ADD</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                       
+                    </div>
+                    
+                </div>
+            </section>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var form = document.getElementById('referralForm');
+            
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+            
+                        var refBonus = document.getElementsByName('refBonus')[0].value;
+                        var sbonus = document.getElementsByName('sbonus')[0].value;
+            
+                        // Reset previous error messages
+                        var errorRefBonus = document.getElementById('errorRefBonus');
+                        var errorSbonus = document.getElementById('errorSbonus');
+                        errorRefBonus.textContent = '';
+                        errorSbonus.textContent = '';
+            
+                        // Validate Referral Bonus
+                        if (!refBonus.trim()) {
+                            errorRefBonus.textContent = 'Referral bonus is required';
+                            return;
+                        } else if (isNaN(refBonus) || Number(refBonus) <= 0) {
+                            errorRefBonus.textContent = 'Referral bonus must be a positive number';
+                            return;
+                        }
+            
+                        // Validate Signup Bonus
+                        if (!sbonus.trim()) {
+                            errorSbonus.textContent = 'Signup bonus is required';
+                            return;
+                        } else if (isNaN(sbonus) || Number(sbonus) <= 0) {
+                            errorSbonus.textContent = 'Signup bonus must be a positive number';
+                            return;
+                        }
+            
+                        // If all validations pass, submit the form
+                        form.submit();
+                    });
+                });
+            </script>
+            <!-- content-main end// -->
+
+           
+            
+            
+            <%- include('../adminLayout/adminFooter.ejs') %>
