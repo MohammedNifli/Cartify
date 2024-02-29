@@ -125,7 +125,6 @@ const bannerList = async (req, res) => {
 const deleteBanner = async (req, res) => {
     try {
        
-        // Extract the banner ID from the request parameters
         const bannerId = req.params.id;
 
         // Find the banner by its ID and delete it from the database
