@@ -127,7 +127,6 @@ const deleteBanner = async (req, res) => {
        
         const bannerId = req.params.id;
 
-        // Find the banner by its ID and delete it from the database
         const deletedBanner = await Banner.findByIdAndDelete(bannerId);
 
         // Check if the banner was successfully deleted
