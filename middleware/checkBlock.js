@@ -15,7 +15,7 @@ const checkBlocked = async (req, res, next) => {
                 return res.status(403).redirect('/login'); // Set 403 Forbidden status
             }
 
-            // Check if the user is blocked
+           
             if (user.isBlocked) {
                 console.log(`User ${user.username} is blocked. Logging out.`);
                 req.session.destroy();
