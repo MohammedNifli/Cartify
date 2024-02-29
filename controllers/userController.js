@@ -11,6 +11,8 @@ const mongoose=require('mongoose');
 const shortId=require('shortid');    
 const Refferal=require('../models/refferalModel');
 
+const flash=require('connect-flash')
+
 //wallet
 const Wallet =require('../models/walletModel');
 
@@ -34,13 +36,18 @@ const homeLoad = async (req, res) => {
         const categoryData = await Category.find({});
         const wishlist = await Wishlist.findOne({ user: req.session.user_id });
         const bannerData = await Banner.find({});
+
+        const loginSuccessParam = req.query.loginSuccess || false;
+        console.log("loginSuccessParam:",loginSuccessParam)
         
         res.render('base', { 
             product: productData, 
             category: categoryData, 
             wishlist: wishlist, 
             user: req.session.user_id, 
-            ban: bannerData 
+            ban: bannerData ,
+
+            loginSuccessParam: loginSuccessParam 
         });
     } catch (error) {
         console.error(error);
@@ -517,7 +524,8 @@ const verifyLogin = async (req, res) => {
         res.locals.user = finduser;
         res.locals.product = productData;
         res.locals.category = categoryData;
-        return res.redirect('/ecom'); // Set the redirect location in the response header
+       
+         return res.redirect('/ecom?loginSuccess=true'); // Set the redirect location in the response header
     } catch (error) {
         console.error(error);
         return res.render('login', { message: 'Internal server error' }); // Pass the message directly to the login page
@@ -548,12 +556,13 @@ const userLogout = async (req, res) => {
         }
 
         req.session.destroy();
-        res.redirect('/login');
+        res.redirect('/login?logoutSuccess=true'); // Set the logout success parameter
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 
 //Forgot Password

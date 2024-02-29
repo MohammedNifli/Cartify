@@ -387,6 +387,37 @@
 				});
 			});
 		</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Check if the query parameter indicates successful login
+    const urlParams = new URLSearchParams(window.location.search);
+    const loginSuccess = urlParams.get('loginSuccess');
+
+    if (loginSuccess === 'true') {
+        // Fire the Toast for successful login
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+
+        Toast.fire({
+            icon: "success",
+            title: "Signed in successfully"
+        });
+
+        // Remove the query parameter from the URL
+        const newUrl = window.location.href.split('?')[0];
+        history.replaceState(null, null, newUrl);
+    }
+</script>
 		
 		<!--end page wrapper -->
 		<!--start footer section-->

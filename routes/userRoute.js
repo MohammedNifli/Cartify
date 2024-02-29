@@ -56,7 +56,7 @@ route.post('/update-profile/:id',userController.updateProfile);
 
 //user adress management
 
-route.get('/user-address',userController.addressLoad);
+route.get('/user-address',userAuth.isLogin,userController.addressLoad);
 route.post('/addaddress',userController.addAddress);
 route.post('/delete-address/:id',userController.deleteAddress);
 route.post('/edit-address/:id',userController.editAddress);
@@ -66,7 +66,7 @@ route.post('/edit-address/:id',userController.editAddress);
 
 //change Password
 
-route.get('/pass-page',userController.changePasswordpg);
+route.get('/pass-page',userAuth.isLogin,userController.changePasswordpg);
 route.post('/change-pass',userController.checkingpassword)
 
 //wishlist

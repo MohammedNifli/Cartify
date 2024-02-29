@@ -118,9 +118,39 @@
 		});
 
 		</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		
+		<!-- logout sweet alert -->
+		<script>
+			// Check if the query parameter indicates successful logout
+			const urlParams = new URLSearchParams(window.location.search);
+			const logoutSuccess = urlParams.get('logoutSuccess');
 		
+			if (logoutSuccess === 'true') {
+				// Fire the Toast for successful logout
+				const Toast = Swal.mixin({
+					toast: true,
+					position: "top",
+					showConfirmButton: false,
+					timer: 3000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.onmouseenter = Swal.stopTimer;
+						toast.onmouseleave = Swal.resumeTimer;
+					}
+				});
 		
+				Toast.fire({
+					icon: "success",
+					title: "Logged out successfully"
+				});
+		
+				// Remove the query parameter from the URL
+				const newUrl = window.location.href.split('?')[0];
+				history.replaceState(null, null, newUrl);
+			}
+		</script>
 		
 		
 		<%- include('../layouts/footer.ejs') %>
