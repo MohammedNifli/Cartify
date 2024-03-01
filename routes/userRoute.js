@@ -24,14 +24,14 @@ route.get('/ecom',checkBlock,userController.homeLoad);
 
 
 
-route.get('/register',userController.loadRegister)
+route.get('/register',userAuth.isLogout,userController.loadRegister)
 route.post('/register',userController.insertUser)
 // route.post('/getbill',userController.insertUser)
 route.post('/verifyotp',userController.verifyOTP);
 route.post('/res-otp',userController.resendOTP);
 
 
-route.get('/login',userController.loadLogin)
+route.get('/login',userAuth.isLogout,userController.loadLogin)
 route.post('/login',userController.verifyLogin)
 
 

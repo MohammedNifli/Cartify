@@ -13,11 +13,11 @@ admin_route.use(session({
     
   }));
   
- 
+ const adminAuth=require('../middleware/adminAuth')
 
 
  admin_route.post('/adminreg', adminController.loadRegister);
- admin_route.get('/adminlogin',adminController.adloadLogin);
+ admin_route.get('/adminlogin',adminAuth.isLogout,adminController.adloadLogin);
  admin_route.post('/adminlog',adminController.verifyLogin);
  admin_route.get('/adlogout',adminController.adminLogout);
  admin_route.get('/admindash',adminController.adminDashboard);

@@ -8,7 +8,7 @@ const Coupon=require('../models/couponModel');
 const AppliedCoupon = require('../models/appliedCoupon');
 const Address= require('../models/addressModel')
 
-
+ 
 const shortid = require('shortid');
 
 const { Types: { ObjectId } } = require('mongoose');
@@ -579,142 +579,149 @@ const invoiceGeneration=async(req,res)=>{
 
 
 
-const applyCoupon = async (req, res) => {
-  try {
-     const {code}  = req.body;
-    const userId = new mongoose.Types.ObjectId(req.session.user_id);
+// const applyCoupon = async (req, res) => {
+//   try {
+//      const {code}  = req.body;
+//     const userId = new mongoose.Types.ObjectId(req.session.user_id);
 
 
 
     
 
-    // Find the coupon based on the provided coupon code
-    const coupon = await Coupon.findOne({ couponCode: code });
-    if (!coupon || req.body.code !== coupon.couponCode) {
-      return res.status(400).json({ message: 'Invalid coupon code.' });
-    }
+//     // Find the coupon based on the provided coupon code
+//     const coupon = await Coupon.findOne({ couponCode: code });
+//     if (!coupon || req.body.code !== coupon.couponCode) {
+//       return res.status(400).json({ message: 'Invalid coupon code.' });
+//     }
 
-    // Check if the coupon is already applied by the user
-    const appliedCoupon = await AppliedCoupon.findOne({ userId:userId, couponId: coupon._id });
-    if (appliedCoupon) {
-      return res.status(400).json({ message: 'Coupon already applied by the user.' });
-    }
+//     // Check if the coupon is already applied by the user
+//     const appliedCoupon = await AppliedCoupon.findOne({ userId:userId, couponId: coupon._id });
+//     if (appliedCoupon) {
+//       return res.status(400).json({ message: 'Coupon already applied by the user.' });
+//     }
 
-    if (!coupon) {
-      return res.status(404).json({ message: 'Coupon not found.' });
-    }
+//     if (!coupon) {
+//       return res.status(404).json({ message: 'Coupon not found.' });
+//     }
 
-    // Check if the coupon has expired
-    const currentDate = new Date();
-    if (currentDate > coupon.expirationDate) {
-      return res.status(400).json({ message: 'Coupon has expired.' });
-    }
+//     // Check if the coupon has expired
+//     const currentDate = new Date();
+//     if (currentDate > coupon.expirationDate) {
+//       return res.status(400).json({ message: 'Coupon has expired.' });
+//     }
 
-    // Retrieve the user's cart
-    const cart = await Cart.findOne({ user_id: userId });
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found for the user.' });
-    }
+//     // Retrieve the user's cart
+//     const cart = await Cart.findOne({ user_id: userId });
+//     if (!cart) {
+//       return res.status(404).json({ message: 'Cart not found for the user.' });
+//     }
 
-    // Apply coupon only if the cart total is greater than or equal to the minTotal specified in the coupon
-    if (cart.totalPrice < coupon.minTotal) {
-      return res.status(400).json({ message: 'Cart total does not meet the minimum requirement for the coupon.' });
-    }
+//     // Apply coupon only if the cart total is greater than or equal to the minTotal specified in the coupon
+//     if (cart.totalPrice < coupon.minTotal) {
+//       return res.status(400).json({ message: 'Cart total does not meet the minimum requirement for the coupon.' });
+//     }
 
-    // Apply the discount
-    const discountAmount = (coupon.discountPercentage / 100) * cart.totalPrice;
-    const discountedTotalPrice = cart.totalPrice - discountAmount;
+//     // Apply the discount
+//     const discountAmount = (coupon.discountPercentage / 100) * cart.totalPrice;
+//     const discountedTotalPrice = cart.totalPrice - discountAmount;
 
-    // Update the cart with the discounted total and mark the coupon as applied
-    cart.totalPrice = discountedTotalPrice;
-    cart.couponId=coupon._id
-    cart.couponApplied = true;
+//     // Update the cart with the discounted total and mark the coupon as applied
+//     cart.totalPrice = discountedTotalPrice;
+//     cart.couponId=coupon._id
+//     cart.couponApplied = true;
 
-    // Increment the currentTry counter
-    coupon.currentTry += 1;
-    coupon.discountAmount= discountAmount;
-    await coupon.save();
+//     // Increment the currentTry counter
+//     coupon.currentTry += 1;
+//     coupon.discountAmount= discountAmount;
+//     await coupon.save();
 
-    // Save the updated cart
-    await cart.save();
+//     // Save the updated cart
+//     await cart.save();
 
-    // Create a new applied coupon record
-    const newAppliedCoupon = new AppliedCoupon({ userId, couponId: coupon._id });
-    await newAppliedCoupon.save();
+//     // Create a new applied coupon record
+//     const newAppliedCoupon = new AppliedCoupon({ userId, couponId: coupon._id });
+//     await newAppliedCoupon.save();
 
-    req.session.couponApplied = true;
+//     req.session.couponApplied = true;
 
-    return res.status(200).json({ message: 'Coupon applied successfully.', updatedCart: cart });
-  } catch (error) {
-    console.error('Error applying coupon:', error);
-    return res.status(500).json({ message: 'Internal server error.' });
-  }
-};
+//     return res.status(200).json({ message: 'Coupon applied successfully.', updatedCart: cart });
+//   } catch (error) {
+//     console.error('Error applying coupon:', error);
+//     return res.status(500).json({ message: 'Internal server error.' });
+//   }
+// };
 
 
 
-const cancelCoupon = async (req, res) => {
-  try {
-    const userId = req.session.user_id;
+// const cancelCoupon = async (req, res) => {
+//   try {
+//     const userId = req.session.user_id;
 
-    // Remove the applied coupon record associated with the user
-    await AppliedCoupon.findOneAndDelete({ userId });
-    req.session.couponApplied = false;
+//     // Remove the applied coupon record associated with the user
+//     await AppliedCoupon.findOneAndDelete({ userId });
+//     req.session.couponApplied = false;
 
-    // Retrieve the user's cart
-    const cart = await Cart.findOne({ user_id: userId });
+//     // Retrieve the user's cart
+//     const cart = await Cart.findOne({ user_id: userId });
 
-    // Check if cart exists
-    if (!cart) {
-      return res.status(404).json({ success: false, message: 'Cart not found for the user.' });
-    }
+//     // Check if cart exists
+//     if (!cart) {
+//       return res.status(404).json({ success: false, message: 'Cart not found for the user.' });
+//     }
 
-    const couponid = new mongoose.Types.ObjectId(cart.couponId);
+//     const couponid = new mongoose.Types.ObjectId(cart.couponId);
 
-    // Retrieve the coupon details if needed for the calculation
-    const coupon = await Coupon.findOne({ _id: couponid });
+//     // Retrieve the coupon details if needed for the calculation
+//     const coupon = await Coupon.findOne({ _id: couponid });
 
-    // Check if the coupon exists
-    if (!coupon) {
-      return res.status(404).json({ success: false, message: 'Coupon not found for the user.' });
-    }
+//     // Check if the coupon exists
+//     if (!coupon) {
+//       return res.status(404).json({ success: false, message: 'Coupon not found for the user.' });
+//     }
 
-    // Here, you need to recalculate the cart total price without the coupon discount
-    // For example, if you're using a coupon discountPercentage, you would subtract the discount from the total price
-    // Update the cart's total price
-    // const discountAmount = (coupon.discountPercentage / 100) * cart.Tprice;
-    // const updatedTotalPrice = cart.totalPrice + discountAmount;
+//     // Here, you need to recalculate the cart total price without the coupon discount
+//     // For example, if you're using a coupon discountPercentage, you would subtract the discount from the total price
+//     // Update the cart's total price
+//     // const discountAmount = (coupon.discountPercentage / 100) * cart.Tprice;
+//     // const updatedTotalPrice = cart.totalPrice + discountAmount;
 
-    // Save the updated cart
-    cart.totalPrice = cart.Tprice;
+//     // Save the updated cart
+//     cart.totalPrice = cart.Tprice;
 
-    // Save the updated cart
-    await cart.save();
+//     // Save the updated cart
+//     await cart.save();
 
-    return res.status(200).json({ success: true, message: 'Applied coupon canceled successfully.', updatedCart: cart });
-  } catch (error) {
-    console.error('Error canceling coupon:', error);
-    return res.status(500).json({ success: false, message: 'Internal server error.' });
-  }
-};
+//     return res.status(200).json({ success: true, message: 'Applied coupon canceled successfully.', updatedCart: cart });
+//   } catch (error) {
+//     console.error('Error canceling coupon:', error);
+//     return res.status(500).json({ success: false, message: 'Internal server error.' });
+//   }
+// };
 
-const couponShow = async (req, res) => {
-  try {
-    // Fetch all coupons from the Coupon collection
-    const coupons = await Coupon.find({});
+// const couponShow = async (req, res) => {
+//   try {
+//     // Fetch all coupons from the Coupon collection
+//     const coupons = await Coupon.find({});
     
-    // Log the retrieved coupons to the console
-    console.log('Coupons:', coupons);
+//     // Log the retrieved coupons to the console
+//     console.log('Coupons:', coupons);
     
-    // Render the couponPage view
-    res.render('couponPage',{coupon:coupons});
-  } catch (error) {
-    // Handle any errors that occur during the process
-    console.log(error);
-    res.status(500).send('Internal Server Error');
-  }
-};
+//     // Render the couponPage view
+//     res.render('couponPage',{coupon:coupons});
+//   } catch (error) {
+//     // Handle any errors that occur during the process
+//     console.log(error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// };
 
+
+
+
+
+
+
+//checkout address
 const checkoutAddress = async (req, res) => {
   try {
     const { name, villa, city, zip } = req.body;
@@ -759,6 +766,44 @@ const checkoutAddress = async (req, res) => {
 
 
 
+
+
+
+//apply coupon
+
+const applyCoupon =async(req,res)=>{
+  try{
+
+    const {code} =req.body
+    console.log("cpcde",code);
+
+    const coupon = await Coupon.findOne({ couponCode: code });
+
+        if (!coupon) {
+            return res.status(404).json({ message: 'Coupon not found.' });
+        }
+
+        const currentDate = new Date();
+        if (currentDate > coupon.expirationDate) {
+            return res.status(400).json({ message: 'Coupon has expired.' });
+        }
+
+        const couponDiscount=coupon.discountAmount;
+
+        return res.json({ amount: couponDiscount });
+
+
+      } catch (error) {
+        console.error('Error applying coupon:', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+}
+
+
+
+
+
+
  
 
 
@@ -770,11 +815,12 @@ const checkoutAddress = async (req, res) => {
     viewOrder,
     cancelOrder,
     razorPayment,
-    applyCoupon,
-    cancelCoupon,
-    couponShow,
+   
     invoiceGeneration,
-    checkoutAddress
+    checkoutAddress,
+
+    //apply coupon
+    applyCoupon
 
    
    

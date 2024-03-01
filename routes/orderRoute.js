@@ -31,8 +31,8 @@ order_route.post('/get-payment',orderController.razorPayment);
 
 //coupon routes
 order_route.post('/apply-coupon',orderController.applyCoupon);
-order_route.get('/cancel-coupon',orderController.cancelCoupon);
-order_route.get('/coupon',orderController.couponShow);
+// order_route.get('/cancel-coupon',orderController.cancelCoupon);
+// order_route.get('/coupon',orderController.couponShow);
 
 //invoice
 order_route.get('/invoice',orderController.invoiceGeneration);

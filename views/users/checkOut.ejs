@@ -244,11 +244,16 @@
 												<% }); %>
 											</div>
 											<% if (couponApplied) { %>
-												<form action="/order/cancel-coupon" method="get">
-													<p style="color: red;">You already applied coupon . so you can access another coupon for next order. <br> Thanks for your Prarticipation </p>
-													<button type="submit" style="color: red;">Remove Coupon</button>
-		
+												<form id="applyCouponForm">
+													<div class="col-md-6">
+														<label for="couponCode" class="form-label">Coupon Code</label>
+														<input type="text" name="code" placeholder="Type here" class="form-control" id="couponCode">
+													</div>
+													<div class="col-md-6">
+														<button type="submit" class="btn btn-primary mt-4">Apply Coupon</button>
+													</div>
 												</form>
+												
 											<% } else { %>
 												<!-- <form action="/apply-coupon" method="POST">
 													<input type="text" name="couponCode" placeholder="Enter coupon code">
@@ -276,7 +281,7 @@
 														<div class="my-3 border-top"></div>
 														<% if (cartDetails && cartDetails.length > 0 && cartDetails[0].totalPrice) { %>
 															<!-- Show only one total price here -->
-															<h5 class="mb-0">Total Price: <span class="float-end"><%= cartDetails[0].totalPrice %></span></h5>
+															<h5 class="mb-0" id="totalPrice">Total Price: <span class="float-end"><%= cartDetails[0].totalPrice %></span></h5>
 														<% } else { %>
 															<h5 class="mb-0">Total Price: <span class="float-end">--</span></h5>
 														<% } %>
@@ -562,4 +567,62 @@
 
 		
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+    const applyCouponForm = document.getElementById('applyCouponForm');
+
+    applyCouponForm.addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        const couponCode = document.getElementById('couponCode').value;
+
+        try {
+            const response = await fetch('/order/apply-coupon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: couponCode })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to apply coupon');
+            }
+
+            const couponData = await response.json();
+            const couponAmount = couponData.amount; 
+
+			console.log("coooopon",couponData)
+			// Adjust this based on your API response structure
+
+            // Perform coupon calculation and update UI
+            const totalPriceElement = document.getElementById('totalPrice');
+            const totalPrice = parseFloat(totalPriceElement.textContent);
+            const discountedPrice = totalPrice - couponAmount;
+
+            // Update UI with discounted price
+            totalPriceElement.textContent = discountedPrice.toFixed(2);
+
+            // Display success message to the user
+            alert('Coupon applied successfully!');
+        } catch (error) {
+            console.error('Error applying coupon:', error);
+            alert('Failed to apply coupon. Please try again.');
+        }
+    });
+});
+
+</script>
+
+
+
+
+
+
+
+
+
+
 		<%- include('../layouts/footer.ejs') %>

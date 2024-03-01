@@ -332,15 +332,15 @@ const couponPage = async (req, res) => {
 
 const addCoupon = async (req, res) => {
     try {
-        const { couponCode, minTotal, discountPercentage, expirationDate, startingDate, maxTry } = req.body;
+        const { couponCode, minTotal, discountAmount, expirationDate, startingDate, maxTry } = req.body;
 
         const coupon = new Coupon({
             couponCode: couponCode,
-            discountPercentage: discountPercentage,
+            discountAmount: discountAmount,
             startingDate: startingDate,
             expirationDate: expirationDate,
             minTotal: minTotal,
-            maxTry: maxTry // Assuming you also want to save maxTry if it's provided in the request body
+             // Assuming you also want to save maxTry if it's provided in the request body
         });
 
         await coupon.save();
