@@ -243,33 +243,27 @@
 												<li><%=item.discountPercentage%>%  Discount Coupon Available (Please check it in coupons) </li>
 												<% }); %>
 											</div>
-											<% if (couponApplied) { %>
-												<form id="applyCouponForm">
-													<div class="col-md-6">
-														<label for="couponCode" class="form-label">Coupon Code</label>
-														<input type="text" name="code" placeholder="Type here" class="form-control" id="couponCode">
-													</div>
-													<div class="col-md-6">
-														<button type="submit" class="btn btn-primary mt-4">Apply Coupon</button>
-													</div>
-												</form>
+											
 												
-											<% } else { %>
+												
+											
 												<!-- <form action="/apply-coupon" method="POST">
 													<input type="text" name="couponCode" placeholder="Enter coupon code">
 													<button>Apply Coupon</button>
 												</form> -->
-												<form action="/order/apply-coupon" method="post" class="row g-3">
-													<div class="col-md-6">
-														<label for="couponCode" class="form-label">Coupon Code</label>
+												
+												<div class="col-md-6">
+													<div class="input-group mb-3">
 														<input type="text" name="code" placeholder="Type here" class="form-control" id="couponCode">
+														<button id="applyCouponButton" class="btn btn-primary">Apply Coupon</button>
+														<button id="removeCouponButton" class="btn btn-danger" style="display: none;">Remove Coupon</button>
 													</div>
-													<div class="col-md-6">
-														<button type="submit" class="btn btn-primary mt-4">Apply Coupon</button>
-													</div>
-												</form>
+													<p id="couponMessage" style="display: none; color: red; font-family: 'Times New Roman', Times, serif; font-size: medium;">Coupon already applied</p>
+												</div>
+												
+												
 		
-											<% } %>
+											
 											<div class="card-body">
 												<div class="card rounded-0 border bg-transparent mb-0 shadow-none">
 													<div class="card-body">
@@ -279,12 +273,20 @@
 														<p class="mb-2">Taxes: <span class="float-end">0.00</span></p>
 														<p class="mb-0">Discount: <span class="float-end">--</span></p>
 														<div class="my-3 border-top"></div>
-														<% if (cartDetails && cartDetails.length > 0 && cartDetails[0].totalPrice) { %>
 															<!-- Show only one total price here -->
-															<h5 class="mb-0" id="totalPrice">Total Price: <span class="float-end"><%= cartDetails[0].totalPrice %></span></h5>
-														<% } else { %>
-															<h5 class="mb-0">Total Price: <span class="float-end">--</span></h5>
-														<% } %>
+															<% if (cartDetails && cartDetails.length > 0 && cartDetails[0].totalPrice) { %>
+																<h5 class="mb-0">Total Price: 
+																	<span class="float-end" id="totalPrice"><%= cartDetails[0].totalPrice %></span>
+																</h5>
+																<span id="finalPrice" style="display: none;"></span>
+															<% } else { %>
+																<h5 class="mb-0">Total Price: 
+																	<span class="float-end">0.00</span> <!-- Provide a default value -->
+																</h5>
+															<% } %>
+															
+
+													
 													</div>
 													
 												</div>
@@ -570,13 +572,16 @@
 
 
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-    const applyCouponForm = document.getElementById('applyCouponForm');
+   document.addEventListener('DOMContentLoaded', async function() {
+    const applyCouponButton = document.getElementById('applyCouponButton');
+    const removeCouponButton = document.getElementById('removeCouponButton');
+    const couponInput = document.getElementById('couponCode');
+    const couponMessage = document.getElementById('couponMessage');
 
-    applyCouponForm.addEventListener('submit', async function(event) {
-        event.preventDefault(); // Prevent form submission
+    applyCouponButton.addEventListener('click', async function(event) {
+        event.preventDefault(); // Prevent default button behavior
 
-        const couponCode = document.getElementById('couponCode').value;
+        const couponCode = couponInput.value;
 
         try {
             const response = await fetch('/order/apply-coupon', {
@@ -592,18 +597,27 @@
             }
 
             const couponData = await response.json();
-            const couponAmount = couponData.amount; 
-
-			console.log("coooopon",couponData)
-			// Adjust this based on your API response structure
+            const couponAmount = couponData.amount;
 
             // Perform coupon calculation and update UI
             const totalPriceElement = document.getElementById('totalPrice');
-            const totalPrice = parseFloat(totalPriceElement.textContent);
-            const discountedPrice = totalPrice - couponAmount;
+            let totalPrice = parseFloat(totalPriceElement.textContent);
 
-            // Update UI with discounted price
-            totalPriceElement.textContent = discountedPrice.toFixed(2);
+            if (couponAmount > 0) {
+                totalPrice -= couponAmount;
+                totalPrice = Math.max(totalPrice, 0);
+                
+                // Update UI with discounted price
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+                
+                // Hide input field and apply button
+                couponInput.style.display = 'none';
+                applyCouponButton.style.display = 'none';
+                couponMessage.style.display = 'block';
+                
+                // Show remove button
+                removeCouponButton.style.display = 'inline';
+            }
 
             // Display success message to the user
             alert('Coupon applied successfully!');
@@ -612,9 +626,54 @@
             alert('Failed to apply coupon. Please try again.');
         }
     });
+
+    removeCouponButton.addEventListener('click', async function(event) {
+        try {
+            const response = await fetch('/order/remove-coupon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to remove coupon');
+            }
+
+            const data = await response.json();
+
+            // Reset UI
+            couponInput.value = '';
+            couponInput.style.display = 'inline';
+            applyCouponButton.style.display = 'inline';
+            couponMessage.style.display = 'none';
+            removeCouponButton.style.display = 'none';
+
+            // Update total amount if needed
+            if (data.totalAmount) {
+                const totalPriceElement = document.getElementById('totalPrice');
+                totalPriceElement.textContent = data.totalAmount.toFixed(2);
+            }
+
+            // Display success message to the user
+            alert('Coupon removed successfully!');
+        } catch (error) {
+            console.error('Error removing coupon:', error);
+            alert('Failed to remove coupon. Please try again.');
+        }
+    });
+
 });
 
+
+
+
 </script>
+
+
+
+
+
 
 
 

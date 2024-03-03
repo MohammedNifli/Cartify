@@ -38,16 +38,31 @@ const loadCart = async (req, res) => {
     ]);
     
 
-    // console.log("cartDetails:",cartDetails);
-
-    // if (!cartDetails || cartDetails.length === 0) {
-    //   return res.render("Cart", { cartDetails: [], totalAmount: 0 });
-    // }
-
-    const totalAmount = cartDetails.reduce((total, item) => {
-      return total + item.items.quantity * item.items.price; // Use item.items.price instead of item.productDetails.price
-    }, 0);
+    
       const hasItemsInCart=cartDetails.length>0
+
+      let totalAmount = 0;
+      
+    for (const item of cartDetails) {
+      // Fetch latest price from the database for each item
+      const productId = item.items.product_id;
+      const product = await Product.findById(productId);
+      const latestPrice = product.price; // Assuming price is stored directly in the product document
+
+      // Update the price of the item in the cart
+      item.items.price = latestPrice;
+
+      // Calculate total price for the item
+      const itemTotal = item.items.quantity * latestPrice;
+      totalAmount += itemTotal;
+    }
+
+    // Update the total price of the cart
+    const userCart = await Cart.findOneAndUpdate(
+      { user_id: currentUser._id },
+      { totalPrice: totalAmount },
+      { new: true }
+    );
 
     
 
@@ -337,20 +352,16 @@ const updateCart = async (req, res) => {
     if (itemIndex !== -1) {
       // Get the original quantity and price of the item
       const originalQuantity = userCart.items[itemIndex].quantity;
-      let pricePerUnit = userCart.items[itemIndex].price;
 
-      // Check if the product has category and product offers
+      // Fetch the latest price of the product from the database
+      let pricePerUnit = prod.price; // Consider default product price if not found
       if (prod.CatOffer && prod.PrOffer) {
-        // Compare the offer prices
         const catOfferPrice = prod.CatOffer.catOfferPrice;
         const prodOfferPrice = prod.PrOffer.prodOfferPrice;
-        // Choose the lesser offer price
         pricePerUnit = Math.min(catOfferPrice, prodOfferPrice);
       } else if (prod.CatOffer) {
-        // If only category offer exists
         pricePerUnit = prod.CatOffer.catOfferPrice;
       } else if (prod.PrOffer) {
-        // If only product offer exists
         pricePerUnit = prod.PrOffer.prodOfferPrice;
       }
 
@@ -367,20 +378,16 @@ const updateCart = async (req, res) => {
       // Update the quantity
       userCart.items[itemIndex].quantity = newQuantity;
 
+      // Update the price of the item in the cart based on the latest price from the database
+      userCart.items[itemIndex].price = pricePerUnit;
+
       // Update the total price in the cart
-      // userCart.totalPrice = quantityChange * pricePerUnit;
-      // userCart.Tprice = quantityChange * pricePerUnit;
+      const totalAmount = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);
+      userCart.totalPrice = totalAmount;
+      userCart.Tprice = totalAmount;
 
       // Save the updated cart
       const updatedCart = await userCart.save();
-
-      // Calculate the total amount for the updated cart
-      const totalAmount = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);
-      let userCartEdited = await Cart.findOneAndUpdate({ user_id: currentUser._id },{$set:{totalPrice:totalAmount,Tprice:totalAmount}},{new : true});
-      // userCart.totalPrice = totalAmount
-      // userCart.Tprice = totalAmount;
-      console.log(userCartEdited)
-      console.log("totalAmount",totalAmount)
 
       // Send the updated cart and total amount back to the client
       res.status(200).json({ userCart: updatedCart, totalAmount, totalstock, newQuantity, message: 'Quantity updated successfully.' });
@@ -392,6 +399,7 @@ const updateCart = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 
 

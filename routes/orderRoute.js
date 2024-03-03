@@ -11,15 +11,16 @@ order_route.use(session({
     saveUninitialized: true
   }));
 
-order_route.get('/load-checkout',orderController.loadCheckout);
+  const userAuth=require('../middleware/userAuth')
+
+order_route.get('/load-checkout',userAuth.isLogin,orderController.loadCheckout);
 
 order_route.post('/add-order',orderController.placeOrder);
 
-order_route.get('/thank-checkout',orderController.checkoutComplete);
-order_route.get('/load-order',orderController.loadOrder);
-order_route.get('/details',orderController.viewOrder);
+order_route.get('/thank-checkout',userAuth.isLogin,orderController.checkoutComplete);
+order_route.get('/load-order',userAuth.isLogin,orderController.loadOrder);
+order_route.get('/details',userAuth.isLogin,orderController.viewOrder);
 order_route.post('/remove/:orderId', orderController.cancelOrder);
-
 
 //oredr Management
 
@@ -31,7 +32,7 @@ order_route.post('/get-payment',orderController.razorPayment);
 
 //coupon routes
 order_route.post('/apply-coupon',orderController.applyCoupon);
-// order_route.get('/cancel-coupon',orderController.cancelCoupon);
+order_route.post('/remove-coupon',orderController.removeCoupon);
 // order_route.get('/coupon',orderController.couponShow);
 
 //invoice

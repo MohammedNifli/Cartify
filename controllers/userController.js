@@ -32,13 +32,13 @@ const homeLoad = async (req, res) => {
        
         // Find all products and populate the 'PrOffer' and 'CatOffer' fields
         const productData = await Product.find().populate(['PrOffer', 'CatOffer']);
-        console.log(",productData",productData)
+        // console.log(",productData",productData)
         const categoryData = await Category.find({});
         const wishlist = await Wishlist.findOne({ user: req.session.user_id });
         const bannerData = await Banner.find({});
 
         const loginSuccessParam = req.query.loginSuccess || false;
-        console.log("loginSuccessParam:",loginSuccessParam)
+        // console.log("loginSuccessParam:",loginSuccessParam)
         
         res.render('base', { 
             product: productData, 
@@ -1106,22 +1106,33 @@ const referalUserside=async(req,res)=>{
 const search = async (req, res) => {
     try {
         const searchItem = req.query.searchKeyword;
-      
+        const page = parseInt(req.query.page) || 1; // Get the current page number from the query parameters, default to 1 if not provided
+        const limit = 10; // Number of items per page
 
         let productData;
         const categories = await Category.find({});
+        
+        // Count the total number of documents regardless of the search
+        const count = await Product.countDocuments({ isDeleted: false });
+        const totalPages = Math.ceil(count / limit);
 
         if (searchItem) {
             const regex = new RegExp(searchItem, 'i');
-            productData = await Product.find({ productName: regex, isDeleted: false });
+            const skip = (page - 1) * limit; // Calculate the skip value for pagination
 
+            // Retrieve the products for the current page
+            productData = await Product.find({ productName: regex, isDeleted: false })
+                                        .skip(skip)
+                                        .limit(limit);
         } else {
-            productData = await Product.find({ isDeleted: false });
+            // If there's no search keyword, retrieve all products
+            productData = await Product.find({ isDeleted: false })
+                                        .skip((page - 1) * limit)
+                                        .limit(limit);
         }
 
-        
+        res.render('shopPage', { catData: categories, proData: productData, totalPages: totalPages, currentPage: page });
 
-        res.render('shopPage', { catData: categories, proData: productData });
     } catch (error) {
         console.log("Error searching for products:", error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -1131,70 +1142,88 @@ const search = async (req, res) => {
 
 
 
-// const filteredProducts = async (req, res) => {
-//     try {
-//         // Retrieve selected categories from the request body
-//         const selectedCategories = req.body.categories;
-
-//         // Use the selected categories to filter products
-//         const products = await Product.find({ category_id: { $in: selectedCategories } });
-
-//         // Send the filtered products back in the response
-//         res.status(200).json({ success: true, products: products });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ success: false, message: 'Internal server error' });
-//     }
-// } 
 
 
 
-const filter=async(req,res)=>{
+
+
+const filter = async (req, res) => {
     try {
-        const selectedCategories = req.query.categories;
-        let products;
-        if (selectedCategories && selectedCategories.length > 0) {
-            products = await Product.find({ category_id: { $in: selectedCategories } });
-        } else {
-            products = await Product.find();
-        }
-
-       
-        
-        // Send the sorted products as JSON response
-        res.json(products);
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-}
-
-
-const filterByPriceRange = async (req, res) => {
-    try {
+        const selectedCategories = typeof req.query.categories === 'string' ? req.query.categories.split(',') : [];
         const initialPrice = parseFloat(req.query.initialPrice);
         const upperPrice = parseFloat(req.query.upperPrice);
+        const page = parseInt(req.query.page) || 1; // Get the current page number from the query parameters, default to 1 if not provided
+        const limit = 10; // Number of items per page
 
-        let productData;
+        // Define a filter object for the MongoDB query
+        const filterQuery = { category_id: { $in: selectedCategories } };
 
-        if (!isNaN(initialPrice) && isNaN(upperPrice)) {
-            // Filter products with price greater than or equal to initial price
-            productData = await Product.find({ price: { $gte: initialPrice } });
-        } else if (isNaN(initialPrice) && !isNaN(upperPrice)) {
-            // Filter products with price less than or equal to upper price
-            productData = await Product.find({ price: { $lte: upperPrice } });
-        } else if (!isNaN(initialPrice) && !isNaN(upperPrice)) {
-            // Filter products within the price range
-            productData = await Product.find({ price: { $gte: initialPrice, $lte: upperPrice } });
-        } 
+        // If initialPrice and upperPrice are provided, add them to the filter
+        if (!isNaN(initialPrice) && !isNaN(upperPrice)) {
+            filterQuery.price = { $gte: initialPrice, $lte: upperPrice };
+        } else if (!isNaN(initialPrice)) {
+            filterQuery.price = { $gte: initialPrice };
+        } else if (!isNaN(upperPrice)) {
+            filterQuery.price = { $lte: upperPrice };
+        }
 
-        // Send the filtered products as JSON response
-        res.json(productData);
+        filterQuery.isDeleted = false;
+
+        // Calculate the skip value for pagination
+        const skip = (page - 1) * limit;
+
+        // Fetch products from the database based on the filter with pagination
+        const products = await Product.find(filterQuery)
+                                       .skip(skip)
+                                       .limit(limit);
+
+        res.json(products);
     } catch (error) {
-        console.error('Error fetching and filtering products by price range:', error);
+        console.error('Error filtering products:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+const sortData = async (req, res) => {
+    try {
+        console.log("koooo")
+
+
+        const { categories, initialPrice, upperPrice, sortOption } = req.query;
+
+        // Construct the filter query
+        const filterQuery = {isDeleted:false};
+        if (categories) {
+            filterQuery.category_id = { $in: categories.split(',') };
+        }
+        if (!isNaN(initialPrice) && !isNaN(upperPrice)) {
+            filterQuery.price = { $gte: initialPrice, $lte: upperPrice };
+        } else if (!isNaN(initialPrice)) {
+            filterQuery.price = { $gte: initialPrice };
+        } else if (!isNaN(upperPrice)) {
+            filterQuery.price = { $lte: upperPrice };
+        }
+
+        // Sort the products based on the selected sort option
+        let sortQuery = {};
+        if (sortOption === 'price') {
+            sortQuery = { price: 1 }; // Sort by price low to high
+        } else if (sortOption === 'price-desc') {
+            sortQuery = { price: -1 }; // Sort by price high to low
+        }
+
+        // Fetch and send the sorted products
+        const products = await Product.find(filterQuery).sort(sortQuery);
+        res.json(products);
+    } catch (error) {
+        console.error('Error sorting products:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+
+
+
 
 
 
@@ -1241,7 +1270,9 @@ module.exports = {
     referalUserside,
     search,
     filter,
-    filterByPriceRange
+    // filterByPriceRange,
+    // filterByCategoryAndPrice
+    sortData
 
    
   };

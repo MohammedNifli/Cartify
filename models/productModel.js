@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
 
     // color: { type: String, required: true },
     countStock: { type: Number, required: true },
-    category_id: { type: mongoose.Types.ObjectId, ref: 'Category', required: true },
+    category_id: { type:mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
     productImages: {type:Array,required:true},
     isDeleted: { type: Boolean, default: false }
 });

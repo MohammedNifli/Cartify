@@ -6,8 +6,10 @@
 }
 
 </style>
+
 		<!--start page wrapper -->
 		<div class="page-wrapper">
+			
 			<div class="page-content">
 				<!--start breadcrumb-->
 				<section class="py-3 border-bottom border-top d-none d-md-flex bg-light">
@@ -58,107 +60,41 @@
 																<label for="<%= cat._id %>"><%= cat.categoryName %></label>
 															</div>
 														<% }); %>
+
+														<div class="Price">
+															<h6 class="p-1 fw-bold bg-light">Price</h6>
+															 <div class="Price-wrapper p-1">
+															  <div class="input-group">
+																  <input type="text" class="form-control rounded-0" placeholder="Initial Price" id="initialPriceInput">
+																  <span class="input-group-text bg-section-1 border-0">-</span>
+																  <input type="text" class="form-control rounded-0" placeholder="Upper Price" id="upperPriceInput">
+																  
+															  </div>
+															  
+															  
+															 </div>
+														   </div>
+														   <hr>
+														  
 														<button type="button" id="filterButton">Apply Filter</button>
 													</form>
 													
 													
 												</div>
+												<div class="d-flex align-items-center flex-nowrap">
+													<select id="sortSelect" class="form-select rounded-0">
+														<option value="menu_order">Default sorting</option>
+														<option value="price">Sort by price: low to high</option>
+														<option value="price-desc">Sort by price: high to low</option>
+													</select>
+												</div>
+												
 											</div>
 											
 											
 											<hr>
-											<!-- <div class="brands">
-											  <h6 class="p-1 fw-bold bg-light">Brands</h6>
-											   <div class="brands-wrapper height-1 p-1">
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand1">
-												  <label class="form-check-label" for="chekBrand1">
-													<span>Samsung</span><span class="product-number">(1548)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand2">
-												  <label class="form-check-label" for="chekBrand2">
-													<span>Sony</span><span class="product-number">(478)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand3">
-												  <label class="form-check-label" for="chekBrand3">
-													<span>Microsoft</span><span class="product-number">(689)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand4">
-												  <label class="form-check-label" for="chekBrand4">
-													<span>Reebok</span><span class="product-number">(987)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand5">
-												  <label class="form-check-label" for="chekBrand5">
-													<span>Adidas</span><span class="product-number">(358)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand6">
-												  <label class="form-check-label" for="chekBrand6">
-													<span>Puma</span><span class="product-number">(5682)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand7">
-												  <label class="form-check-label" for="chekBrand7">
-													<span>Ajio</span><span class="product-number">(5712)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand8">
-												  <label class="form-check-label" for="chekBrand8">
-													<span>Motorola</span><span class="product-number">(657)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand9">
-												  <label class="form-check-label" for="chekBrand9">
-													<span>amazon</span><span class="product-number">(984)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand10">
-												  <label class="form-check-label" for="chekBrand10">
-													<span>Canon</span><span class="product-number">(524)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand11">
-												  <label class="form-check-label" for="chekBrand11">
-													<span>Apple</span><span class="product-number">(168)</span>
-												  </label>
-												</div>
-												<div class="form-check">
-												  <input class="form-check-input" type="checkbox" value="" id="chekBrand12">
-												  <label class="form-check-label" for="chekBrand12">
-													<span>Philips</span><span class="product-number">(279)</span>
-												  </label>
-												</div>
-											   </div>
-											</div> -->
-											<hr>
-											<div class="Price">
-											  <h6 class="p-1 fw-bold bg-light">Price</h6>
-											   <div class="Price-wrapper p-1">
-												<div class="input-group">
-													<input type="text" class="form-control rounded-0" placeholder="Initial Price" id="initialPriceInput">
-													<span class="input-group-text bg-section-1 border-0">-</span>
-													<input type="text" class="form-control rounded-0" placeholder="Upper Price" id="upperPriceInput">
-													<button type="button" id="sortButton" class="btn btn-outline-dark rounded-0 ms-2"><i class='bx bx-chevron-right me-0'></i></button>
-												</div>
-												
-												
-											   </div>
-											 </div>
-											 <hr>
+											
+											 
 											
 										</div>
 									  </div>
@@ -196,13 +132,7 @@
 																	<a href="javascript:;"><i class="bx bx-heart"></i></a>
 																</div>
 															</div>
-															<!-- <div class="cursor-pointer rating mt-2">
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-															</div> -->
+															
 															<div class="product-price d-flex align-items-center justify-content-start gap-2 mt-2">
 																<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through"></div>
 																<div class="h6 fw-bold"><%=pro.price%></div>
@@ -220,26 +150,13 @@
 									
 									
 									<hr>
-									<nav class="d-flex justify-content-between" aria-label="Page navigation">
-										<ul class="pagination">
-											<li class="page-item"><a class="page-link" href="javascript:;"><i class='bx bx-chevron-left'></i> Prev</a>
-											</li>
-										</ul>
-										<ul class="pagination">
-											<li class="page-item active d-none d-sm-block" aria-current="page"><span class="page-link">1<span class="visually-hidden">(current)</span></span>
-											</li>
-											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">2</a>
-											</li>
-											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">3</a>
-											</li>
-											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">4</a>
-											</li>
-											<li class="page-item d-none d-sm-block"><a class="page-link" href="javascript:;">5</a>
-											</li>
-										</ul>
-										<ul class="pagination">
-											<li class="page-item"><a class="page-link" href="javascript:;" aria-label="Next">Next <i class='bx bx-chevron-right'></i></a>
-											</li>
+									<nav aria-label="Page navigation example">
+										<ul class="pagination justify-content-start">
+											<% for (let i = 1; i <= totalPages; i++) { %>
+												<li class="page-item <%= currentPage === i ? 'active' : '' %>">
+													<a class="page-link" href="?page=<%= i %>"><%= i %></a>
+												</li>
+											<% } %>
 										</ul>
 									</nav>
 								</div>
@@ -253,55 +170,78 @@
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-				const filterButton = document.getElementById('filterButton');
-				const sortButton = document.getElementById('sortButton');
-		
-				filterButton.addEventListener('click', async function() {
-					try {
-						const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(checkbox => checkbox.value);
-		
-						// Construct the URL parameters string
-						const queryParams = new URLSearchParams();
-						selectedCategories.forEach(category => {
-							queryParams.append('categories', category);
-						});
-		
-						// Fetch with multiple category parameters
-						const response = await fetch(`/filter?${queryParams.toString()}`);
-						const products = await response.json();
-						renderProducts(products);
-					} catch (error) {
-						console.error('Error fetching filtered products:', error);
-					}
-				});
-		
-				sortButton.addEventListener('click', async function() {
-					try {
-						const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(checkbox => checkbox.value);
-		
-						// Construct the URL parameters string
-						const queryParams = new URLSearchParams();
-						selectedCategories.forEach(category => {
-							queryParams.append('categories', category);
-						});
-		
-						// Fetch with multiple category parameters
-						const response = await fetch(`/filter?${queryParams.toString()}`);
-						let products = await response.json();
-		
-						// Sort products by price
-						
-						// Sort products by price
+	
 
-		
-						renderProducts(products);
-					} catch (error) {
-						console.error('Error fetching filtered products:', error);
-					}
-				});
-		
-				function renderProducts(products) {
+
+	document.addEventListener("DOMContentLoaded", function() {
+        const filterButton = document.getElementById('filterButton');
+        const sortSelect = document.getElementById("sortSelect");
+
+        // Event listener for the filter button
+        filterButton.addEventListener('click', async function() {
+            try {
+                const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(checkbox => checkbox.value);
+                const initialPrice = parseFloat(document.getElementById('initialPriceInput').value);
+                const upperPrice = parseFloat(document.getElementById('upperPriceInput').value);
+
+                // Construct the categories query parameter
+                const categoriesParam = selectedCategories.join(',');
+
+                const queryParams = new URLSearchParams();
+                queryParams.append('categories', categoriesParam);
+                queryParams.append('initialPrice', initialPrice);
+                queryParams.append('upperPrice', upperPrice);
+
+                // Fetch data from the server
+                const response = await fetch(`/filterAndSortProducts?${queryParams.toString()}`);
+                const products = await response.json();
+
+                // Render the filtered products
+                renderProducts(products);
+            } catch (error) {
+                console.error('Error fetching and filtering products:', error);
+            }
+        });
+
+        // Event listener for the sort select element
+        sortSelect.addEventListener("change", async function() {
+            const selectedSortOption = this.value;
+            console.log("Selected sort option:", selectedSortOption);
+
+            try {
+                const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked')).map(checkbox => checkbox.value);
+                const initialPrice = parseFloat(document.getElementById('initialPriceInput').value);
+                const upperPrice = parseFloat(document.getElementById('upperPriceInput').value);
+
+                // Construct the categories query parameter
+                const categoriesParam = selectedCategories.join(',');
+
+                // Construct the query parameters including sorting option
+                const queryParams = new URLSearchParams();
+                queryParams.append('categories', categoriesParam);
+                queryParams.append('initialPrice', initialPrice);
+                queryParams.append('upperPrice', upperPrice);
+                queryParams.append('sortOption', selectedSortOption);
+
+                const response = await fetch(`/sort-data?${queryParams.toString()}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const sortedProducts = await response.json();
+                console.log("Sorted products:", sortedProducts);
+                // Render the sorted products
+                renderProducts(sortedProducts);
+            } catch (error) {
+                console.error('Error sorting products:', error);
+            }
+        });
+    
+
+
+
+
+	function renderProducts(products) {
 					const productContainer = document.getElementById('productContainer');
 					productContainer.innerHTML = '';
 		
@@ -332,7 +272,7 @@
 										
 										<div class="product-price d-flex align-items-center justify-content-start gap-2 mt-2">
 											<div class="h6 fw-light fw-bold text-secondary text-decoration-line-through"></div>
-											<div class="h6 fw-bold">${product.price}</div>
+											<div class="h6 fw-bold">Price: ${product.price} INR</div>
 										</div>
 									</div>
 								</div>
@@ -341,41 +281,15 @@
 						productContainer.innerHTML += productCard;
 					});
 				}
-			});
-		</script>
-		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-    const sortButton = document.getElementById('sortButton');
-
-    sortButton.addEventListener('click', async function() {
-        try {
-            const initialPrice = parseFloat(document.getElementById('initialPriceInput').value);
-            const upperPrice = parseFloat(document.getElementById('upperPriceInput').value);
-
-            const queryParams = new URLSearchParams();
-            if (!isNaN(initialPrice)) {
-                queryParams.append('initialPrice', initialPrice);
-            }
-            if (!isNaN(upperPrice)) {
-                queryParams.append('upperPrice', upperPrice);
-            }
-
-            const response = await fetch(`/pricefilter?${queryParams.toString()}`);
-            const productData = await response.json();
-
-            if (productData.length === 0) {
-                alert('No products available within the specified price range.');
-            } else {
-                renderProducts(productData);
-            }
-        } catch (error) {
-            console.error('Error fetching and filtering products by price range:', error);
-        }
-    });
+			
 });
 
 
+
+		
+				
 		</script>
+		
 			
 		
 		

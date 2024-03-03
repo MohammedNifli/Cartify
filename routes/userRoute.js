@@ -88,8 +88,12 @@ route.get('/refer-link',userController.referalUserside);
 
 //search
 route.get('/search',userController.search);
-route.get('/filter',userController.filter);
-route.get('/pricefilter',userController.filterByPriceRange)
+route.get('/filterAndSortProducts',userController.filter);
+// route.get('/pricefilter',userController.filterByPriceRange);
+route.get('/sort-data',userController.sortData);
+
+
+
 
 
 
