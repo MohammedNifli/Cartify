@@ -6,7 +6,7 @@
                 <div class="container">
                     <div class="border p-4 rounded mt-5">
                         <h1 class="text-center mb-4">Add Category Offer</h1>
-                        <form id="categoryForm" action="/admin/offer/addoffer " method="post" >
+                        <form id="categoryForm" action="/admin/offer/addoffer" method="post">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="categorySelect" class="form-label">Select Category</label>
@@ -16,31 +16,29 @@
                                         <% }); %>
                                     </select>
                                 </div>
-                                
+                        
                                 <div class="col-md-6 mb-3">
                                     <label for="discountPercentage" class="form-label">Discount Percentage</label>
                                     <input type="number" name="dispercentage" placeholder="Enter percentage" class="form-control" id="discountPercentage" style="background-color: bisque;" min="1" />
                                     <span id="discountPercentageError" class="text-danger"></span>
                                 </div>
-                                
-                                
                         
                                 <div class="col-md-6 mb-3">
                                     <label for="offerStartDate" class="form-label">Offer Start Date</label>
-                                    <input type="date" name="starDate" class="form-control" id="offerStartDate" style="background-color: bisque;"/>
-                                    <!-- You can style this input as needed -->
+                                    <input type="date" name="starDate" class="form-control" id="offerStartDate" style="background-color: bisque;" />
                                 </div>
                         
                                 <div class="col-md-6 mb-3">
                                     <label for="offerEndDate" class="form-label">Offer End Date</label>
-                                    <input type="date" name="enDate" class="form-control" id="offerEndDate" style="background-color: bisque;"/>
-                                    <!-- You can style this input as needed -->
+                                    <input type="date" name="enDate" class="form-control" id="offerEndDate" style="background-color: bisque;" />
                                 </div>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
+                        
+                        
                         
                     </div>
                 </div>
@@ -125,53 +123,94 @@
                 }
             </script>
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('categoryForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the form from submitting by default
+    document.getElementById('categoryForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting by default
 
-            // Validate the form fields
-            let category = document.getElementById('categorySelect').value;
-            let discountPercentage = document.getElementById('discountPercentage').value;
-            let startDate = document.getElementById('offerStartDate').value;
-            let endDate = document.getElementById('offerEndDate').value;
+        // Validate the form fields
+        let category = document.getElementById('categorySelect').value;
+        let discountPercentage = document.getElementById('discountPercentage').value;
+        let startDate = document.getElementById('offerStartDate').value;
+        let endDate = document.getElementById('offerEndDate').value;
 
-            // Basic validation: Ensure all fields are filled
-            if (category.trim() === '') {
-                alert('Please select a category');
-                return;
-            }
+        // Basic validation: Ensure all fields are filled
+        if (category.trim() === '') {
+            alert('Please select a category');
+            return;
+        }
 
-            if (discountPercentage.trim() === '' || isNaN(discountPercentage) || discountPercentage <= 0) {
-                alert('Please enter a valid discount percentage');
-                return;
-            }
+        if (discountPercentage.trim() === '' || isNaN(discountPercentage) || discountPercentage <= 0) {
+            alert('Please enter a valid discount percentage');
+            return;
+        }
 
-            if (startDate.trim() === '' || endDate.trim() === '') {
-                alert('Please select both start and end dates for the offer');
-                return;
-            }
+        if (startDate.trim() === '' || endDate.trim() === '') {
+            alert('Please select both start and end dates for the offer');
+            return;
+        }
 
-            // Convert today's date to compare with selected dates
-            let today = new Date();
-            let selectedStartDate = new Date(startDate);
-            let selectedEndDate = new Date(endDate);
+        // Convert today's date to compare with selected dates
+        let today = new Date();
+        let selectedStartDate = new Date(startDate);
+        let selectedEndDate = new Date(endDate);
 
-            // Ensure that the start date is not in the past
-            if (selectedStartDate < today) {
-                alert('Offer start date cannot be a past date');
-                return;
-            }
+        // Ensure that the start date is not in the past
+        if (selectedStartDate < today) {
+            alert('Offer start date cannot be a past date');
+            return;
+        }
 
-            // Ensure that the end date is after the start date
-            if (selectedStartDate >= selectedEndDate) {
-                alert('Offer end date should be after the start date');
-                return;
-            }
+        // Ensure that the end date is after the start date
+        if (selectedStartDate >= selectedEndDate) {
+            alert('Offer end date should be after the start date');
+            return;
+        }
 
-            // If all fields are filled and validation passes, submit the form
-            this.submit();
-        });
+        // If all fields are filled and validation passes, submit the form
+        this.submit();
+    });
+});
+
+</script> -->
+
+
+<script>
+    document.getElementById("categoryForm").addEventListener("submit", function(event) {
+        // Prevent the form from submitting by default
+        event.preventDefault();
+
+        // Validate Discount Percentage
+        var discountPercentage = document.getElementById("discountPercentage").value;
+        if (discountPercentage === "" || isNaN(discountPercentage) || discountPercentage < 1) {
+            document.getElementById("discountPercentageError").innerText = "Please enter a valid discount percentage (greater than or equal to 1).";
+            return false;
+        } else {
+            document.getElementById("discountPercentageError").innerText = "";
+        }
+
+        // Validate Offer Start Date
+        var offerStartDate = document.getElementById("offerStartDate").value;
+        if (offerStartDate === "") {
+            alert("Please select an offer start date.");
+            return false;
+        }
+
+        // Validate Offer End Date
+        var offerEndDate = document.getElementById("offerEndDate").value;
+        if (offerEndDate === "") {
+            alert("Please select an offer end date.");
+            return false;
+        }
+
+        // Check if Offer End Date is after Offer Start Date
+        if (offerEndDate < offerStartDate) {
+            alert("Offer End Date must be after Offer Start Date.");
+            return false;
+        }
+
+        // If all validations pass, submit the form
+        this.submit();
     });
 </script>
 

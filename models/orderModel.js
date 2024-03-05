@@ -8,8 +8,8 @@ const orderSchema = new mongoose.Schema({
         required: true,
     },
     billingAddress: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Address', 
     },
     totalAmount: {
         type: Number,

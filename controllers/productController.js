@@ -28,13 +28,13 @@ const Cart=require('../models/categoryModel')
 
 
 
-const addProduct = async (req, res) => {
+  const addProduct = async (req, res) => {
     try {
-        console.log("hiiiiii")
-        let arrImages = [];
+        console.log("hiiiiii");
 
-        // Assuming you have multer or a similar middleware for handling file uploads
-        if(req.files) {
+        // Check if there are files uploaded
+        let arrImages = [];
+        if (req.files) {
             for (let i = 0; i < req.files.length; i++) {
                 // Use sharp to resize and crop the image
                 const croppedBuffer = await sharp(req.files[i].path)
@@ -42,37 +42,38 @@ const addProduct = async (req, res) => {
                     .toBuffer();
         
                 const filename = `cropped_${req.files[i].originalname}`; // Corrected string interpolation
-                arrImages[i] = filename;
+                arrImages.push(filename);
         
                 // Save the cropped image
                 await sharp(croppedBuffer).toFile(`uploads/products/${filename}`); // Corrected file path
             }
         }
-    
 
-       
-        console.log(req.files);
+        // Check if product with the same description already exists
+        const existingProduct = await Product.findOne({ description: req.body.description });
+        if (existingProduct) {
+            return res.status(400).send("A product with the same description already exists.");
+        }
 
-        
-
-        
-        console.log(req.body)
-
+        // Create a new product
         const product = new Product({
             productName: req.body.productName,
             description: req.body.description,
             price: req.body.price,
             color: req.body.color,
             countStock: req.body.count,
-            category_id: req.body.category, // Use the 'id' property of the found category
-            productImages:arrImages,
+            category_id: req.body.category,
+            productImages: arrImages,
             isDeleted: false
         });
 
+        // Save the new product to the database
         const product_data = await product.save();
-        res.redirect("/admin/product/list-pro")
+        
+        // Redirect to product list page after successful addition
+        res.redirect("/admin/product/list-pro");
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).send({ success: false, msg: "Internal Server Error" });
     }
 };

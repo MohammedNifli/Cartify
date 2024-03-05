@@ -6,7 +6,7 @@ const categoryController=require('../controllers/categoryController')
 
 product_route.use(express.urlencoded({ extended: true }));
 product_route.use(session({
-    secret: 'aarodum-parayalley',
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 3600000 }

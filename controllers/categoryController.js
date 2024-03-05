@@ -65,37 +65,43 @@ const upload = multer({ storage: storage });
 
 const addCategory = async (req, res) => {
   if (req.file) {
-    try {
-        // Use sharp to resize and crop the image
-        const resizedImageBuffer = await sharp(req.file.path)
-            .resize({ width: 306, height: 408, fit: sharp.fit.cover })
-            .toBuffer();
+      try {
+          // Check if the category name already exists in the database
+          const existingCategory = await Category.findOne({ categoryName: req.body.catname.toLowerCase() });
+          if (existingCategory) {
+              return res.status(400).send({ success: false, msg: "Category already exists" });
+          }
 
-        const filename = `cropped_${req.file.originalname}`;
+          // Use sharp to resize and crop the image
+          const resizedImageBuffer = await sharp(req.file.path)
+              .resize({ width: 306, height: 408, fit: sharp.fit.cover })
+              .toBuffer();
 
-        // Save the resized image
-        await sharp(resizedImageBuffer).toFile(`uploads/category/${filename}`);
+          const filename = `cropped_${req.file.originalname}`;
 
-        // Create a new category object
-        const category = new Category({
-            categoryName: req.body.catname.toLowerCase(),
-            categoryImage: filename,
-            // Add other category properties as needed
-        });
+          // Save the resized image
+          await sharp(resizedImageBuffer).toFile(`uploads/category/${filename}`);
 
-        // Save the new category to the database
-        const cat_data = await category.save();
+          // Create a new category object
+          const category = new Category({
+              categoryName: req.body.catname.toLowerCase(),
+              categoryImage: filename,
+              // Add other category properties as needed
+          });
 
-        return res.status(200).send({ success: true, msg: "Category added successfully", data: cat_data });
-    } catch (error) {
-        console.error("Error in addCategory:", error);
-        return res.status(400).send({ success: false, msg: "Error adding category", error: error.message });
-    }
-} else {
-    return res.status(400).send({ success: false, msg: "No file uploaded" });
-}
+          // Save the new category to the database
+          const cat_data = await category.save();
 
-}
+          return res.status(200).send({ success: true, msg: "Category added successfully", data: cat_data });
+      } catch (error) {
+          console.error("Error in addCategory:", error);
+          return res.status(400).send({ success: false, msg: "Error adding category", error: error.message });
+      }
+  } else {
+      return res.status(400).send({ success: false, msg: "No file uploaded" });
+  }
+};
+
 
 
 

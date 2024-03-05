@@ -8,11 +8,12 @@ const walletController= require('../controllers/walletController')
 wallet_route.use(express.urlencoded({ extended: true }));
 
 wallet_route.use(session({
-    secret: 'aarodum-parayalley',
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true,
     
   }));
+  
 
   wallet_route.get('/walletpg',walletController.wallet);
 

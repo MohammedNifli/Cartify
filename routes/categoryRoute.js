@@ -5,7 +5,7 @@ const session=require('express-session')
 category_route.use(express.urlencoded({ extended: true }));
 
 category_route.use(session({
-    secret: 'aarodum-parayalley',
+    secret:'your-secret-key',
     resave: false,
     saveUninitialized: true,
     

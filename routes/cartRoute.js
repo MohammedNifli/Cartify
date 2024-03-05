@@ -9,11 +9,10 @@ const cartController= require('../controllers/cartController');
 cart_route.use(express.urlencoded({ extended: true }));
 
 cart_route.use(session({
-    secret: 'aarodum-parayalley',
-    resave: false,
-    saveUninitialized: true,
-    
-  }));
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+}));
   const userAuth=require('../middleware/userAuth')
   const checkBlock=require("../middleware/checkBlock")
 

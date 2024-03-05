@@ -94,37 +94,42 @@
 													
 														<!-- Modal -->
 														<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
-														  <div class="modal-dialog">
-															<div class="modal-content">
-															  <div class="modal-header">
-																<h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
-																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-															  </div>
-															  <div class="modal-body">
-																<!-- Form to add address -->
-																<form action="/order/check-address" method="post" id="addAddressForm">
-																  <div class="mb-3">
-																	<label for="addressName" class="form-label">Name</label>
-																	<input type="text" class="form-control" id="addressName" name="name" required>
-																  </div>
-																  <div class="mb-3">
-																	<label for="villaName" class="form-label">Villa Name</label>
-																	<input type="text" class="form-control" id="villaName" name="villa" required>
-																  </div>
-																  <div class="mb-3">
-																	<label for="cityName" class="form-label">City Name</label>
-																	<input type="text" class="form-control" id="cityName" name="city" required>
-																  </div>
-																  <div class="mb-3">
-																	<label for="zipcode" class="form-label">Zipcode</label>
-																	<input type="text" class="form-control" id="zipcode" name="zip" required>
-																  </div>
-																  <button type="submit" class="btn btn-primary">Save Address</button>
-																</form>
-															  </div>
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+																		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		<!-- Form to add address -->
+																		<form action="/order/check-address" method="post" id="addAddressForm">
+																			<div class="mb-3">
+																				<label for="addressName" class="form-label">Name</label>
+																				<input type="text" class="form-control" id="addressName" name="name" required>
+																				<div class="error-message" id="name-error"></div>
+																			</div>
+																			<div class="mb-3">
+																				<label for="villaName" class="form-label">Villa Name</label>
+																				<input type="text" class="form-control" id="villaName" name="villa" required>
+																				<div class="error-message" id="villa-error"></div>
+																			</div>
+																			<div class="mb-3">
+																				<label for="cityName" class="form-label">City Name</label>
+																				<input type="text" class="form-control" id="cityName" name="city" required>
+																				<div class="error-message" id="city-error"></div>
+																			</div>
+																			<div class="mb-3">
+																				<label for="zipcode" class="form-label">Zipcode</label>
+																				<input type="text" class="form-control" id="zipcode" name="zip" required>
+																				<div class="error-message" id="zip-error"></div>
+																			</div>
+																			<button type="submit" class="btn btn-primary">Save Address</button>
+																		</form>
+																	</div>
+																</div>
 															</div>
-														  </div>
 														</div>
+														
 													  </div>
 													
 													
@@ -672,6 +677,76 @@
 
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("addAddressForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var name = document.getElementById("addressName").value.trim();
+            var villa = document.getElementById("villaName").value.trim();
+            var city = document.getElementById("cityName").value.trim();
+            var zip = document.getElementById("zipcode").value.trim();
+            var nameError = document.getElementById("name-error");
+            var villaError = document.getElementById("villa-error");
+            var cityError = document.getElementById("city-error");
+            var zipError = document.getElementById("zip-error");
+
+            // Reset error messages
+            nameError.textContent = "";
+            villaError.textContent = "";
+            cityError.textContent = "";
+            zipError.textContent = "";
+
+            // Validate Name
+            if (name === "") {
+                nameError.textContent = "Please enter a name for the address.";
+                return false;
+            } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+                nameError.textContent = "Name can only contain letters and spaces.";
+                return false;
+            }
+
+            // Validate Villa Name
+            if (villa === "") {
+                villaError.textContent = "Please enter the villa name.";
+                return false;
+            } else if (!/^[a-zA-Z\s]+$/.test(villa)) {
+                villaError.textContent = "Villa name can only contain letters and spaces.";
+                return false;
+            }
+
+            // Validate City Name
+            if (city === "") {
+                cityError.textContent = "Please enter the city name.";
+                return false;
+            } else if (!/^[a-zA-Z\s]+$/.test(city)) {
+                cityError.textContent = "City name can only contain letters and spaces.";
+                return false;
+            }
+
+            // Validate Zipcode
+            if (zip === "") {
+                zipError.textContent = "Please enter the zipcode.";
+                return false;
+            } else if (!/^\d+$/.test(zip)) {
+                zipError.textContent = "Zipcode must contain only numbers.";
+                return false;
+            }
+
+            // If all data is valid, submit the form
+            this.submit();
+        });
+
+        // Additional event listener to prevent only whitespace input
+        document.querySelectorAll('input').forEach(function(input) {
+            input.addEventListener('input', function() {
+                if (this.value.trim() === '') {
+                    this.value = ''; // Clear the input value
+                }
+            });
+        });
+    });
+</script>
 
 
 

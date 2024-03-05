@@ -97,13 +97,14 @@ const addOffer = async (req, res) => {
             });
         }
 
-        
-        return res.redirect('/admin/offer/loadoffer')
+        // Redirect to the offer loading page
+        return res.redirect('/admin/offer/loadoffer');
     } catch (error) {
         console.error('Error adding offer:', error);
         return res.status(500).json({ message: 'Internal server error.', error: error.message });
     }
 };
+
 
 
 const deleteCatOffer = async (req, res) => {

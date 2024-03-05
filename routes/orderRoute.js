@@ -6,7 +6,7 @@ const orderController=require('../controllers/orderController')
 order_route.use(express.urlencoded({ extended: true }));
 
 order_route.use(session({
-    secret: 'aarodum-parayalley',
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true
   }));
@@ -33,7 +33,7 @@ order_route.post('/get-payment',orderController.razorPayment);
 //coupon routes
 order_route.post('/apply-coupon',orderController.applyCoupon);
 order_route.post('/remove-coupon',orderController.removeCoupon);
-// order_route.get('/coupon',orderController.couponShow);
+order_route.get('/coupon',orderController.couponShow);
 
 //invoice
 order_route.get('/invoice',orderController.invoiceGeneration);

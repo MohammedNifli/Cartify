@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Sales Report</h2>
+    <!-- salesreport.ejs -->
+<table>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (data && Array.isArray(data)) { %>
+            <tbody>
+                <% data.forEach(item => { %>
+                    <tr>
+                        <td><%= item._id %></td>
+                        <td><%= item.productInfo.productName %></td>
+                        <td><%= item.items.quantity %></td>
+                        <td><%= item.productInfo.price %> INR</td>
+                        <td><%= item.totalAmount %> INR</td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        <% } else { %>
+            <tbody>
+                <tr>
+                    <td colspan="5">No sales data available</td>
+                </tr>
+            </tbody>
+        <% } %>
+        
+    </tbody>
+</table>
+
+</body>
+</html>

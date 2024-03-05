@@ -18,9 +18,15 @@ const mongoose = require('mongoose');
 
 const ExcelJS = require('exceljs');
 
+const puppeteer=require('puppeteer')
+
 const XLSX = require('xlsx');
 // const { jsPDF } = require('jspdf');
 // const puppeteer = require('puppeteer');
+
+//moment.js
+
+
 
 
 
@@ -38,7 +44,7 @@ const loadRegister = async (req, res) => {
         const adminData = await admin.save();
         console.log("data is", adminData)
         if (adminData) {
-            res.render('adminlogin')
+            res.render('adminlogin',{})
             console.log(adminData)
         } else {
             res.redirect('register');
@@ -54,7 +60,7 @@ const loadRegister = async (req, res) => {
 
 const adloadLogin = async (req, res) => {
     try {
-        res.render('adminLogin')
+        res.render('adminLogin', { notadminp: notadminp, notadmine: notadmine });
 
     } catch (error) {
         console.log(error);
@@ -62,10 +68,14 @@ const adloadLogin = async (req, res) => {
 
 }
 
+let notadminp;
+let notadmine;
+
 const verifyLogin = async (req, res) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
+       
 
         const adminData = await Admin.findOne({ email: email });
 
@@ -78,11 +88,13 @@ const verifyLogin = async (req, res) => {
                 console.log(req.session.admin);
             } else {
                 // Passwords do not match, redirect back to the admin login page
-                res.redirect('/adminLogin');
+                res.redirect('/admin/adminLogin');
+                notadminp="invalid password"
             }
         } else {
             // Admin not found for the provided email, redirect back to the admin login page
-            res.redirect('/adminLogin');
+            res.redirect('/admin/adminLogin');
+            notadmine="invalid email"
         }
 
     } catch (error) {
@@ -203,7 +215,10 @@ const loadingOrder = async (req, res) => {
                     as: "user"
                 }
             },
-            { $unwind: "$user" }
+            { $unwind: "$user" },
+            {
+                $sort: { createdAt: -1 } // Sort by createdAt field in descending order
+            }
         ])
             .skip(skipCount)
             .limit(itemsPerPage);
@@ -217,7 +232,8 @@ const loadingOrder = async (req, res) => {
         res.render('orderList', { 
             orders,
             currentPage: page,
-            totalPages: totalPages
+            totalPages: totalPages,
+            moment
         });
     } catch (error) {
         console.log(error);
@@ -309,7 +325,7 @@ const statusChange = async (req, res) => {
         );
 
         console.log("updateOrder:", updateOrder);
-        res.status(200).send("Status updated successfully");
+        res.redirect('/admin/order-detail')
 
     } catch (error) {
         console.log(error);
@@ -407,14 +423,11 @@ const salesReport = async (req, res) => {
         console.log("ennnnnnd:", endingDate);
 
         // Aggregate to get sales report data
-        customSalesWithProductInfo = await Order.aggregate([
+         customSalesWithProductInfo = await Order.aggregate([
             {
                 $match: {
                     createdAt: { $gte: startingDate, $lte: endingDate }, // Filter orders within the date range
                 },
-            },
-            {
-                $sort: { createdAt: -1 } // Sort orders by createdAt field in descending order (latest first)
             },
             {
                 $unwind: "$items", // Unwind the items array
@@ -430,9 +443,17 @@ const salesReport = async (req, res) => {
             {
                 $unwind: "$productInfo", // Unwind the productInfo array
             },
-
-
+            {
+                $match: {
+                    "items.status": { $ne: 'cancelled' } // Exclude orders with status 'cancelled'
+                }
+            },
+            {
+                $sort: { createdAt: -1 } // Sort orders by createdAt field in descending order (latest first)
+            }
         ]);
+
+        
 
         // Render the sales report template and pass the data
         res.render('sales', { salesReportData: customSalesWithProductInfo, startDate, endDate });
@@ -442,6 +463,8 @@ const salesReport = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+
 
 
 
@@ -461,9 +484,39 @@ const excelDownload = async (req, res) => {
 
 const path = require('path');
 const { log } = require('console');
+const ejs = require('ejs')
 
 const pdfDownload = async (req, res) => {
     try {
+
+       
+
+
+
+        console.log("customSalesWithProductInfo",customSalesWithProductInfo)
+      
+       
+        const Data = {
+            data: customSalesWithProductInfo
+        };
+        
+        const ejsTemplate = path.resolve(__dirname, "../views/admin/salesreport.ejs");
+        const ejsData = await ejs.renderFile(ejsTemplate, Data);
+        
+
+       const browser = await puppeteer.launch({ headless: 'new' });   
+    const page = await browser.newPage();
+    await page.setContent(ejsData, { waitUntil: "networkidle0" });
+    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+
+    // Close the browser
+    await browser.close();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
+    res.send(pdfBuffer);
+
+
        
     } catch (error) {
         console.error('Error generating PDF:', error);
@@ -530,11 +583,13 @@ const adminDash=async(req,res)=>{
         ]);
          
 
-        const totalCancelledAmount = total[0].totalCancelledAmount;
-        
-        const Revenue = totalAmount - totalCancelledAmount;
+        const totalCancelledAmount = total[0] ? total[0].totalCancelledAmount : 0;
+const cancelledOrder = total[0] ? total[0].totalCount : 0;
+
+const Revenue = totalAmount - totalCancelledAmount;
+
       
-        const cancelledOrder = total[0].totalCount;
+        
        
         const dailyOrderData = await Order.aggregate([
             {
@@ -576,10 +631,47 @@ const adminDash=async(req,res)=>{
       
           console.log("dailyOrderData",dailyOrderData)
           console.log("labelsmotnh:", monthlyLabels)
-          console.log("datamonth:", monthlyData)      
+          console.log("datamonth:", monthlyData)   
+          
+          
 
+          const categorySalesData = await Order.aggregate([
+            {
+                $unwind: "$items"
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "items.product_id",
+                    foreignField: "_id",
+                    as: "productInfo"
+                }
+            },
+            {
+                $unwind: "$productInfo"
+            },
+            {
+                $lookup: {
+                    from: "categories",
+                    localField: "productInfo.category_id",
+                    foreignField: "_id",
+                    as: "categoryInfo"
+                }
+            },
+            {
+                $unwind: "$categoryInfo"
+            },
+            {
+                $group: {
+                    _id: "$categoryInfo.categoryName", // Assuming the category name field is "categoryName"
+                    totalSales: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
+                }
+            }
+        ]);
 
-        res.render('adhome',{totalRevenue, orderCount ,userCount ,productCount, totalCategory ,Revenue,cancelledOrder, dailyLabels,
+   console.log("catsalesData:",categorySalesData)
+
+        res.render('adhome',{totalRevenue, categorySalesData,orderCount ,userCount ,productCount, totalCategory ,Revenue,cancelledOrder, dailyLabels,
             dailyData,
             monthlyLabels,
             monthlyData,});
@@ -642,6 +734,73 @@ const addToRefferal=async(req,res)=>{
 }
 
 
+const deleteRefferal = async (req, res) => {
+    try {
+        const referralId = req.params.referralId;
+        console.log("ref",referralId)
+
+        // Find the referral by ID and delete it from the database
+        await Refferal.findByIdAndDelete(referralId);
+
+        res.redirect('/admin/refferal'); // Redirect to referral listing page after deletion
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+// let categorySalesData;
+// const categoryChart=async(req,res)=>{
+//     try{
+
+//          categorySalesData = await Order.aggregate([
+//             {
+//                 $unwind: "$items"
+//             },
+//             {
+//                 $lookup: {
+//                     from: "products",
+//                     localField: "items.product_id",
+//                     foreignField: "_id",
+//                     as: "productInfo"
+//                 }
+//             },
+//             {
+//                 $unwind: "$productInfo"
+//             },
+//             {
+//                 $lookup: {
+//                     from: "categories",
+//                     localField: "productInfo.category_id",
+//                     foreignField: "_id",
+//                     as: "categoryInfo"
+//                 }
+//             },
+//             {
+//                 $unwind: "$categoryInfo"
+//             },
+//             {
+//                 $group: {
+//                     _id: "$categoryInfo.categoryName", // Assuming the category name field is "categoryName"
+//                     totalSales: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
+//                 }
+//             }
+//         ]);
+
+//         // Pass category-wise sales data to the view
+        
+
+
+
+
+//     }catch(error){
+//         console.log(error)
+//     }
+// }
+
+
+
 
 
 module.exports = {
@@ -664,6 +823,9 @@ module.exports = {
     adminDash,
     refferalPage,
     addRefferalpg,
-    addToRefferal
+    addToRefferal,
+    deleteRefferal,
+
+    // categoryChart
     
 }

@@ -86,6 +86,32 @@
                         categoryDescriptionError.textContent = '';
                     }
                 });
+
+
+
+
+                document.getElementById("categoryForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting in the default way
+    
+    // Get the form data
+    const formData = new FormData(event.target);
+
+    fetch('/admin/category/adding-category', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.msg); // Success message
+            // Optionally, you can redirect the user to another page or perform other actions
+        } else {
+            alert(data.msg); // Error message
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
             </script>
            
             <!-- content-main end// -->

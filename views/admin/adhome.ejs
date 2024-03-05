@@ -76,6 +76,16 @@
                             <!-- </article> -->
                           </div>
                     </div>
+                    <br>
+
+                    <div class="card mb-4">
+                      <h5 class="card-title">Category-wise Sales</h5>
+                      <canvas id="categorySalesChart" style="max-width: 400px; max-height: 300px;"></canvas>
+                  </div>
+                  
+
+
+
                 </div>
                  
                 <div class="pagination-area mt-30 mb-50">
@@ -138,6 +148,60 @@ ctx.canvas.parentNode.style.width = '900px';
                 myChart.update();
               }
             </script>
+
+
+
+<script>
+  // Ensure categorySalesData is properly defined and contains the data
+  const categorySalesData = <%- JSON.stringify(categorySalesData) %>;
+  const categoryLabels = categorySalesData.map(item => item._id);
+  const categoryData = categorySalesData.map(item => item.totalSales);
+
+  console.log("categorySalesData",categorySalesData)
+
+  // Check if canvas element exists and get its context
+  const stx= document.getElementById('categorySalesChart');
+  if (!stx) {
+      console.error('Canvas element not found');
+  } else {
+      const stxContext = stx.getContext('2d');
+      if (!stxContext) {
+          console.error('Failed to get canvas context');
+      } else {
+          // Set canvas dimensions
+          stx.width = 400;
+          stx.height = 400;
+
+          // Create new Chart instance
+          new Chart(stxContext, {
+              type: 'pie',
+              data: {
+                  labels: categoryLabels,
+                  datasets: [{
+                      label: 'Sales Amount',
+                      data: categoryData,
+                      backgroundColor: [
+                          'rgba(255, 99, 132, 0.6)',
+                          'rgba(54, 162, 235, 0.6)',
+                          'rgba(255, 206, 86, 0.6)',
+                          'rgba(75, 192, 192, 0.6)',
+                          'rgba(153, 102, 255, 0.6)',
+                          'rgba(255, 159, 64, 0.6)'
+                          // Add more colors if you have more categories
+                      ],
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  maintainAspectRatio: false
+              }
+          });
+      }
+  }
+</script>
+
+
             
 
             <!-- content-main end// -->

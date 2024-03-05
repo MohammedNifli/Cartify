@@ -38,7 +38,7 @@
         <div class="card">
             <h1>Order Details</h1>
             <p>Order ID: <%= order._id %> </p>
-            <p>Order Date: <%= order.createdAt %></p>
+            <p>Order Date: <%= formattedOrderDate %></p>
             <p>Product Price: <%= order.items.price %></p>
             <p>Quantity: <%= order.items.quantity %></p>
             <p>Total Amount: <%= order.totalAmount %></p>

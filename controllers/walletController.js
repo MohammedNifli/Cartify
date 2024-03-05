@@ -188,18 +188,26 @@ const razorpay = new Razorpay({
 };
 
 
-const showHistory=async(req,res)=>{
-    try{
-        const userId= new mongoose.Types.ObjectId(req.session.user_id);
-        const wallet =await  Wallet.findOne({userId:userId})
-        console.log('history',wallet )
-        res.render('history',{wallet});
+const showHistory = async (req, res) => {
+    try {
+        const userId = new mongoose.Types.ObjectId(req.session.user_id);
+        const wallet = await Wallet.findOne({ userId: userId });
 
+        if (!wallet) {
+            return res.status(404).json({ message: "Wallet not found" });
+        }
 
-    }catch(error){
-        console.log(error)
+        // Sort transactions by timestamp in descending order (latest first)
+        wallet.transactions.sort((a, b) => b.timestamp - a.timestamp);
+
+        console.log('history', wallet);
+        res.render('history', { wallet });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
 
 
 module.exports={

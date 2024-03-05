@@ -66,6 +66,18 @@
                 <div class="card mx-auto card-login">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Sign in</h4>
+                        <% if (notadminp) { %>
+                            <div class="error-message" style="color: red;">
+                                <%= notadminp %>
+                            </div>
+                        <% } %>
+                        
+                        <!-- Display invalid email message -->
+                        <% if (notadmine) { %>
+                            <div class="error-message" style="color: red;">
+                                <%= notadmine %>
+                            </div>
+                        <% } %>
                         <form action="/admin/adminlog" method="post">
                             <div class="mb-3">
                                 <input class="form-control" placeholder="email" type="text" name="email" />

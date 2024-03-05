@@ -7,7 +7,7 @@ const bannerController = require('../controllers/BannerController');
 banner_route.use(express.urlencoded({ extended: true }));
 
 banner_route.use(session({
-    secret: 'aarodum-parayalley',
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: true
 }));

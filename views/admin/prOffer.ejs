@@ -126,53 +126,45 @@
                 </div>
             </section>
 
-
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    document.getElementById('categoryForm').addEventListener('submit', function (event) {
-                        event.preventDefault(); // Prevent the form from submitting by default
+                document.getElementById("categoryForm").addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent the form from submitting by default
             
-                        // Validate the form fields
-                        let product = document.getElementById('categorySelect').value;
-                        let discountPercentage = document.getElementById('discountPercentage').value;
-                        let validFrom = document.getElementById('offerStartDate').value;
-                        let validUntil = document.getElementById('offerEndDate').value;
+                    // Reset any previous error messages
+                    document.getElementById("discountPercentageError").innerText = "";
             
-                        // Basic validation: Ensure all fields are filled
-                        if (product.trim() === '') {
-                            alert('Please select a product');
-                            return;
-                        }
+                    // Validate Discount Percentage
+                    var discountPercentage = document.getElementById("discountPercentage").value;
+                    if (discountPercentage === "" || isNaN(discountPercentage) || discountPercentage < 1) {
+                        document.getElementById("discountPercentageError").innerText = "Please enter a valid discount percentage (greater than or equal to 1).";
+                        return false;
+                    }
             
-                        if (discountPercentage.trim() === '' || isNaN(discountPercentage) || discountPercentage <= 0) {
-                            alert('Please enter a valid discount percentage');
-                            return;
-                        }
+                    // Validate Offer Start Date
+                    var offerStartDate = document.getElementById("offerStartDate").value;
+                    if (offerStartDate === "") {
+                        alert("Please select an offer start date.");
+                        return false;
+                    }
             
-                        if (validFrom.trim() === '' || validUntil.trim() === '') {
-                            alert('Please select both start and end dates for the offer');
-                            return;
-                        }
+                    // Validate Offer End Date
+                    var offerEndDate = document.getElementById("offerEndDate").value;
+                    if (offerEndDate === "") {
+                        alert("Please select an offer end date.");
+                        return false;
+                    }
             
-                        // Ensure that the start date is a future date
-                        let currentDate = new Date();
-                        let startDate = new Date(validFrom);
-                        if (startDate <= currentDate) {
-                            alert('Offer start date should be a future date');
-                            return;
-                        }
+                    // Check if Offer End Date is after Offer Start Date
+                    if (new Date(offerEndDate) < new Date(offerStartDate)) {
+                        alert("Offer End Date must be after Offer Start Date.");
+                        return false;
+                    }
             
-                        // Ensure that the end date is after the start date
-                        let endDate = new Date(validUntil);
-                        if (endDate <= startDate) {
-                            alert('Offer end date should be after the start date');
-                            return;
-                        }
-            
-                        // If all fields are filled and validation passes, submit the form
-                        this.submit();
-                    });
+                    // If all validations pass, submit the form
+                    this.submit();
                 });
             </script>
+            
+        
             
             <%- include('../adminLayout/adminFooter.ejs') %>

@@ -60,6 +60,54 @@
                     
                 </div>
             </section>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    console.log("DOMContentLoaded event fired");
+                    
+                    const startDateInput = document.querySelector('input[name="startDate"]');
+                    const endDateInput = document.querySelector('input[name="endDate"]');
+                    const form = document.querySelector('form');
+            
+                    console.log(startDateInput);
+                    console.log(endDateInput);
+                    console.log(form);
+            
+                    form.addEventListener('submit', function (event) {
+                        // Prevent the form from submitting by default
+                        event.preventDefault();
+            
+                        // Get the current date
+                        const currentDate = new Date();
+            
+                        // Convert input date strings to Date objects
+                        const startDate = new Date(startDateInput.value);
+                        const endDate = new Date(endDateInput.value);
+            
+                        // Validation: Check if the start date is not in the past
+                        if (startDate < currentDate) {
+                            alert("Start date cannot be in the past.");
+                            return;
+                        }
+            
+                        // Validation: Check if the end date is not in the past
+                        if (endDate < currentDate) {
+                            alert("End date cannot be in the past.");
+                            return;
+                        }
+            
+                        // Validation: Check if the end date is greater than the start date
+                        if (endDate <= startDate) {
+                            alert("End date must be greater than the start date.");
+                            return;
+                        }
+            
+                        // If all validations pass, submit the form
+                        form.submit();
+                    });
+                });
+            </script>
+            
            
             <!-- content-main end// -->
             <%- include('../adminLayout/adminFooter.ejs') %>

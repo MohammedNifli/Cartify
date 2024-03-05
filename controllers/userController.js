@@ -766,7 +766,7 @@ const addAddress = async (req, res) => {
     try {
         // Retrieve the user ID from the session
         const userId = req.session.user_id;
-
+   console.log("body name",req.body.name)
         // Validate user ID
         if (!userId) {
             return res.status(401).send('User not authenticated');
@@ -780,6 +780,13 @@ const addAddress = async (req, res) => {
             cityName: req.body.city,
             zipcode: req.body.zip,
         };
+
+        
+
+        // Check if name field is provided
+        if (!addressData.name) {
+            return res.status(400).json({ error: 'Name field is required' });
+        }
 
         // Find the user's address using the user_id
         let userAddress = await Address.findOne({ user_id: userId });
@@ -805,6 +812,7 @@ const addAddress = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 
 
@@ -867,6 +875,8 @@ const changePasswordpg=async(req,res)=>{
 }
 
 //comparing password
+// const bcrypt = require('bcrypt');
+
 const checkingpassword = async (req, res) => {
     try {
         const id = req.session.user_id;
@@ -874,23 +884,22 @@ const checkingpassword = async (req, res) => {
 
         // Check if userData is null before accessing its properties
         if (!userData) {
-            return res.status(401).send("User not found");
+            return res.json({ msg: "User not found" });
         }
 
-        const currentPass = req.body.pass;
-        const newPass = req.body.npass;
-        const confirmPass = req.body.cpass;
+        const currentPass = req.body.currentPassword;
+        const newPass = req.body.newPassword;
+        const confirmPass = req.body.confirmPassword;
 
         // Check if the current password provided matches the stored hashed password
         const isPasswordMatch = await bcrypt.compare(currentPass, userData.password);
         if (!isPasswordMatch) {
-            const checkmessage = "Current password is incorrect";
-            return res.status(401).send(checkmessage); // Send the message
+            return res.json({ msg: "Current password is incorrect" });
         }
 
         // Check if the new password and confirm password match
         if (newPass !== confirmPass) {
-            return res.status(400).send("New password and confirm password do not match");
+            return res.json({ msg: "New password and confirm password do not match" });
         }
 
         // Hash the new password before updating
@@ -902,12 +911,19 @@ const checkingpassword = async (req, res) => {
         // Save the updated user to the database
         await userData.save();
 
-        res.redirect('/pass-page');
+        return res.json({ msg: "Password updated successfully" });
     } catch (error) {
         console.log(error);
         return res.status(500).send("Internal Server Error");
     }
 };
+
+
+
+module.exports = {
+    checkingpassword
+};
+
 
 
 
@@ -1092,7 +1108,7 @@ const removeWishlistItem = async (req, res) => {
 const referalUserside=async(req,res)=>{
     try{
         const userId=req.session.user_id;
-       const userData=await User.findById({_id:userId})
+       const userData=await User.findById({_id:new mongoose.Types.ObjectId(userId)})
        console.log("userrrrr:",userData)
         res.render('referalLink',{ref:userData.refferalId})
 
@@ -1223,6 +1239,34 @@ const sortData = async (req, res) => {
 
 
 
+// const getAllProducts = async (req, res) => {
+//     try {
+//         const initialPrice = parseFloat(req.query.initialPrice);
+//         const upperPrice = parseFloat(req.query.upperPrice);
+
+//         // Define a filter object for the MongoDB query
+//         const filterQuery = { isDeleted: false };
+
+//         // If initialPrice and upperPrice are provided, add them to the filter
+//         if (!isNaN(initialPrice) && !isNaN(upperPrice)) {
+//             filterQuery.price = { $gte: initialPrice, $lte: upperPrice };
+//         } else if (!isNaN(initialPrice)) {
+//             filterQuery.price = { $gte: initialPrice };
+//         } else if (!isNaN(upperPrice)) {
+//             filterQuery.price = { $lte: upperPrice };
+//         }
+
+//         // Fetch products from the database based on the filter
+//         const products = await Product.find(filterQuery);
+//         res.json(products);
+//     } catch (error) {
+//         console.error('Error fetching products:', error);
+//         res.status(500).json({ success: false, message: 'Internal server error' });
+//     }
+// };
+
+
+
 
 
 
@@ -1272,7 +1316,8 @@ module.exports = {
     filter,
     // filterByPriceRange,
     // filterByCategoryAndPrice
-    sortData
+    sortData,
+    // getAllProducts
 
    
   };

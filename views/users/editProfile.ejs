@@ -92,55 +92,68 @@
 
 		<script>
 			function validateForm() {
-				const fname = document.getElementById('fname').value.trim();
-				const lname = document.getElementById('lname').value.trim();
-				const email = document.getElementById('email').value.trim();
-				const country = document.getElementById('inputCountry').value.trim();
-				let isValid = true;
+				// Get form inputs
+				var fname = document.getElementById("fname").value.trim();
+				var lname = document.getElementById("lname").value.trim();
+				var email = document.getElementById("email").value.trim();
+				var country = document.getElementById("inputCountry").value.trim();
+		
+				// Regular expression for letters only
+				var lettersPattern = /^[A-Za-z]+$/;
+		
+				// Regular expression for email validation
+				var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		
+				// Regular expression to check if the country contains only letters
+				var countryPattern = /^[A-Za-z]+$/;
+		
+				// Validation flag
+				var isValid = true;
+		
+				// Clear previous error messages
+				document.getElementById("fname-error").innerHTML = "";
+				document.getElementById("lname-error").innerHTML = "";
+				document.getElementById("email-error").innerHTML = "";
+				document.getElementById("country-error").innerHTML = "";
 		
 				// Validate First Name
-				if (!fname) {
-					document.getElementById('fname-error').innerText = "Please enter your First Name";
+				if (fname === "") {
+					document.getElementById("fname-error").innerHTML = "First name is required";
 					isValid = false;
-				} else {
-					document.getElementById('fname-error').innerText = "";
+				} else if (!lettersPattern.test(fname)) {
+					document.getElementById("fname-error").innerHTML = "First name must contain only letters";
+					isValid = false;
 				}
 		
 				// Validate Last Name
-				if (!lname) {
-					document.getElementById('lname-error').innerText = "Please enter your Last Name";
+				if (lname === "") {
+					document.getElementById("lname-error").innerHTML = "Last name is required";
 					isValid = false;
-				} else {
-					document.getElementById('lname-error').innerText = "";
+				} else if (!lettersPattern.test(lname)) {
+					document.getElementById("lname-error").innerHTML = "Last name must contain only letters";
+					isValid = false;
 				}
 		
-				// Validate Email Address
-				if (!email) {
-					document.getElementById('email-error').innerText = "Please enter your Email Address";
+				// Validate Email
+				if (email === "") {
+					document.getElementById("email-error").innerHTML = "Email is required";
 					isValid = false;
-				} else if (!isValidEmail(email)) {
-					document.getElementById('email-error').innerText = "Please enter a valid Email Address";
+				} else if (!emailPattern.test(email)) {
+					document.getElementById("email-error").innerHTML = "Invalid email address";
 					isValid = false;
-				} else {
-					document.getElementById('email-error').innerText = "";
 				}
 		
 				// Validate Country
-				if (!country) {
-					document.getElementById('country-error').innerText = "Please enter your Country";
+				if (country === "") {
+					document.getElementById("country-error").innerHTML = "Country is required";
 					isValid = false;
-				} else {
-					document.getElementById('country-error').innerText = "";
+				} else if (!countryPattern.test(country)) {
+					document.getElementById("country-error").innerHTML = "Country must contain only letters";
+					isValid = false;
 				}
 		
 				return isValid;
 			}
-		
-			// Function to validate email format
-			function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@gmail\.com$/;
-    return emailRegex.test(email);
-}
-
 		</script>
+		
 		<%- include('../layouts/footer.ejs') %>

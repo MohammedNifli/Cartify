@@ -26,7 +26,7 @@ const path=require('path');
 const ejs=require('ejs');
 const puppeteer=require('puppeteer')
 
-
+const moment =require('moment')
 
 // const totalPrice = cartDetails.reduce((total, item) => {
 //   return total + (item.items.quantity * item.productDetails.price);
@@ -257,8 +257,8 @@ console.log('Total Price:', totalPrice);
 
 //<---------------------------------------------RAZORPAYMENT------------------------------------------------>
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_m90tBYBDKu8GIf',
-  key_secret: '4EH6DyrDsr1A8Tkv79NJOONA'
+  key_id: process.env.RazorpayKey,
+  key_secret: process.env.RazorpaySecret
 });
 
 const razorPayment = async (req, res) => {
@@ -274,7 +274,7 @@ const razorPayment = async (req, res) => {
     }
 
     // Retrieve the total price from the cart
-    let totalPrice = cart.totalPrice;
+    let totalPrice = cart.Tprice;
     if (req.session.couponAmount) {
       totalPrice -= req.session.couponAmount;
     }
@@ -417,30 +417,30 @@ const viewOrder = async (req, res) => {
       },
     ]);
 
-    console.log("orderview:", orderView);
+    console.log("orderview:", orderView[0].billingAddress);
 
-    let billingAddress = "";
+    let billingAddressId = "";
     if (orderView.length > 0) {
-      billingAddress = orderView[0].billingAddress;
+      billingAddressId = orderView[0].billingAddress;
     }
 
     const userAddress = await Address.findOne(
-      {
-        user_id: userId,
-      },
-      { Addresses: 1 }
-    ).exec();
+      { user_id: userId, "Addresses._id": billingAddressId },
+      { Addresses: { $elemMatch: { _id: billingAddressId } } }
+  ).exec();
 
+  const formattedOrderDate = moment(orderView.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+  
+    
     console.log("userAddress:", userAddress);
 
-   
-
+    // Ensure proper error handling
     if (!userAddress) {
-      console.log("User address not found");
+      console.log("User address not found for userId:", userId, "and billingAddressId:", billingAddressId);
       // Handle the case where userAddress is null
     }
 
-    res.render("viewDetails", { orderView, billingAddress, userAddress, user: req.session.user_id });
+    res.render("viewDetails", { orderView, billingAddressId, userAddress, user: req.session.user_id,formattedOrderDate });
 
     if (orderView.length === 0) {
       console.log("No matching documents found");
@@ -448,11 +448,12 @@ const viewOrder = async (req, res) => {
       console.log("Found matching documents");
     }
   } catch (error) {
-    console.error("Error during aggregation:", error);
+    console.error("Error during viewOrder:", error);
     // Handle the error and send an appropriate response to the client
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
@@ -507,10 +508,9 @@ const cancelOrder = async (req, res) => {
     // Step 6: Update Order Status to 'cancelled'
     const updatedOrder = await Order.findByIdAndUpdate(
       orderId,
-      { $set: { "items.$[].status": "cancelled" } }, // Corrected syntax
+      { $set: { "items.$[].status": "cancelled" } },
       { new: true }
-    );
-    
+    ); 
     console.log("updateOrder",updatedOrder)
 
     if (!updatedOrder) {
@@ -733,7 +733,16 @@ const removeCoupon = async (req, res) => {
   }
 };
 
-module.exports = { removeCoupon };
+const couponShow=async(req,res)=>{
+  try{
+    const couponData=await Coupon.find();
+    console.log("coupons:",couponData);
+    res.render("couponPage",{couponData})
+
+  }catch(error){
+    console.log(error)
+  }
+}
 
 
 
@@ -757,7 +766,8 @@ module.exports = { removeCoupon };
 
     //apply coupon
     applyCoupon,
-    removeCoupon
+    removeCoupon,
+    couponShow
 
    
    

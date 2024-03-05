@@ -114,28 +114,27 @@
 									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-									
-									<form  action="/addaddress" method="post" id="addAddressForm">
-
-
+									<form action="/addaddress" method="post" id="addAddressForm">
 										<input type="hidden" name="user_Id" value="#">
-										
-
 										<div class="mb-3">
 											<label for="addressName" class="form-label">Name</label>
-											<input type="text" class="form-control" id="addressName" name="name"  required>
+											<input type="text" class="form-control" id="addressName" name="name" required>
+											<div id="name-error" class="error-message"></div>
 										</div>
 										<div class="mb-3">
 											<label for="villaName" class="form-label">Villa Name</label>
 											<input type="text" class="form-control" id="villaName" name="villa" required>
+											<div id="villa-error" class="error-message"></div>
 										</div>
 										<div class="mb-3">
 											<label for="cityName" class="form-label">City Name</label>
 											<input type="text" class="form-control" id="cityName" name="city" required>
+											<div id="city-error" class="error-message"></div>
 										</div>
 										<div class="mb-3">
 											<label for="zipcode" class="form-label">Zipcode</label>
 											<input type="text" class="form-control" id="zipcode" name="zip" required>
+											<div id="zip-error" class="error-message"></div>
 										</div>
 										<button type="submit" class="btn btn-primary">Save Address</button>
 									</form>
@@ -143,6 +142,9 @@
 							</div>
 						</div>
 					</div>
+					
+					
+					
 					<% addresses.forEach(address => { %>
 						<% address.Addresses.forEach((singleaddress, index) => { %>
 							<div class="modal fade" id="editAddressModal_<%= singleaddress._id %>" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
@@ -154,26 +156,32 @@
 								</div>
 								<div class="modal-body">
 									
-											<form  action="/edit-address/<%=singleaddress._id%>" method="post" id="editAddressForm">
-												<input type="hidden" name="user_Id" value="<%= singleaddress.user_Id %>">
-												<div class="mb-3">
-													<label for="addressName" class="form-label">Name</label>
-													<input type="text" class="form-control" id="addressName" name="name" value="<%= singleaddress.name %>">
-												</div>
-												<div class="mb-3">
-													<label for="villaName" class="form-label">Villa Name</label>
-													<input type="text" class="form-control" id="villaName" name="villa" value="<%= singleaddress.villaName %>">
-												</div>
-												<div class="mb-3">
-													<label for="cityName" class="form-label">City Name</label>
-													<input type="text" class="form-control" id="cityName" name="city" value="<%= singleaddress.cityName %>">
-												</div>
-												<div class="mb-3">
-													<label for="zipcode" class="form-label">Zipcode</label>
-													<input type="text" class="form-control" id="zipcode" name="zip" value="<%= singleaddress.zipcode %>">
-												</div>
-												<button type="submit" class="btn btn-primary">Save Address</button>
-											</form>
+									<form action="/edit-address/<%= singleaddress._id %>" method="post" id="editAddressForm"  >
+										<input type="hidden" name="user_Id" value="<%= singleaddress.user_Id %>">
+										<div class="mb-3">
+											<label for="addressName" class="form-label">Name</label>
+											<input type="text" class="form-control" id="addressName" name="name" value="<%= singleaddress.name %>">
+											<div id="name-error" class="error-message"></div>
+										</div>
+										<div class="mb-3">
+											<label for="villaName" class="form-label">Villa Name</label>
+											<input type="text" class="form-control" id="villaName" name="villa" value="<%= singleaddress.villaName %>">
+											<div id="villa-error" class="error-message"></div>
+										</div>
+										<div class="mb-3">
+											<label for="cityName" class="form-label">City Name</label>
+											<input type="text" class="form-control" id="cityName" name="city" value="<%= singleaddress.cityName %>">
+											<div id="city-error" class="error-message"></div>
+										</div>
+										<div class="mb-3">
+											<label for="zipcode" class="form-label">Zipcode</label>
+											<input type="text" class="form-control" id="zipcode" name="zip" value="<%= singleaddress.zipcode %>">
+											<div id="zip-error" class="error-message"></div>
+										</div>
+										<button type="submit" class="btn btn-primary">Save Address</button>
+									</form>
+									
+									
 											
 										
 								</div>
@@ -231,37 +239,153 @@
 		</script>
 
 		
-<!-- <script>
-    $(document).ready(function() {
-        $('#openEditAddressModal').click(function() {
-            $('#editAddressModal').modal('show'); // Show the modal when the button is clicked
+
+	<script>
+		
+		document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("addAddressForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        var name = document.getElementById("addressName").value.trim();
+        var villa = document.getElementById("villaName").value.trim();
+        var city = document.getElementById("cityName").value.trim();
+        var zip = document.getElementById("zipcode").value.trim();
+        var nameError = document.getElementById("name-error");
+        var villaError = document.getElementById("villa-error");
+        var cityError = document.getElementById("city-error");
+        var zipError = document.getElementById("zip-error");
+
+        // Reset error messages
+        nameError.textContent = "";
+        villaError.textContent = "";
+        cityError.textContent = "";
+        zipError.textContent = "";
+
+        // Validate Name
+        if (name === "") {
+            nameError.textContent = "Please enter a name for the address.";
+            return false;
+        } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+            nameError.textContent = "Name can only contain letters and spaces.";
+            return false;
+        }
+
+        // Validate Villa Name
+        if (villa === "") {
+            villaError.textContent = "Please enter the villa name.";
+            return false;
+        } else if (!/^[a-zA-Z\s]+$/.test(villa)) {
+            villaError.textContent = "Villa name can only contain letters and spaces.";
+            return false;
+        }
+
+        // Validate City Name
+        if (city === "") {
+            cityError.textContent = "Please enter the city name.";
+            return false;
+        } else if (!/^[a-zA-Z\s]+$/.test(city)) {
+            cityError.textContent = "City name can only contain letters and spaces.";
+            return false;
+        }
+
+        // Validate Zipcode
+        if (zip === "") {
+            zipError.textContent = "Please enter the zipcode.";
+            return false;
+        } else if (!/^\d+$/.test(zip)) {
+            zipError.textContent = "Zipcode must contain only numbers.";
+            return false;
+        }
+
+        // If all data is valid, submit the form
+        this.submit();
+    });
+
+    // Additional event listener to prevent only whitespace input
+    document.querySelectorAll('input').forEach(function(input) {
+        input.addEventListener('input', function() {
+            if (this.value.trim() === '') {
+                this.value = ''; // Clear the input value
+            }
         });
     });
-</script> -->
-
-
-		<!-- <script>
-			function showEditForm() {
-				// Get the edit address form container
-				var editAddressFormContainer = document.getElementById('editAddressFormContainer');
-				
-				// Show the edit address form
-				editAddressFormContainer.style.display = 'block';
-			}
-		</script> -->
-<!-- 
-		<script>
-			const addAddressForm = document.getElementById('addAddressForm');
-addAddressForm.addEventListener('submit', function (event) {
-   event.preventDefault();
-   console.log('Form submitted');  // Add this line for debugging
-   const addAddressModal = new bootstrap.Modal(document.getElementById('addAddressModal'));
-   addAddressModal.hide();
 });
 
-		</script> -->
+</script>
+
+		
+		
+		
+		
+		<script>
+			
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get all edit address forms and attach event listeners
+        var editAddressForms = document.querySelectorAll("form[id^='editAddressForm']");
+        
+        editAddressForms.forEach(function(form) {
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var name = form.querySelector(".form-control#addressName").value.trim();
+                var villa = form.querySelector(".form-control#villaName").value.trim();
+                var city = form.querySelector(".form-control#cityName").value.trim();
+                var zip = form.querySelector(".form-control#zipcode").value.trim();
+                var nameError = form.querySelector(".error-message#name-error");
+                var villaError = form.querySelector(".error-message#villa-error");
+                var cityError = form.querySelector(".error-message#city-error");
+                var zipError = form.querySelector(".error-message#zip-error");
+
+                // Reset error messages
+                nameError.textContent = "";
+                villaError.textContent = "";
+                cityError.textContent = "";
+                zipError.textContent = "";
+
+                // Validate Name
+                // Validate Name
+if (name === "") {
+    nameError.textContent = "Please enter a name for the address.";
+    return false;
+} else if (!/^[a-zA-Z\s]+$/.test(name)) { // Updated regex to allow whitespace (\s)
+    nameError.textContent = "Name can only contain letters.";
+    return false;
+}
+
+// Validate Villa Name
+if (villa === "") {
+    villaError.textContent = "Please enter the villa name.";
+    return false;
+} else if (!/^[a-zA-Z\s]+$/.test(villa)) { // Updated regex to allow whitespace (\s)
+    villaError.textContent = "Villa name can only contain letters.";
+    return false;
+}
+
+// Validate City Name
+if (city === "") {
+    cityError.textContent = "Please enter the city name.";
+    return false;
+} else if (!/^[a-zA-Z\s]+$/.test(city)) { // Updated regex to allow whitespace (\s)
+    cityError.textContent = "City name can only contain letters.";
+    return false;
+}
+
+
+                // If all data is valid, submit the form
+                this.submit();
+            });
+        });
+    });
+
+
+		</script>
+		
+		
+		
 		
 
-		<!--end page wrapper -->
-		<!--start footer section-->
+
+		
+		
+		
 <%- include('../layouts/footer.ejs') %>

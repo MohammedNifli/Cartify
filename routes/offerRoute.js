@@ -6,7 +6,7 @@ const offerController = require('../controllers/offerController');
 offer_route.use(express.urlencoded({ extended: true }));
 
 offer_route.use(session({
-    secret: 'mysecret-key',
+    secret: 'your-secret-key',
    
     resave: false,
     saveUninitialized: true,

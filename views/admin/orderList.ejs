@@ -38,7 +38,8 @@
                                         <td><%= order.totalAmount%></td>
                                         <td><%= order.payment%></td>
                                         <td><span class="badge rounded-pill alert-warning"><%= item.status%></span></td>
-                                        <td><%= order.createdAt%></td>
+                                        <td><%= moment(order.createdAt).format('MMMM Do YYYY, h:mm:ss a') %></td>
+
                                         <td class="text-end">
                                             <a href="/admin/order-detail?orderid=<%= order._id%>" class="btn btn-md rounded font-sm">Detail</a>
 
@@ -78,5 +79,8 @@
                     </nav>
                 </div>
             </section>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
             <!-- content-main end// -->
             <%- include('../adminLayout/adminFooter.ejs') %>

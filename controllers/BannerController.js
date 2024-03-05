@@ -203,7 +203,8 @@ const updateBanner = async (req, res) => {
                 return res.status(404).json({ error: 'Banner not found' });
             }
 
-            return res.status(200).json({ message: 'Banner updated successfully', banner: updatedBanner });
+            return  res.redirect('/admin/banner/banner-list')
+            
         }
     } catch (error) {
         console.error(error);

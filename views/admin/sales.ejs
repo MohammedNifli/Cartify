@@ -3,7 +3,7 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Order List</h2>
+                        <h2 class="content-title card-title">Sales List</h2>
                         <p>Lorem ipsum dolor sit amet.</p>
                     </div>
                     <div>
@@ -14,18 +14,16 @@
                     
                     <!-- card-header end// -->
                     <div class="card-body">
-                        <form action="/admin/salespg?start=<%=startDate%>&end=<%=endDate%>" method="get">
+                        <form id="salesForm" action="/admin/salespg" method="get">
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="startDate" class="form-label">Start Date</label>
-                                    <input type="date" class="form-control" id="startDate" name="start"  value="<%=startDate%>">
+                                    <input type="date" class="form-control" id="startDate" name="start" value="<%=startDate%>">
                                 </div>
-                                <br>
                                 <div class="col">
                                     <label for="endDate" class="form-label">End Date</label>
-                                    <input type="date" class="form-control" id="endDate" name="end"  value="<%=endDate%>">
+                                    <input type="date" class="form-control" id="endDate" name="end" value="<%=endDate%>">
                                 </div>
-                                <br>
                                 <div class="col align-self-end">
                                     <button type="submit" class="btn btn-primary">Generate Report</button>
                                 </div>
@@ -49,7 +47,7 @@
                                     <tr>
                                         <td><%= index + 1 %></td>
                                         <td><%= order._id %></td>
-                                        <td><%= order.productInfo.name %></td>
+                                        <td><%= order.productInfo.productName %></td>
                                         <td><%= order.items.quantity %></td>
                                         <td><%= order.totalAmount %></td>
                                         <td><%= order.createdAt.toLocaleDateString() %></td>
@@ -64,6 +62,7 @@
                     </div>
 
                     <a href="/admin/sales-excel">Download Excel</a>
+                  
                     <a href="/admin/sales-pdf">Download PDF</a>
                     
 
@@ -87,6 +86,43 @@
                 </div>
             </section>
             <!-- Include the jsPDF library -->
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const form = document.getElementById('salesForm');
+                    const startDateInput = document.getElementById('startDate');
+                    const endDateInput = document.getElementById('endDate');
+            
+                    form.addEventListener('submit', function (event) {
+                        event.preventDefault(); // Prevent the form from submitting
+            
+                        const startDate = new Date(startDateInput.value);
+                        const endDate = new Date(endDateInput.value);
+            
+                        // Check if the end date is before the start date
+                        if (endDate < startDate) {
+                            alert('End date cannot be before the start date.');
+                            return;
+                        }
+            
+                        // Check if the start date is in the future
+                        const currentDate = new Date();
+                        if (startDate > currentDate) {
+                            alert('Start date cannot be in the future.');
+                            return;
+                        }
+            
+                        // Check if the end date is in the future
+                        if (endDate > currentDate) {
+                            alert('End date cannot be in the future.');
+                            return;
+                        }
+            
+                        // If all validations pass, submit the form
+                        form.submit();
+                    });
+                });
+            </script>
            
 
             <%- include('../adminLayout/adminFooter.ejs') %>
