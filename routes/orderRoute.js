@@ -44,5 +44,12 @@ order_route.get('/invoice',orderController.invoiceGeneration);
 order_route.post('/check-address',orderController.checkoutAddress);
 
 
+order_route.post('/return', orderController.returnOrder);
+
+order_route.post('/reason',orderController.reasonForreturn);
+
+
+
+
 
 module.exports=order_route

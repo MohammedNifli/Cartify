@@ -170,6 +170,7 @@
 			</div>
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script>
 	
 
@@ -253,7 +254,14 @@
                 console.error('Error sorting products:', error);
             }
         });
+
+		
     
+		// Your addToWishlist function remains the same
+		
+
+
+
 
 
 
@@ -283,8 +291,11 @@
 												<h6 class="mb-0 fw-bold product-short-title">${product.productName}</h6>
 											</div>
 											<div class="icon-wishlist">
-												<a href="javascript:;"><i class="bx bx-heart"></i></a>
-											</div>
+                                               <a href="/addwish/${product._id}" onclick="addToWishlist(event, '${product._id}')">
+                                                <i id="heartIcon_${product._id}" class="bx bx-heart"></i>
+                                                  </a>
+                                            </div>
+
 										</div>
 										
 										<div class="product-price d-flex align-items-center justify-content-start gap-2 mt-2">
@@ -305,9 +316,120 @@
 
 		
 				
-		</script>
+</script>
+
+<!-- 		
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+		<script>
+			function addToWishlist(event, productId) {
+				event.preventDefault(); // Prevent default behavior of anchor tag
+
+				console.log("koooo")
 		
-			
+				console.log("Product ID:", productId); // Check if productId is correctly passed
+		
+				const heartIcon = document.querySelector(`#heartIcon_${productId}`);
+				console.log("Heart Icon:", heartIcon); // Check if heartIcon is correctly selected
+		
+				fetch(`/addwish/${productId}`, {
+					method: 'GET',
+				})
+				.then(response => {
+					console.log("Response:", response); // Check response from the server
+					if (!response.ok) {
+						throw new Error('Failed to add/remove product to/from wishlist');
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log("Data:", data); // Check the data received from the server
+					if (data.success) {
+						if (data.isInWishlist) {
+							// Product is in the wishlist, show product removed successfully alert
+							Swal.fire({
+                        title: "Product removed successfully",
+                        icon: "success",
+                        buttons: false,
+                        timer: 1500,
+                    });
+						} else {
+							// Product is not in the wishlist, show product added successfully alert
+							swal({
+                        title: "Product added successfully",
+                        icon: "success",
+                        buttons: false,
+                        timer: 1500,
+                    });
+						}
+						// Toggle the heart icon color based on whether the product is in the wishlist
+						heartIcon.classList.toggle('text-danger', data.isInWishlist);
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
+			}
+		</script>
+				 -->
+
+
+				<!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<!-- Frontend JavaScript code -->
+<script>
+    function addToWishlist(event, productId) {
+        event.preventDefault(); // Prevent default behavior of anchor tag
+
+        console.log("Product ID:", productId); // Check if productId is correctly passed
+
+        // Fetch request to add/remove product from wishlist
+        fetch(`/addwish/${productId}`, {
+            method: 'GET',
+        })
+        .then(response => {
+            console.log("Response status:", response.status); // Log response status
+            if (!response.ok) {
+                throw new Error('Failed to add/remove product to/from wishlist');
+            }
+            return response.json(); // Parse response JSON
+        })
+        .then(data => {
+            console.log("Data:", data); // Log the data received from the server
+            if (data.success) {
+				console.log("HERE")
+                // Select the heart icon
+                const heartIcon = document.querySelector(`#heartIcon_${productId}`);
+
+                // Toggle heart icon color based on whether the product is in the wishlist
+                heartIcon.classList.toggle('text-danger', data.isInWishlist);
+
+                // Show SweetAlert based on wishlist status
+                const alertMessage = data.isInWishlist ? "Product removed successfully" : "Product added successfully";
+                Swal.fire({
+                    position: "top",
+                    icon: "success",
+                    title: alertMessage,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error); // Log any errors that occur
+            // Show an error alert if something went wrong
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                title: "Something went wrong",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+    }
+</script>
+
 		
 		
 		

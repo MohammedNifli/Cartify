@@ -123,56 +123,7 @@
                 }
             </script>
 
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('categoryForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting by default
 
-        // Validate the form fields
-        let category = document.getElementById('categorySelect').value;
-        let discountPercentage = document.getElementById('discountPercentage').value;
-        let startDate = document.getElementById('offerStartDate').value;
-        let endDate = document.getElementById('offerEndDate').value;
-
-        // Basic validation: Ensure all fields are filled
-        if (category.trim() === '') {
-            alert('Please select a category');
-            return;
-        }
-
-        if (discountPercentage.trim() === '' || isNaN(discountPercentage) || discountPercentage <= 0) {
-            alert('Please enter a valid discount percentage');
-            return;
-        }
-
-        if (startDate.trim() === '' || endDate.trim() === '') {
-            alert('Please select both start and end dates for the offer');
-            return;
-        }
-
-        // Convert today's date to compare with selected dates
-        let today = new Date();
-        let selectedStartDate = new Date(startDate);
-        let selectedEndDate = new Date(endDate);
-
-        // Ensure that the start date is not in the past
-        if (selectedStartDate < today) {
-            alert('Offer start date cannot be a past date');
-            return;
-        }
-
-        // Ensure that the end date is after the start date
-        if (selectedStartDate >= selectedEndDate) {
-            alert('Offer end date should be after the start date');
-            return;
-        }
-
-        // If all fields are filled and validation passes, submit the form
-        this.submit();
-    });
-});
-
-</script> -->
 
 
 <script>
@@ -182,8 +133,11 @@
 
         // Validate Discount Percentage
         var discountPercentage = document.getElementById("discountPercentage").value;
-        if (discountPercentage === "" || isNaN(discountPercentage) || discountPercentage < 1) {
-            document.getElementById("discountPercentageError").innerText = "Please enter a valid discount percentage (greater than or equal to 1).";
+        if (discountPercentage === "" || isNaN(discountPercentage) || discountPercentage < 1 || discountPercentage > 99) {
+            alert("Please enter a valid discount percentage between 1 and 99.")
+            return false;
+        } else if (discountPercentage >= 100) {
+            alert("Discount percentage cannot be 100 or above.");
             return false;
         } else {
             document.getElementById("discountPercentageError").innerText = "";

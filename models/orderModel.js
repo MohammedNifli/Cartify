@@ -36,6 +36,10 @@ const orderSchema = new mongoose.Schema({
                 default: 'pending',
                 required: true
             },
+            reason:{
+                type:String,
+                
+            }
         }
     ],
     payment: {

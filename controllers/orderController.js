@@ -564,8 +564,9 @@ const invoiceGeneration=async(req,res)=>{
     
 
     const addressId= orderData[0].billingAddress  ;
+    console.log("addressId",addressId)
     const addressData = await Address.findOne({user_id: user});
-    const deliveryAddress = addressData.Addresses.find(address => address._id.toString() === addressId)
+    const deliveryAddress = addressData.Addresses.find(address => address._id === addressId);
     console.log('delivery:',deliveryAddress)
     const data = {
       order: orderData,
@@ -746,6 +747,70 @@ const couponShow=async(req,res)=>{
 
 
 
+const returnOrder = async (req, res) => {
+  try {
+      const orderId = req.query.orderId;
+      const productId = req.query.productId;
+      
+      // Update the order status to "returned" in the database
+      const updatedOrder = await Order.findOneAndUpdate(
+          {
+              _id: orderId,
+              "items.product_id": productId
+          },
+          {
+              $set: {
+                  "items.$.status": "returned"
+              }
+          },
+          { new: true }
+      );
+
+      // Respond with the updated order information
+      res.json(updatedOrder);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+
+
+
+const reasonForreturn = async (req, res) => {
+  try {
+      const orderId = req.query.orderId;
+      const productId = req.query.productId;
+
+      const reason = req.body.returnReason;
+
+      console.log('orderId', orderId);
+      console.log('productId', productId);
+      console.log('reason', reason);
+
+      const updateReason = await Order.findOneAndUpdate(
+          {
+              _id: orderId,
+              "items.product_id": productId
+          },
+          {
+              $set: {
+                  "items.$.reason": reason,
+                  "items.$.status": "returned"
+              }
+          },
+          { new: true }
+      );
+
+      console.log('updateReason', updateReason);
+
+      res.redirect('/order/load-order');
+  } catch (error) {
+      console.log(error);
+  }
+}
+
 
 
 
@@ -767,7 +832,9 @@ const couponShow=async(req,res)=>{
     //apply coupon
     applyCoupon,
     removeCoupon,
-    couponShow
+    couponShow,
+    returnOrder,
+    reasonForreturn
 
    
    

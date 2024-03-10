@@ -1028,23 +1028,28 @@ const addWishlist = async (req, res) => {
         }
 
         // Check if the product is already in the wishlist
-        if (wishlist.items.some(item => item.product_id.equals(productId))) {
-            return res.status(400).json({ error: 'Product already in wishlist' });
+        const existingIndex = wishlist.items.findIndex(item => item.product_id.equals(productId));
+
+        if (existingIndex !== -1) {
+            // If the product is already in the wishlist, remove it
+            wishlist.items.splice(existingIndex, 1);
+            await wishlist.save();
+            // res.sendStatus(204); // No content response
+            res.json({success: true,message: "removed", isInWishlist: "rem"})
+        } else {
+            // If the product is not in the wishlist, add it
+            wishlist.items.push({ product_id: productId });
+            await wishlist.save();
+            res.json({success: true,message: "already list"})
+            // res.sendStatus(204); // No content response
         }
-
-        // Add the product to the wishlist's items array
-        wishlist.items.push({ product_id: productId });
-
-        // Save the changes to the wishlist
-        await wishlist.save();
-
-        // Respond with success message
-        res.status(200).json({ success: true, message: 'Product added to wishlist' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
 
 
 
@@ -1058,13 +1063,13 @@ const removeWishlistItem = async (req, res) => {
         // Find the user's wishlist document
         let wishlist = await Wishlist.findOne({ user_id: userId });
         if (!wishlist) {
-            return res.status(404).json({ error: 'Wishlist not found for the user' });
+            return res.json({ error: 'Wishlist not found for the user' });
         }
 
         // Check if the product exists in the wishlist
         const index = wishlist.items.findIndex(item => item.product_id.equals(productId));
         if (index === -1) {
-            return res.status(404).json({ error: 'Product not found in wishlist' });
+            return res.json({ error: 'Product not found in wishlist' });
         }
 
         // Remove the product from the wishlist
@@ -1084,22 +1089,6 @@ const removeWishlistItem = async (req, res) => {
 
 
 
-//product showing page and car=tegory wise filtration
-
-
-// const productPage= async(req,res)=>{
-//     try{
-
-//         const categories=  await Category.find({})
-        
-//         const productData= await Product.find({isDeleted:false});
-//         console.log('categories:',categories)
-//         res.render('shopPage',{catData:categories,proData:productData});
-
-//     }catch(error){
-//         console.log(error)
-//     }
-// }
 
 
 
@@ -1147,7 +1136,7 @@ const search = async (req, res) => {
                                         .limit(limit);
         }
 
-        res.render('shopPage', { catData: categories, proData: productData, totalPages: totalPages, currentPage: page });
+        res.render('shopPage', { user:req.session.user_id,catData: categories, proData: productData, totalPages: totalPages, currentPage: page });
 
     } catch (error) {
         console.log("Error searching for products:", error);
@@ -1226,7 +1215,7 @@ const sortData = async (req, res) => {
             sortQuery = { price: 1 }; // Sort by price low to high
         } else if (sortOption === 'price-desc') {
             sortQuery = { price: -1 }; // Sort by price high to low
-        }
+        }     
 
         // Fetch and send the sorted products
         const products = await Product.find(filterQuery).sort(sortQuery);
@@ -1239,41 +1228,7 @@ const sortData = async (req, res) => {
 
 
 
-// const getAllProducts = async (req, res) => {
-//     try {
-//         const initialPrice = parseFloat(req.query.initialPrice);
-//         const upperPrice = parseFloat(req.query.upperPrice);
-
-//         // Define a filter object for the MongoDB query
-//         const filterQuery = { isDeleted: false };
-
-//         // If initialPrice and upperPrice are provided, add them to the filter
-//         if (!isNaN(initialPrice) && !isNaN(upperPrice)) {
-//             filterQuery.price = { $gte: initialPrice, $lte: upperPrice };
-//         } else if (!isNaN(initialPrice)) {
-//             filterQuery.price = { $gte: initialPrice };
-//         } else if (!isNaN(upperPrice)) {
-//             filterQuery.price = { $lte: upperPrice };
-//         }
-
-//         // Fetch products from the database based on the filter
-//         const products = await Product.find(filterQuery);
-//         res.json(products);
-//     } catch (error) {
-//         console.error('Error fetching products:', error);
-//         res.status(500).json({ success: false, message: 'Internal server error' });
-//     }
-// };
-
-
-
-
-
-
-
-
-
-
+ 
 
  
 

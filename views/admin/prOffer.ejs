@@ -135,8 +135,8 @@
             
                     // Validate Discount Percentage
                     var discountPercentage = document.getElementById("discountPercentage").value;
-                    if (discountPercentage === "" || isNaN(discountPercentage) || discountPercentage < 1) {
-                        document.getElementById("discountPercentageError").innerText = "Please enter a valid discount percentage (greater than or equal to 1).";
+                    if (discountPercentage === "" || isNaN(discountPercentage) || discountPercentage < 1 || discountPercentage > 99) {
+                        document.getElementById("discountPercentageError").innerText = "Please enter a valid discount percentage between 1 and 99.";
                         return false;
                     }
             
@@ -164,6 +164,8 @@
                     this.submit();
                 });
             </script>
+            
+            
             
         
             

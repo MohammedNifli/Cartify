@@ -19,7 +19,7 @@ admin_route.use(session({
  admin_route.post('/adminreg',adminController.loadRegister);
  admin_route.get('/adminlogin',adminAuth.isLogout,adminController.adloadLogin);
  admin_route.post('/adminlog',adminController.verifyLogin);
- admin_route.get('/adlogout',adminAuth.isLogout,adminController.adminLogout);
+ admin_route.get('/adlogout',adminAuth.isLogin,adminController.adminLogout);
  admin_route.get('/admindash',adminAuth.isLogin,adminController.adminDashboard);
 
  //block user

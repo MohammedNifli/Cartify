@@ -57,73 +57,73 @@
             </section>
 
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var form = document.getElementById('couponForm');
-            
-                    form.addEventListener('submit', function(event) {
-                        event.preventDefault();
-            
-                        var couponCode = document.getElementById('couponCode').value;
-                        var discountPercentage = document.getElementById('discountPercentage').value;
-                        var startingDate = document.getElementById('startingDate').value;
-                        var expirationDate = document.getElementById('expirationDate').value;
-                        var minTotal = document.getElementById('minTotal').value;
-            
-                        var currentDate = new Date().toISOString().slice(0, 10); // Get current date in yyyy-mm-dd format
-            
-                        // Reset previous error messages
-                        var errorMessages = document.querySelectorAll('.error-message');
-                        errorMessages.forEach(function(element) {
-                            element.textContent = '';
-                        });
-            
-                        // Validate Coupon Code
-                        if (!couponCode.trim()) {
-                            document.getElementById('errorCouponCode').textContent = 'Coupon code is required';
-                            return;
-                        }
-            
-                        // Validate Discount Percentage
-                        if (!discountPercentage.trim()) {
-                            document.getElementById('errorDiscountPercentage').textContent = 'Discount percentage is required';
-                            return;
-                        } else if (isNaN(discountPercentage) || discountPercentage <= 0) {
-                            document.getElementById('errorDiscountPercentage').textContent = 'Discount percentage must be a positive number';
-                            return;
-                        }
-            
-                        // Validate Starting Date
-                        if (!startingDate.trim()) {
-                            document.getElementById('errorStartingDate').textContent = 'Starting date is required';
-                            return;
-                        } else if (startingDate < currentDate) {
-                            document.getElementById('errorStartingDate').textContent = 'Starting date must be today or a future date';
-                            return;
-                        }
-            
-                        // Validate Expiration Date
-                        if (!expirationDate.trim()) {
-                            document.getElementById('errorExpirationDate').textContent = 'Expiration date is required';
-                            return;
-                        } else if (expirationDate <= startingDate) {
-                            document.getElementById('errorExpirationDate').textContent = 'Expiration date must be after the starting date';
-                            return;
-                        }
-            
-                        // Validate Minimum Total
-                        if (!minTotal.trim()) {
-                            document.getElementById('errorMinTotal').textContent = 'Minimum total is required';
-                            return;
-                        } else if (isNaN(minTotal) || minTotal <= 0) {
-                            document.getElementById('errorMinTotal').textContent = 'Minimum total must be a positive number';
-                            return;
-                        }
-            
-                        // If all validations pass, submit the form
-                        form.submit();
-                    });
-                });
-            </script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('couponForm');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var couponCode = document.getElementById('couponCode').value;
+        var discountPercentage = document.getElementById('discountPercentage').value;
+        var startingDate = document.getElementById('startingDate').value;
+        var expirationDate = document.getElementById('expirationDate').value;
+        var minTotal = document.getElementById('minTotal').value;
+        var couponAmount = parseFloat(discountPercentage); // Retrieve discountPercentage here and parse it as float
+
+        var currentDate = new Date().toISOString().slice(0, 10);
+
+        var errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(function(element) {
+            element.textContent = '';
+        });
+
+        if (!couponCode.trim()) {
+            document.getElementById('errorCouponCode').textContent = 'Coupon code is required';
+            return;
+        }
+
+        if (!discountPercentage.trim()) {
+            document.getElementById('errorDiscountPercentage').textContent = 'Discount percentage is required';
+            return;
+        } else if (isNaN(discountPercentage) || discountPercentage <= 0) {
+            document.getElementById('errorDiscountPercentage').textContent = 'Discount percentage must be a positive number';
+            return;
+        }
+
+        if (!startingDate.trim()) {
+            document.getElementById('errorStartingDate').textContent = 'Starting date is required';
+            return;
+        } else if (startingDate < currentDate) {
+            document.getElementById('errorStartingDate').textContent = 'Starting date must be today or a future date';
+            return;
+        }
+
+        if (!expirationDate.trim()) {
+            document.getElementById('errorExpirationDate').textContent = 'Expiration date is required';
+            return;
+        } else if (expirationDate <= startingDate) {
+            document.getElementById('errorExpirationDate').textContent = 'Expiration date must be after the starting date';
+            return;
+        }
+
+        if (!minTotal.trim()) {
+            document.getElementById('errorMinTotal').textContent = 'Minimum total is required';
+            return;
+        } else if (isNaN(minTotal) || minTotal <= 0) {
+            document.getElementById('errorMinTotal').textContent = 'Minimum total must be a positive number';
+            return;
+        } else if (couponAmount > parseFloat(minTotal) * 0.75) {
+            alert("Coupon amount cannot exceed 75% of the minimum total");
+            return;
+        }
+
+        form.submit();
+    });
+});
+
+</script>
+
+
             
             
             <!-- content-main end// -->

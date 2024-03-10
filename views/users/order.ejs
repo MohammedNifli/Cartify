@@ -81,28 +81,69 @@
 																	<td>
 																		<div class="d-flex gap-2">
 																			<a href="/order/details?orderId=<%= order._id %>&productId=<%= order.items.product_id %>" class="btn btn-dark btn-sm rounded-0">View</a>
-
-
-																			
+																	
+																			<!-- Order status and return button -->
 																			<div id="orderStatus">
 																				<% if (order.items.status === 'cancelled') { %>
 																					<span style="color: red;">Cancelled</span>
+																				<% } else if (order.items.status === 'delivered') { %>
+																					<% if (order.items.status !== 'returned') { %>
+																						<!-- Return form and button -->
+																						<form id="returnForm_<%= order._id %>" method="POST" action="/order/return?orderId=<%= order._id %>&productId=<%= order.items.product_id %>">
+																							<button type="button" class="btn btn-sm btn-danger returnButton" data-bs-toggle="modal" data-bs-target="#returnReasonModal_<%= order._id %>">Return</button>
+																						</form>
+																					<% } else { %>
+																						<!-- Show "Returned" status -->
+																						<p style="color: #ff8800;">Returned</p>
+																					<% } %>
 																				<% } else { %>
 																					<form id="cancelForm" method="POST" action="/order/remove/<%= order._id %>">
 																						<button type="button" id="cancelButton">Cancel</button>
 																					</form>
 																				<% } %>
 																			</div>
-																			
-																			
-																			  
-																			<a href="/order/invoice?id=<%= order._id %>" class="btn btn-primary btn-sm rounded-0" download>Download</a>
+																	
+																			<!-- Download button -->
+																			<% if (order.items.status === 'delivered') { %>
+																				<a href="/order/invoice?id=<%= order._id %>" class="btn btn-primary btn-sm rounded-0" download>Download</a>
+																			<% } %>
 																		</div>
 																	</td>
+																	
+																	
 																</tr>
+																<form id="returnForm" method="POST" action="/order/reason?orderId=<%= order._id %>&productId=<%=order.items.product_id%>">
+																	<!-- Your form content goes here -->
+																
+																	<!-- Modal -->
+																	<div class="modal fade" id="returnReasonModal" tabindex="-1" aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+																		<div class="modal-dialog">
+																			<div class="modal-content">
+																				<div class="modal-header">
+																					<h5 class="modal-title" id="returnReasonModalLabel">Return Reason</h5>
+																					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																				</div>
+																				<div class="modal-body">
+																					<!-- Return reason input -->
+																					<textarea class="form-control" id="returnReason" rows="3" name="returnReason" placeholder="Enter return reason..."></textarea>
+																				</div>
+																				<div class="modal-footer">
+																					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																					<button type="submit" class="btn btn-primary" id="confirmReturn">Confirm Return</button>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</form>
+															
 															<% }); %>
 														</tbody>
 													</table>
+
+
+													<!-- Modal -->
+
+  
 													
 												</div>
 												
@@ -121,6 +162,8 @@
 			</div>
 		</div>
 		<!--end page wrapper -->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 		<script>
 			document.addEventListener("DOMContentLoaded", function() {
     // Get the cancel button and the cancel form
@@ -141,4 +184,57 @@
 });
 
 		</script>
+
+<script>
+    // JavaScript logic to handle button click and display modal
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the return buttons
+        var returnButtons = document.querySelectorAll('.returnButton');
+        
+        // Add event listeners to each return button
+        returnButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Show the modal
+                var modal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
+                modal.show();
+            });
+        });
+    });
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+    var returnButtons = document.querySelectorAll('.returnButton');
+    
+    returnButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Handle form submission
+            var form = button.closest('form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // AJAX request to update status to "returned"
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Assuming data contains updated order information
+                    if (data.items.status === 'returned') {
+                        // Replace the button with "Returned" status
+                        button.parentElement.innerHTML = '<p style="color: #ff8800;">Returned</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    });
+});
+
+</script>
+
+
 		<%- include('../layouts/footer.ejs') %>
