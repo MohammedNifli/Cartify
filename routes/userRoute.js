@@ -23,7 +23,7 @@ route.use(session({
   
 
 
-route.get('/ecom',checkBlock,userController.homeLoad);
+route.get('/',userController.homeLoad);
 
 
 

@@ -1,6 +1,6 @@
 const Admin = require('../models/adminModel');
 const User = require('../models/userModel');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const Order = require('../models/orderModel');
 const Address = require('../models/addressModel'); // Adjust the path as per your project structure
 const Coupon = require("../models/couponModel");

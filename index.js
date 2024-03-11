@@ -1,7 +1,7 @@
 
 
 const  mongoose=require('mongoose')
-mongoose.connect('mongodb://localhost:27017/users');
+mongoose.connect('mongodb+srv://mohammednifliap:wf9IkIOudGjhn9ZQ@test-pro-db.sbonlqr.mongodb.net/?retryWrites=true&w=majority&appName=test-pro-db');
 const dotenv=require('dotenv')
 
 dotenv.config()
