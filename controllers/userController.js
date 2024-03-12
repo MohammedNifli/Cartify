@@ -391,46 +391,52 @@ const verifyLogin = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
+        // Find the user by email
         const finduser = await User.findOne({ email: email });
 
+        // If user not found, render the login page with an error message
         if (!finduser) {
             console.log('User not found');
-            return res.render('login', { message: 'Invalid email' }); // Pass the message directly to the login page
+            return res.render('login', { message: 'Invalid email' });
         }
 
+        // Set user session variables
         req.session.user = finduser;
         req.session.user_id = finduser._id;
 
+        // Compare the provided password with the stored hashed password
         const passwordMatch = await bcrypt.compare(password, finduser.password);
 
+        // If passwords don't match, render the login page with an error message
         if (!passwordMatch) {
             console.log('Invalid password');
-            return res.render('login', { message: 'Invalid password' }); // Pass the message directly to the login page
+            return res.render('login', { message: 'Invalid password' });
         }
 
+        // If user is blocked, render the login page with an error message
         if (finduser.isBlocked) {
             console.log('User is blocked');
-            return res.render('login', { message: 'Your account is blocked' }); // Pass the message directly to the login page
+            return res.render('login', { message: 'Your account is blocked' });
         }
 
         // Update the user's online status
         await User.findByIdAndUpdate(finduser._id, { $set: { isOnline: true } });
 
+        // Fetch product and category data
         const productData = await Product.find({});
         const categoryData = await Category.find({});
 
-        // You can pass data to the template using res.locals or directly in the render function
+        // Pass data to the template using res.locals or directly in the render function
         res.locals.user = finduser;
         res.locals.product = productData;
         res.locals.category = categoryData;
        
+        // Redirect to the home page with loginSuccess=true query parameter
         return res.redirect('/?loginSuccess=true');
-
-
-         
     } catch (error) {
+        // If an error occurs, log it and render the login page with an error message
         console.error(error);
-        return res.render('login', { message: 'Internal server error' }); // Pass the message directly to the login page
+        return res.render('login', { message: 'Internal server error' });
     }
 };
 
