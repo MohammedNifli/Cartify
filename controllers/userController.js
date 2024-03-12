@@ -424,7 +424,10 @@ const verifyLogin = async (req, res) => {
         res.locals.product = productData;
         res.locals.category = categoryData;
        
-         return res.redirect('/ ?loginSuccess=true'); // Set the redirect location in the response header
+        return res.redirect('/?loginSuccess=true');
+
+
+         
     } catch (error) {
         console.error(error);
         return res.render('login', { message: 'Internal server error' }); // Pass the message directly to the login page
