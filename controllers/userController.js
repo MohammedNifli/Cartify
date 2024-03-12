@@ -150,38 +150,7 @@ const insertUser = async (req, res) => {
 
 
 
-// const verifyOTP=async(req,res)=>{
-//     try{
-//         const enterotp=req.body.otp;
-//         if(enterotp==otp){
-            
-//         const user = new User({
-//             firstName: gfname,
-//             lastName: glname,
-//             password: hashedPassword,
-//             country:gcountry,
-//             email:gemail,
-            
-//             is_admin: 0,
-//             // otp: otp
-//             //  // Store the OTP in the user object
-//         });
-//         const userData=await user.save()
-//         if(userData){
-//             res.redirect('login')
-//             console.log('registration successfull');
-//         }else{
-//             res.render('registration');
-//             console.log('registration failed')
-//         }
 
-//         }
-
-//     }catch(error){
-//         console.log(error)
-//     }
-
-// }
 const verifyOTP = async (req, res) => {
     try {
         const enterotp = req.body.otp;
@@ -416,58 +385,6 @@ const loadLogin = async (req, res) => {
 
 
 
-// const verifyLogin = async (req, res) => {
-//     try {
-//         const email = req.body.email;
-//         const password = req.body.password;
-
-//         const finduser = await User.findOne({ email: email });
-//         req.session.user=finduser;
-//         req.session.user_id=finduser._id;
-
-//         if (finduser) {
-//             // if (finduser.isBlocked) {
-//             //     // Log the user out if they are blocked
-//             //     req.session.destroy();
-//             //     console.log("user cannot login")
-//             //     return res.status(403).redirect('/login'); // Set 403 Forbidden status
-//             // }
-         
-
-
-//             const passwordMatch = await bcrypt.compare(password, finduser.password);
-
-//             if (passwordMatch) {
-//                 req.session.user_id = finduser._id;
-//                 const productData = await Product.find({});
-//                 const categoryData = await Category.find({});
-                
-//                 // Update the user's online status
-//                 await User.findByIdAndUpdate(finduser._id, { $set: { isOnline: true } });
-
-//                 // You can pass data to the template using res.locals or directly in the render function
-//                 res.locals.user = finduser;
-//                 res.locals.product = productData;
-//                 res.locals.category = categoryData;
-
-//                 return res.redirect('/ecom');
-//             } else {
-//                 console.log('Login failed');
-//                 req.session.alert = 'Invalid email or password'; // Set error message in session
-//                 return res.redirect('/login'); 
-//             }
-//         } else {
-//             console.log('User not found');
-//             req.session.alert = 'User not found'; // Set error message in session
-//             return res.redirect('/login');
-//         }
-//     } catch (error) {
-//         console.error(error);
-//         req.session.alert = 'Internal server error'; // Set error message in session
-//         return res.redirect('/login'); // Redirect to login page
-//     }
-// };
-
 
 const verifyLogin = async (req, res) => {
     try {
@@ -507,7 +424,7 @@ const verifyLogin = async (req, res) => {
         res.locals.product = productData;
         res.locals.category = categoryData;
        
-         return res.redirect('/?loginSuccess=true'); // Set the redirect location in the response header
+         return res.redirect('/ ?loginSuccess=true'); // Set the redirect location in the response header
     } catch (error) {
         console.error(error);
         return res.render('login', { message: 'Internal server error' }); // Pass the message directly to the login page
