@@ -133,7 +133,8 @@
 														<h6 class="mb-0 fw-bold product-short-title"><%= product.productName %></h6>
 													</div>
 													<div class="icon-wishlist">
-														<% if (wishlist && wishlist.products.some(wishItem => wishItem.product_id.toString() === product._id.toString())) { %>
+														<% if (wishlist && Array.isArray(wishlist.products) && wishlist.products.some(wishItem => wishItem.product_id.toString() === product._id.toString())) { %>
+
 															<!-- Product is in the wishlist, display heart icon in red color -->
 															<a href="#" class="remove-from-wishlist" data-product-id="<%= product._id %>"><i class="bx bx-heart in-wishlist"></i></a>
 														<% } else { %>

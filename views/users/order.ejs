@@ -81,7 +81,7 @@
 																	<td>
 																		<div class="d-flex gap-2">
 																			<a href="/order/details?orderId=<%= order._id %>&productId=<%= order.items.product_id %>" class="btn btn-dark btn-sm rounded-0">View</a>
-																	
+																			
 																			<!-- Order status and return button -->
 																			<div id="orderStatus">
 																				<% if (order.items.status === 'cancelled') { %>
@@ -96,18 +96,22 @@
 																						<!-- Show "Returned" status -->
 																						<p style="color: #ff8800;">Returned</p>
 																					<% } %>
-																				<% } else { %>
-																					<form id="cancelForm" method="POST" action="/order/remove/<%= order._id %>">
-																						<button type="button" id="cancelButton">Cancel</button>
-																					</form>
 																				<% } %>
 																			</div>
-																	
+																		
 																			<!-- Download button -->
 																			<% if (order.items.status === 'delivered') { %>
 																				<a href="/order/invoice?id=<%= order._id %>" class="btn btn-primary btn-sm rounded-0" download>Download</a>
 																			<% } %>
+																		
+																			<!-- Cancel button -->
+																			<% if (order.items.status !== 'returned') { %>
+																				<form id="cancelForm" method="POST" action="/order/remove/<%= order._id %>">
+																					<button type="button" id="cancelButton">Cancel</button>
+																				</form>
+																			<% } %>
 																		</div>
+																		
 																	</td>
 																	
 																	

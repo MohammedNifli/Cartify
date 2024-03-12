@@ -291,29 +291,11 @@ const verifyOTP = async (req, res) => {
                     } else {
                         console.log('User wallet not found');
                     }
-                    
-
-
-
-
 
                 } else {
                     console.log('Referred user wallet not found');
                 } 
             }
-        
-
-        
-       
-            
-            
-
-            
-
-
-
-
-
 
             if (userData) {
                 res.redirect('login');
@@ -525,7 +507,7 @@ const verifyLogin = async (req, res) => {
         res.locals.product = productData;
         res.locals.category = categoryData;
        
-         return res.redirect('/ecom?loginSuccess=true'); // Set the redirect location in the response header
+         return res.redirect('/?loginSuccess=true'); // Set the redirect location in the response header
     } catch (error) {
         console.error(error);
         return res.render('login', { message: 'Internal server error' }); // Pass the message directly to the login page

@@ -19,13 +19,19 @@ cart_route.use(session({
 
 //loadcart 
 cart_route.get('/load-cart',checkBlock,userAuth.isLogin,cartController.loadCart);
-cart_route.post('/add-to-cart/:id',cartController.addToCart);
+cart_route.post('/add-to-cart/:id',userAuth.isLogin,cartController.addToCart);
 
 cart_route.post('/update-cart', cartController.updateCart);
 cart_route.post('/remove-product',cartController.removeProduct)
 
 
 //load checkout
+
+
+
+//second cart
+
+
 
 
 module.exports= cart_route;

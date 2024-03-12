@@ -7,13 +7,11 @@ const mongoose = require('mongoose');
 const loadCart = async (req, res) => {
   try {
     const currentUser = req.session.user;
-    // console.log('current:', currentUser)
 
     if (!currentUser) {
       return res.redirect('/login');
     }
 
-    // const cartDetails = await Cart.find({user_id: currentUser._id})
     const cartDetails = await Cart.aggregate([
       {
         $match: { user_id: new mongoose.Types.ObjectId(currentUser._id) },
@@ -33,42 +31,35 @@ const loadCart = async (req, res) => {
         $unwind: "$productDetails",
       },
       {
-        $match:{'productDetails.isDeleted':false}
+        $match: { 'productDetails.isDeleted': false }
       }
     ]);
-    
 
-    
-      const hasItemsInCart=cartDetails.length>0
+    const hasItemsInCart = cartDetails.length > 0;
 
-      let totalAmount = 0;
-      
+    // Calculate the total amount dynamically based on the updated prices
+    let totalAmount = 0;
     for (const item of cartDetails) {
-      // Fetch latest price from the database for each item
       const productId = item.items.product_id;
       const product = await Product.findById(productId);
-      const latestPrice = product.price; // Assuming price is stored directly in the product document
+      const latestPrice = product.price;
 
       // Update the price of the item in the cart
       item.items.price = latestPrice;
 
-      // Calculate total price for the item
+      // Calculate the total price for the item
       const itemTotal = item.items.quantity * latestPrice;
       totalAmount += itemTotal;
     }
 
-    // Update the total price of the cart
-    const userCart = await Cart.findOneAndUpdate(
+    // Update the total price of the cart in the database
+    await Cart.findOneAndUpdate(
       { user_id: currentUser._id },
-      { totalPrice: totalAmount },
+      { totalPrice: totalAmount, Tprice: totalAmount },
       { new: true }
     );
 
-    
-
-      
-      res.render("Cart", { cartDetails, totalAmount ,user:req.session.user_id,hasItemsInCart});
-
+    res.render("Cart", { cartDetails, totalAmount,user: req.session.user_id, hasItemsInCart });
   } catch (error) {
     console.error("Error in loadCart", error);
     res.status(500).render("error", { error });
@@ -169,10 +160,6 @@ const addToCart = async (req, res) => {
       });
     }
 
-    const existingProductIndex = userCart.items.findIndex(
-      (item) => item.product_id.equals(productId)
-    );
-
     let priceToAdd = productData.price; // Default price to add to the cart
 
     // Check if the product has CatOffer and PrOffer
@@ -211,13 +198,13 @@ const addToCart = async (req, res) => {
       userCart.totalPrice = priceToAdd;
     }
 
+    const existingProductIndex = userCart.items.findIndex(
+      (item) => item.product_id.equals(productId)
+    );
+
     if (existingProductIndex !== -1) {
       // If the product already exists in the cart, increase the quantity
       userCart.items[existingProductIndex].quantity += 1;
-      // Update the total price by adding the price of the product being added
-      userCart.totalPrice = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);;
-      // Update Tprice based on all items in the cart
-      userCart.Tprice = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);;
     } else {
       // If the product is not in the cart, add it as a new item
       userCart.items.push({
@@ -225,13 +212,12 @@ const addToCart = async (req, res) => {
         quantity: 1,
         price: priceToAdd,
       });
-      // Update the total price with the price of the newly added product
-      // userCart.totalPrice = priceToAdd;
-      userCart.totalPrice = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);;
-      // Update Tprice based on all items in the cart
-      // userCart.Tprice = priceToAdd;
-      userCart.Tprice = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);;
     }
+
+    // Update the total price with the price of the newly added product
+    userCart.totalPrice = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);
+    // Update Tprice based on all items in the cart
+    userCart.Tprice = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);
 
     await userCart.save();
 
@@ -242,6 +228,7 @@ const addToCart = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 
 
@@ -328,13 +315,11 @@ const updateCart = async (req, res) => {
     const { productId, adjustment } = req.body;
     console.log('Received update request:', productId, adjustment);
 
-    // Find the user's cart
     const currentUser = req.session.user;
     let userCart = await Cart.findOne({ user_id: currentUser._id });
     const prod = await Product.findOne({ _id: productId });
     const totalstock = prod.countStock;
 
-    // If the cart doesn't exist, create a new one and initialize the total price
     if (!userCart) {
       userCart = new cartModel({
         user_id: currentUser._id,
@@ -342,18 +327,13 @@ const updateCart = async (req, res) => {
         totalPrice: 0,
         Tprice: 0
       });
-      // Save the new cart
       await userCart.save();
     }
 
-    // Find the item in the cart with the given productId
     const itemIndex = userCart.items.findIndex(item => String(item.product_id) === productId);
 
     if (itemIndex !== -1) {
-      // Get the original quantity and price of the item
       const originalQuantity = userCart.items[itemIndex].quantity;
-
-      // Fetch the latest price of the product from the database
       let pricePerUnit = prod.price; // Consider default product price if not found
       if (prod.CatOffer && prod.PrOffer) {
         const catOfferPrice = prod.CatOffer.catOfferPrice;
@@ -365,31 +345,21 @@ const updateCart = async (req, res) => {
         pricePerUnit = prod.PrOffer.prodOfferPrice;
       }
 
-      // Calculate the new quantity after adjustment
       let newQuantity = userCart.items[itemIndex].quantity + parseInt(adjustment, 10);
-      // Ensure the new quantity does not exceed the total stock
       newQuantity = Math.min(newQuantity, totalstock);
-      // Ensure the new quantity is at least 1
       newQuantity = Math.max(newQuantity, 1);
 
-      // Calculate the change in quantity
       const quantityChange = newQuantity - originalQuantity;
 
-      // Update the quantity
       userCart.items[itemIndex].quantity = newQuantity;
-
-      // Update the price of the item in the cart based on the latest price from the database
       userCart.items[itemIndex].price = pricePerUnit;
 
-      // Update the total price in the cart
       const totalAmount = userCart.items.reduce((total, item) => total + item.quantity * item.price, 0);
       userCart.totalPrice = totalAmount;
       userCart.Tprice = totalAmount;
 
-      // Save the updated cart
       const updatedCart = await userCart.save();
 
-      // Send the updated cart and total amount back to the client
       res.status(200).json({ userCart: updatedCart, totalAmount, totalstock, newQuantity, message: 'Quantity updated successfully.' });
     } else {
       res.status(404).json({ error: 'Product not found in the cart.' });
@@ -399,7 +369,6 @@ const updateCart = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-
 
 
 
@@ -439,12 +408,12 @@ const removeProduct = async (req, res) => {
 
 
 
-
 module.exports={
     loadCart,
     addToCart,
     updateCart,
     removeProduct,
+  
    
 
 

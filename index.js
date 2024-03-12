@@ -94,5 +94,5 @@ app.use('/admin/offer',offerRoute)
 
 
 app.listen(port,()=>{
-    console.log(`server running on http://localhost:5000/ecom`)
+    console.log(`server running on http://localhost:5000`)
 })

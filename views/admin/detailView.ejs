@@ -115,14 +115,7 @@
                                                                         <!-- Select dropdown for status -->
                                                                         <% if (item.status=="cancelled") { %>
                                                                             <p style="color: red;">cancelled</p>
-                                                                            <!-- <select class="form-select" name="status">
-                                                                                <option value="Pending">Pending</option>
-                                                                                <option value="shipped">Shipped</option>
-                                                                                <option value="delivered">Delivered</option>
-                                                                                <option value="cancelled">Cancelled</option>
-                                                                                 Add more options if needed -->
-                                                                            <!-- </select> --> 
-                                                                            <!-- HTML code to be rendered if the condition is true -->
+                                                                            
                                                                         <% } else { %>
                                                                             <!-- HTML code to be rendered if the condition is false -->
                                                                             <form action="/admin/status" method="POST">
