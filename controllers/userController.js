@@ -74,7 +74,7 @@ const loadRegister = async (req, res) => {
 
          req.session.referal=referalId;
          console.log( req.session.referal);
-
+        
         res.render('register',{message: req.session.smessage,referalId});
     } catch (error) {
         console.error('Error loading registration page:', error);
