@@ -75,7 +75,7 @@ const loadRegister = async (req, res) => {
          req.session.referal=referalId;
          console.log( req.session.referal);
 
-        res.render('register',{smessage: req.session.smessage,referalId});
+        res.render('register',{message: req.session.smessage,referalId});
     } catch (error) {
         console.error('Error loading registration page:', error);
         res.status(500).send('Internal Server Error');
@@ -87,7 +87,7 @@ let gfname,glname,gpassword,gemail,hashedPassword,gcountry;
 var otp;
 let mail;
 let message
-let smessage
+
 
 
 
