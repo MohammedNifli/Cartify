@@ -18,7 +18,7 @@ const mongoose = require('mongoose');
 
 const ExcelJS = require('exceljs');
 
-const puppeteer=require('puppeteer')
+const puppeteer=require('puppeteer-core')
 
 const XLSX = require('xlsx');
 // const { jsPDF } = require('jspdf');

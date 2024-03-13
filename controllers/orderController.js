@@ -25,7 +25,7 @@ const Wallet=require('../models/walletModel')
 const Razorpay=require("razorpay");
 const path=require('path');
 const ejs=require('ejs');
-const puppeteer=require('puppeteer')
+const puppeteer=require("puppeteer-core")
 
 const moment =require('moment')
 
@@ -530,45 +530,47 @@ const cancelOrder = async (req, res) => {
 
 // <--------------------Invoice Generation----------------------->
 
-const invoiceGeneration=async(req,res)=>{
-  try{
-    const user=req.session.user_id;
-    const userData= await User.findById(user);
-   
-    const orderId=req.query.id;
-    console.log('orderid:',orderId)
-    const order= await Order.findById(new mongoose.Types.ObjectId(orderId))
-    
+const invoiceGeneration = async (req, res) => {
+  try {
+    const user = req.session.user_id;
+    const userData = await User.findById(user);
 
-    const orderData=await Order.aggregate([
+    const orderId = req.query.id;
+    console.log('orderid:', orderId)
+    const order = await Order.findById(new mongoose.Types.ObjectId(orderId))
+
+    const orderData = await Order.aggregate([
       {
-        $match:{_id:new mongoose.Types.ObjectId(orderId)}
+        $match: { _id: new mongoose.Types.ObjectId(orderId) }
       },
       {
-       $unwind:'$items'
-
+        $unwind: '$items'
       },
       {
-        $lookup:{
-          from:"products",
-          localField:"items.product_id",
-          foreignField:"_id",
-          as:"productDetails"
+        $lookup: {
+          from: "products",
+          localField: "items.product_id",
+          foreignField: "_id",
+          as: "productDetails"
         }
       },
       {
-        $unwind:"$productDetails"
+        $unwind: "$productDetails"
       }
-
-
     ])
-    
 
-    const addressId= orderData[0].billingAddress  ;
-    console.log("addressId",addressId)
-    const addressData = await Address.findOne({user_id: user});
-    const deliveryAddress = addressData.Addresses.find(address => address._id === addressId);
-    console.log('delivery:',deliveryAddress)
+    const addressId = orderData[0].billingAddress;
+    console.log("addressId", addressId)
+
+    let deliveryAddress = null;
+    if (addressId) {
+      const addressData = await Address.findOne({ user_id: user });
+      if (addressData && addressData.Addresses) {
+        deliveryAddress = addressData.Addresses.find(address => address._id === addressId);
+      }
+    }
+    
+    console.log('delivery:', deliveryAddress)
     const data = {
       order: orderData,
       user: userData,
@@ -577,10 +579,11 @@ const invoiceGeneration=async(req,res)=>{
     const ejsTemplate = path.resolve(__dirname, "../views/users/invoice.ejs");
     const ejsData = await ejs.renderFile(ejsTemplate, data);
 
-    
-
     // Launch Puppeteer and generate PDF
-    const browser = await puppeteer.launch({ headless: 'new' });   
+    const browser = await puppeteer.launch({
+      headless: "new", // Set headless mode to true
+      executablePath: '/snap/bin/chromium', // Specify the path to Chromium executable
+    });
     const page = await browser.newPage();
     await page.setContent(ejsData, { waitUntil: "networkidle0" });
     const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
@@ -591,13 +594,12 @@ const invoiceGeneration=async(req,res)=>{
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
     res.send(pdfBuffer);
-
-
-
-  }catch(error){
+  } catch (error) {
     console.log(error);
+    res.status(500).send('Internal server error');
   }
 }
+
 
 
 
