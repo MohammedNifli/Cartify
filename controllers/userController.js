@@ -86,7 +86,9 @@ const loadRegister = async (req, res) => {
 let gfname,glname,gpassword,gemail,hashedPassword,gcountry;
 var otp;
 let mail;
-let smessage
+let smessage;
+let message;
+
 
 
 
@@ -106,7 +108,7 @@ const insertUser = async (req, res) => {
         // Check if the email already exists
         const existingUser = await User.findOne({ email: gemail });
         if (existingUser) {
-            // Set session message for email already exists
+            
             smessage= "Email already exists";
             return res.redirect('/register');
         }
