@@ -48,11 +48,21 @@
 													<hr/>
 												</div>
 												<div class="form-body">
-
 													<!-- form -->
-													<% if (message) { %>
-														<p style="color: red;"><%= message %></p>
+													<% if (smessage) { %>
+														<div id="errorMessage" class="error-message" style="color: red; font-size: medium; font-style: italic;">
+															<%= smessage %>
+														</div>
+														
 													<% } %>
+													
+
+
+
+													
+													
+													
+													
 
 
 													<form class="row g-3" id="registrationForm" method="post" 
@@ -172,6 +182,17 @@
 });
 
 		  </script>
+
+<script>
+	// Set timeout to clear error message after 1 minute (60000 milliseconds)
+	setTimeout(function() {
+		console.log("kttttttt")
+		var errorMessage = document.getElementById('errorMessage');
+		if (errorMessage) {
+			errorMessage.style.display = 'none'; // Hide the error message
+		}
+	},30000); // 60000 milliseconds = 1 minute
+</script>
 
 		  
 		<!--end page wrapper -->

@@ -168,43 +168,16 @@
 										
 									
 										
-									  <a href="/addwish/<%=product._id%>" class="btn btn-light btn-ecomm">
-										<i class="bx bx-heart"></i>Add to Wishlist
-									  </a>
+										  <a href="#" class="btn btn-light btn-ecomm" data-product-id="<%= product._id %>">
+											<i class="bx bx-heart"></i> Add to Wishlist
+										</a>
+										
 									</div>
 				  
 									<hr/>
 				  
 									<!-- Product Sharing Buttons -->
-									<!-- <div class="product-sharing">
-									  <div class="d-flex align-items-center gap-2 flex-wrap">
-										<div class="">
-										  <button type="button" class="btn-social bg-twitter">
-											<i class='bx bxl-twitter'></i>
-										  </button>
-										</div>
-										<div class="">
-										  <button type="button" class="btn-social bg-facebook">
-											<i class='bx bxl-facebook'></i>
-										  </button>
-										</div>
-										<div class="">
-										  <button type="button" class="btn-social bg-linkedin">
-											<i class='bx bxl-linkedin'></i>
-										  </button>
-										</div>
-										<div class="">
-										  <button type="button" class="btn-social bg-youtube">
-											<i class='bx bxl-youtube'></i>
-										  </button>
-										</div>
-										<div class="">
-										  <button type="button" class="btn-social bg-pinterest">
-											<i class='bx bxl-pinterest'></i>
-										  </button>
-										</div>
-									  </div>
-									</div> -->
+									
 								  </div>
 								</div>
 							  </div>
@@ -221,178 +194,7 @@
 				<!--end product detail-->
 				<!--start product more info-->
 				<!-- <section class="py-4">
-					<div class="container">
-						<div class="product-more-info">
-							<ul class="nav nav-tabs mb-0" role="tablist">
-								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#discription">
-										<div class="d-flex align-items-center">
-											<div class="tab-title text-uppercase fw-500">Description</div>
-										</div>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#more-info">
-										<div class="d-flex align-items-center">
-											<div class="tab-title text-uppercase fw-500">More Info</div>
-										</div>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link" data-bs-toggle="tab" href="#tags">
-										<div class="d-flex align-items-center">
-											<div class="tab-title text-uppercase fw-500">Tags</div>
-										</div>
-									</a>
-								</li>
-								<li class="nav-item">
-									<a class="nav-link active" data-bs-toggle="tab" href="#reviews">
-										<div class="d-flex align-items-center">
-											<div class="tab-title text-uppercase fw-500">(3) Reviews</div>
-										</div>
-									</a>
-								</li>
-							</ul>
-							<div class="tab-content pt-3">
-								<div class="tab-pane fade" id="discription">
-									<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi.</p>
-									<ul>
-										<li>Not just for commute</li>
-										<li>Branded tongue and cuff</li>
-										<li>Super fast and amazing</li>
-										<li>Lorem sed do eiusmod tempor</li>
-									</ul>
-									<p class="mb-1">Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone.</p>
-									<p class="mb-1">Seitan aliquip quis cardigan american apparel, butcher voluptate nisi.</p>
-								</div>
-								<div class="tab-pane fade" id="more-info">
-									<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
-								</div>
-								<div class="tab-pane fade" id="tags">
-									<div class="tags-box d-flex flex-wrap gap-2">
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Cloths</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Electronis</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Furniture</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Sports</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Men Wear</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Women Wear</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Laptops</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Formal Shirts</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Topwear</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Headphones</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Bottom Wear</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Bags</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Sofa</a>
-										<a href="javascript:;" class="btn btn-ecomm btn-outline-dark">Shoes</a>
-									</div>
-								</div>
-								<div class="tab-pane fade show active" id="reviews">
-									<div class="row">
-										<div class="col col-lg-8">
-											<div class="product-review">
-												<h5 class="mb-4">3 Reviews For The Product</h5>
-												<div class="review-list">
-													<div class="d-flex align-items-start">
-														<div class="review-user">
-															<img src="/images/avatars/avatar-1.png" width="65" height="65" class="rounded-circle" alt="" />
-														</div>
-														<div class="review-content ms-3">
-															<div class="rates cursor-pointer fs-6">
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-															</div>
-															<div class="d-flex align-items-center mb-2">
-																<h6 class="mb-0">James Caviness</h6>
-																<p class="mb-0 ms-auto">February 16, 2021</p>
-															</div>
-															<p>Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan</p>
-														</div>
-													</div>
-													<hr/>
-													<div class="d-flex align-items-start">
-														<div class="review-user">
-															<img src="/images/avatars/avatar-2.png" width="65" height="65" class="rounded-circle" alt="" />
-														</div>
-														<div class="review-content ms-3">
-															<div class="rates cursor-pointer fs-6">
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-															</div>
-															<div class="d-flex align-items-center mb-2">
-																<h6 class="mb-0">David Buckley</h6>
-																<p class="mb-0 ms-auto">February 22, 2021</p>
-															</div>
-															<p>Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan</p>
-														</div>
-													</div>
-													<hr/>
-													<div class="d-flex align-items-start">
-														<div class="review-user">
-															<img src="/images/avatars/avatar-3.png" width="65" height="65" class="rounded-circle" alt="" />
-														</div>
-														<div class="review-content ms-3">
-															<div class="rates cursor-pointer fs-6">
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-																<i class="bx bxs-star text-warning"></i>
-															</div>
-															<div class="d-flex align-items-center mb-2">
-																<h6 class="mb-0">Peter Costanzo</h6>
-																<p class="mb-0 ms-auto">February 26, 2021</p>
-															</div>
-															<p>Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan</p>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col col-lg-4">
-											<div class="add-review border">
-												<div class="form-body p-3">
-													<h4 class="mb-4">Write a Review</h4>
-													<div class="mb-3">
-														<label class="form-label">Your Name</label>
-														<input type="text" class="form-control rounded-0">
-													</div>
-													<div class="mb-3">
-														<label class="form-label">Your Email</label>
-														<input type="text" class="form-control rounded-0">
-													</div>
-													<div class="mb-3">
-														<label class="form-label">Rating</label>
-														<select class="form-select rounded-0">
-															<option selected>Choose Rating</option>
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3">3</option>
-															<option value="3">4</option>
-															<option value="3">5</option>
-														</select>
-													</div>
-													<div class="mb-3">
-														<label class="form-label">Example textarea</label>
-														<textarea class="form-control rounded-0" rows="3"></textarea>
-													</div>
-													<div class="d-grid">
-														<button type="button" class="btn btn-dark btn-ecomm">Submit a Review</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!--end row-->
-								<!-- </div>
-							</div>
-						</div>
-					</div>
+					
 				</section> -->
 				<!--end product more info-->
 				<!--start similar products-->
@@ -702,5 +504,72 @@
         zoomedImageContainer.style.opacity = 0;
     }
 		</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+
+<script>
+	const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+    }
+});
+
+document.addEventListener('click', async function(event) {
+    if (event.target.matches('.btn-ecomm')) {
+        event.preventDefault();
+        const productId = event.target.dataset.productId;
+
+        try {
+            const response = await fetch(`/addwish/${productId}`);
+            const data = await response.json();
+
+            if (data.success) {
+                Toast.fire({
+                    icon: 'success',
+                    title: data.message
+                }).then(() => {
+                    // Redirect or perform any other action after the alert
+                    if (mongoose.Types.ObjectId.isValid(productId)) {
+                        window.location.href = `/home-pro/${productId}`;
+                    } else {
+                        // Handle invalid ObjectId
+                        console.error('Invalid ObjectId:', productId);
+                        // Redirect or display an error message
+                    }
+                });
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: data.error || 'Something went wrong!'
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            Toast.fire({
+                icon: 'error',
+                title: 'Oops... Something went wrong!'
+            });
+        }
+    }
+});
+
+// Check if the user is logged in
+if ("!<%= user %>") {
+    Toast.fire({
+        icon: 'warning',
+        title: 'You are not logged in'
+    });
+}
+
+
+</script>
 		<!--end page wrapper -->
 		<%- include('../layouts/footer.ejs') %>

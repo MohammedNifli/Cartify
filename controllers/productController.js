@@ -100,6 +100,7 @@ const { ObjectId } = require('mongodb');
 
 const loadHome = async (req, res) => {
     try {
+       
         console.log(req.params.id);
         const Id = req.params.id;
 

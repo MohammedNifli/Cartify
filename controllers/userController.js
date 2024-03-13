@@ -75,7 +75,7 @@ const loadRegister = async (req, res) => {
          req.session.referal=referalId;
          console.log( req.session.referal);
 
-        res.render('register',{message,referalId});
+        res.render('register',{smessage: req.session.smessage,referalId});
     } catch (error) {
         console.error('Error loading registration page:', error);
         res.status(500).send('Internal Server Error');
@@ -87,6 +87,7 @@ let gfname,glname,gpassword,gemail,hashedPassword,gcountry;
 var otp;
 let mail;
 let message
+let smessage
 
 
 
@@ -105,9 +106,13 @@ const insertUser = async (req, res) => {
         // Check if the email already exists
         const existingUser = await User.findOne({ email: gemail });
         if (existingUser) {
-            message=" email already exist"
+            // Set session message for email already exists
+            req.session.smessage = "Email already exists";
             return res.redirect('/register');
         }
+
+        // Clear session message
+        req.session.smessage = null;
 
         // Generate OTP
         otp = otpgenerator.generateOTP(); // You need to implement this function in 'otpgenerator' module
@@ -139,7 +144,7 @@ const insertUser = async (req, res) => {
         await transporter.sendMail(mailOptions);
 
         // Render the OTP page
-        res.render('otp', { gemail });
+        res.render('otp', { gemail ,error:k});
         console.log(otp)
 
     } catch (error) {
@@ -150,7 +155,7 @@ const insertUser = async (req, res) => {
 
 
 
-
+let k;
 const verifyOTP = async (req, res) => {
     try {
         const enterotp = req.body.otp;
@@ -160,25 +165,23 @@ const verifyOTP = async (req, res) => {
         console.log("ottttttttp:", otpDoc);
 
         if (!otpDoc) {
-            // If the OTP document does not exist, create a new one
-            otpDoc = new OTP({
-                email: gemail,
-                otp: enterotp
-            });
+            // Handle the case when the OTP is invalid
+            k = 'Invalid OTP. Please enter the correct OTP.';
+            return res.render('otp', { gemail, error: k });
         } else {
             // If the OTP document exists, update its fields
             otpDoc.otp = enterotp;
             otpDoc.updatedAt = new Date();
-        }
+        
+            // Save the OTP document to the OTP collection
+            await otpDoc.save();
 
-        // Save the OTP document to the OTP collection
-        await otpDoc.save();
+            // Check if the OTP has expired
+            if (otpDoc.expiresAt && otpDoc.expiresAt < new Date()) {
+                // OTP has expired
+                return res.render('otp', { gemail, error: 'OTP has expired. Please request a new OTP.' });
+            }
 
-        // Check if the OTP has expired
-        if (otpDoc.expiresAt < new Date()) {
-            // OTP has expired
-            res.render('otp', { gemail, error: 'OTP has expired. Please request a new OTP.' });
-        } else {
             // OTP is valid
             const user = new User({
                 firstName: gfname,
@@ -186,7 +189,7 @@ const verifyOTP = async (req, res) => {
                 password: hashedPassword,
                 country: gcountry,
                 email: gemail,
-                refferalId:shortId.generate(),
+                refferalId: shortId.generate(),
                 is_admin: 0
             });
 
@@ -909,8 +912,13 @@ const wishlist = async (req, res) => {
 
 const addWishlist = async (req, res) => {
     try {
+        if (!req.session.user_id) {
+            res.json({success: false,message: "!User"})
+        }
         const userId = req.session.user_id;
         const productId = req.params.productId;
+
+        
 
         // Retrieve product data from the Product model
         const productData = await Product.findById(productId);
@@ -932,12 +940,12 @@ const addWishlist = async (req, res) => {
             wishlist.items.splice(existingIndex, 1);
             await wishlist.save();
             // res.sendStatus(204); // No content response
-            res.json({success: true,message: "removed", isInWishlist: "rem"})
+            res.json({success: true,message: "Product removed from wishlist", isInWishlist: "rem"})
         } else {
             // If the product is not in the wishlist, add it
             wishlist.items.push({ product_id: productId });
             await wishlist.save();
-            res.json({success: true,message: "already list"})
+            res.json({success: true,message: "Product has added in wishlist"})
             // res.sendStatus(204); // No content response
         }
     } catch (error) {
