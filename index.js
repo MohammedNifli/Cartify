@@ -45,7 +45,13 @@ app.use((req,res,next)=>{
   });
 
 
-
+  const disableCache = (req, res, next) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next(); // Call next to proceed to the next middleware or route handler
+};
+app.use(disableCache);
 
 
  const userRoute=require('./routes/userRoute');

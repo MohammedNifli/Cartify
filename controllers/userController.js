@@ -405,10 +405,6 @@ const verifyLogin = async (req, res) => {
             return res.render('login', { message: 'Invalid email' });
         }
 
-        // Set user session variables
-        req.session.user = finduser;
-        req.session.user_id = finduser._id;
-
         // Compare the provided password with the stored hashed password
         const passwordMatch = await bcrypt.compare(password, finduser.password);
 
@@ -423,6 +419,10 @@ const verifyLogin = async (req, res) => {
             console.log('User is blocked');
             return res.render('login', { message: 'Your account is blocked' });
         }
+
+        // Set user session variables
+        req.session.user = finduser;
+        req.session.user_id = finduser._id;
 
         // Update the user's online status
         await User.findByIdAndUpdate(finduser._id, { $set: { isOnline: true } });
@@ -444,6 +444,7 @@ const verifyLogin = async (req, res) => {
         return res.render('login', { message: 'Internal server error' });
     }
 };
+
 
 
 

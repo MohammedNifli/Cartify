@@ -1,10 +1,10 @@
 // Middleware to check if user is logged in
 const isLogin = async (req, res, next) => {
     try {
-        if (req.session.user_id) {
-            next(); 
+        if (req.session.user) {
+            next();
         } else {
-            res.redirect('/login'); 
+            res.redirect('/login');
         }
     } catch (error) {
         console.error('Error in isLogin middleware:', error);
@@ -17,6 +17,7 @@ const isLogout = async (req, res, next) => {
     try {
         if (!req.session.user_id) {
             next();  
+            req.session.destroy();
         } else {
             res.redirect('/');
             
