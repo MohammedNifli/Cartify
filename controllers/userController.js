@@ -86,7 +86,7 @@ const loadRegister = async (req, res) => {
 let gfname,glname,gpassword,gemail,hashedPassword,gcountry;
 var otp;
 let mail;
-let message
+let smessage
 
 
 
@@ -107,12 +107,12 @@ const insertUser = async (req, res) => {
         const existingUser = await User.findOne({ email: gemail });
         if (existingUser) {
             // Set session message for email already exists
-            req.session.smessage = "Email already exists";
+            smessage= "Email already exists";
             return res.redirect('/register');
         }
 
         // Clear session message
-        req.session.smessage = null;
+       
 
         // Generate OTP
         otp = otpgenerator.generateOTP(); // You need to implement this function in 'otpgenerator' module
