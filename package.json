@@ -32,11 +32,12 @@
     "nodemon": "^3.0.2",
     "path": "^0.12.7",
     "pdfkit": "^0.14.0",
-    "puppeteer": "^22.0.0",
+    "puppeteer-core": "^22.4.1",
     "razorpay": "^2.9.2",
     "sharp": "^0.33.2",
     "shortid": "^2.2.16",
     "sweetalert2": "^11.10.6",
     "xlsx": "^0.18.5"
-  }
+  },
+  "keywords": []
 }

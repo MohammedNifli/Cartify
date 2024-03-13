@@ -98,19 +98,19 @@
 																					<% } %>
 																				<% } %>
 																			</div>
-																		
+																			
 																			<!-- Download button -->
-																			<% if (order.items.status === 'delivered') { %>
-																				<a href="/order/invoice?id=<%= order._id %>" class="btn btn-primary btn-sm rounded-0" download>Download</a>
+																			<% if (order.items.status === 'delivered' && order.items.status !== 'returned') { %>
+																				<a href="/order/invoice?id=<%= order._id %>" class="btn btn-primary btn-sm rounded-0 downloadButton" download>Download</a>
 																			<% } %>
-																		
+																			
 																			<!-- Cancel button -->
 																			<% if (order.items.status !== 'returned') { %>
 																				<form id="cancelForm" method="POST" action="/order/remove/<%= order._id %>">
 																					<button type="button" id="cancelButton">Cancel</button>
 																				</form>
 																			<% } %>
-																		</div>
+																			
 																		
 																	</td>
 																	
@@ -207,38 +207,33 @@
 </script>
 
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-    var returnButtons = document.querySelectorAll('.returnButton');
-    
-    returnButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            // Handle form submission
-            var form = button.closest('form');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                // AJAX request to update status to "returned"
-                fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Assuming data contains updated order information
-                    if (data.items.status === 'returned') {
-                        // Replace the button with "Returned" status
-                        button.parentElement.innerHTML = '<p style="color: #ff8800;">Returned</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    // JavaScript logic to handle button click and display modal
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the return buttons
+        var returnButtons = document.querySelectorAll('.returnButton');
+        
+        // Add event listeners to each return button
+        returnButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                // Show the modal
+                var modal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
+                modal.show();
             });
         });
-    });
-});
 
+        // Get the cancel button
+        var cancelButton = document.getElementById('cancelButton');
+        if (cancelButton) {
+            // Add event listener to the cancel button
+            cancelButton.addEventListener('click', function() {
+                
+                cancelButton.parentElement.style.display = 'none'; // Hide the cancel button
+                document.querySelector('.downloadButton').style.display = 'none'; // Hide the download button
+            });
+        }
+    });
 </script>
+
 
 
 		<%- include('../layouts/footer.ejs') %>
