@@ -39,10 +39,7 @@ app.use((req,res,next)=>{
 
 })
 
-app.use((req,res,next)=>{
-    res.set('Cache-control','no-store,no-cache');
-    next();
-  });
+
 
 
   const disableCache = (req, res, next) => {
