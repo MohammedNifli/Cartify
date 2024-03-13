@@ -6,7 +6,8 @@ const Order=require('../models/orderModel');
 
 const Coupon=require('../models/couponModel');
 const AppliedCoupon = require('../models/appliedCoupon');
-const Address= require('../models/addressModel')
+const Address= require('../models/addressModel');
+const PDFDocument = require('pdfkit');
 
  
 const shortid = require('shortid');
@@ -529,74 +530,129 @@ const cancelOrder = async (req, res) => {
 
 // <--------------------Invoice Generation----------------------->
 
-const invoiceGeneration=async(req,res)=>{
-  try{
-    const user=req.session.user_id;
-    const userData= await User.findById(user);
+// const invoiceGeneration=async(req,res)=>{
+//   try{
+//     const user=req.session.user_id;
+//     const userData= await User.findById(user);
    
-    const orderId=req.query.id;
-    console.log('orderid:',orderId)
-    const order= await Order.findById(new mongoose.Types.ObjectId(orderId))
+//     const orderId=req.query.id;
+//     console.log('orderid:',orderId)
+//     const order= await Order.findById(new mongoose.Types.ObjectId(orderId))
     
 
-    const orderData=await Order.aggregate([
-      {
-        $match:{_id:new mongoose.Types.ObjectId(orderId)}
-      },
-      {
-       $unwind:'$items'
+//     const orderData=await Order.aggregate([
+//       {
+//         $match:{_id:new mongoose.Types.ObjectId(orderId)}
+//       },
+//       {
+//        $unwind:'$items'
 
-      },
-      {
-        $lookup:{
-          from:"products",
-          localField:"items.product_id",
-          foreignField:"_id",
-          as:"productDetails"
-        }
-      },
-      {
-        $unwind:"$productDetails"
-      }
+//       },
+//       {
+//         $lookup:{
+//           from:"products",
+//           localField:"items.product_id",
+//           foreignField:"_id",
+//           as:"productDetails"
+//         }
+//       },
+//       {
+//         $unwind:"$productDetails"
+//       }
 
 
-    ])
+//     ])
     
 
-    const addressId= orderData[0].billingAddress  ;
-    console.log("addressId",addressId)
-    const addressData = await Address.findOne({user_id: user});
-    const deliveryAddress = addressData.Addresses.find(address => address._id === addressId);
-    console.log('delivery:',deliveryAddress)
-    const data = {
-      order: orderData,
-      user: userData,
-      address: deliveryAddress
-    }
-    const ejsTemplate = path.resolve(__dirname, "../views/users/invoice.ejs");
-    const ejsData = await ejs.renderFile(ejsTemplate, data);
+//     const addressId= orderData[0].billingAddress  ;
+//     console.log("addressId",addressId)
+//     const addressData = await Address.findOne({user_id: user});
+//     const deliveryAddress = addressData.Addresses.find(address => address._id === addressId);
+//     console.log('delivery:',deliveryAddress)
+//     const data = {
+//       order: orderData,
+//       user: userData,
+//       address: deliveryAddress
+//     }
+//     const ejsTemplate = path.resolve(__dirname, "../views/users/invoice.ejs");
+//     const ejsData = await ejs.renderFile(ejsTemplate, data);
 
     
 
-    // Launch Puppeteer and generate PDF
-    const browser = await puppeteer.launch({ headless: 'new' });   
-    const page = await browser.newPage();
-    await page.setContent(ejsData, { waitUntil: "networkidle0" });
-    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+//     // Launch Puppeteer and generate PDF
+//     const browser = await puppeteer.launch({ headless: 'new' });   
+//     const page = await browser.newPage();
+//     await page.setContent(ejsData, { waitUntil: "networkidle0" });
+//     const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
 
-    // Close the browser
-    await browser.close();
+//     // Close the browser
+//     await browser.close();
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
-    res.send(pdfBuffer);
+//     res.setHeader("Content-Type", "application/pdf");
+//     res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
+//     res.send(pdfBuffer);
 
 
 
-  }catch(error){
-    console.log(error);
+//   }catch(error){
+//     console.log(error);
+//   }
+// }
+
+
+
+const invoiceGeneration = async (req, res) => {
+  try {
+      const user = req.session.user_id;
+      const userData = await User.findById(user);
+
+      const orderId = req.query.id;
+      console.log('orderid:', orderId);
+      const order = await Order.findById(new mongoose.Types.ObjectId(orderId));
+
+      const orderData = await Order.aggregate([
+          {
+              $match: { _id: new mongoose.Types.ObjectId(orderId) }
+          },
+          {
+              $unwind: '$items'
+          },
+          {
+              $lookup: {
+                  from: "products",
+                  localField: "items.product_id",
+                  foreignField: "_id",
+                  as: "productDetails"
+              }
+          },
+          {
+              $unwind: "$productDetails"
+          }
+      ]);
+
+      const addressId = orderData[0].billingAddress;
+      console.log("addressId", addressId);
+      const addressData = await Address.findOne({ user_id: user });
+      const deliveryAddress = addressData.Addresses.find(address => address._id === addressId);
+      console.log('delivery:', deliveryAddress);
+      const data = {
+          order: orderData,
+          user: userData,
+          address: deliveryAddress
+      };
+      const ejsTemplate = path.resolve(__dirname, "../views/users/invoice.ejs");
+      const ejsData = await ejs.renderFile(ejsTemplate, data);
+
+      // Create PDF using PDFKit
+      const doc = new PDFDocument();
+      doc.pipe(res); // Pipe the PDF document directly to the response stream
+      doc.text(ejsData);
+      doc.end();
+  } catch (error) {
+      console.log(error);
+      res.status(500).send('Internal Server Error');
   }
-}
+};
 
 
 

@@ -105,9 +105,7 @@ const loadHome = async (req, res) => {
         const Id = req.params.id;
 
         // Ensure that Id is a valid ObjectId before passing it to findById
-        if (!ObjectId.isValid(Id)) {
-            throw new Error('Invalid ObjectId');
-        }
+      
 
         const category_Data = await Category.find({});
         const product_Data = await Product.findById(Id).populate('PrOffer CatOffer');
