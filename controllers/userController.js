@@ -449,6 +449,8 @@ const verifyLogin = async (req, res) => {
 
 
 
+
+
 const userLogout = async (req, res) => {
     try {
         const userId = req.session.user_id;
