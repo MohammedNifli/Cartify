@@ -486,14 +486,15 @@ const pdfDownload = async (req, res) => {
     try {
         // Fetch data for the sales report (replace this with your actual data-fetching logic)
         const data = { data: customSalesWithProductInfo };
+        console.log("data",data);
 
         // Render the sales report template using EJS
         const ejsTemplate = path.resolve(__dirname, "../views/admin/salesreport.ejs");
-        const ejsData = await ejs.renderFile(ejsTemplate, { data});
+        const ejsData = await ejs.renderFile(ejsTemplate, { data:customSalesWithProductInfo });
 
         // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
-            headless: true, // Set headless mode to true
+            headless: "new", // Set headless mode to true
             executablePath: '/snap/bin/chromium', // Specify the path to Chromium executable
         });
         const page = await browser.newPage();
