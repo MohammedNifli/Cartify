@@ -18,14 +18,9 @@ const mongoose = require('mongoose');
 
 const ExcelJS = require('exceljs');
 
-const puppeteer=require('Puppeteer-core')
+const puppeteer=require('puppeteer-core')
 
 const XLSX = require('xlsx');
-// const { jsPDF } = require('jspdf');
-// const puppeteer = require('puppeteer');
-
-//moment.js
-
 
 
 
@@ -488,20 +483,15 @@ const ejs = require('ejs')
 
 const pdfDownload = async (req, res) => {
     try {
-        // Ensure proper path to Chromium executable
-        const executablePath = '/snap/bin/chromium';
-        
-        // Prepare data object
-        
         const Data = { data: customSalesWithProductInfo };
 
         const ejsTemplate = path.resolve(__dirname, "../views/admin/salesreport.ejs");
         const ejsData = await ejs.renderFile(ejsTemplate, Data);
 
-        const browser = await puppeteer.launch({ 
-            headless: true, // or false if you want to see the browser window
-            executablePath: executablePath,
-        });
+        const browser = await puppeteer.launch({
+            headless: "new", // Set headless mode to true
+            executablePath: '/snap/bin/chromium', // Specify the path to Chromium executable
+          });
 
         const page = await browser.newPage();
         await page.setContent(ejsData, { waitUntil: "networkidle0" });
@@ -518,6 +508,8 @@ const pdfDownload = async (req, res) => {
         res.status(500).send('Error generating PDF');
     }
 }
+
+
 
 
 
