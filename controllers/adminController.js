@@ -479,20 +479,23 @@ const excelDownload = async (req, res) => {
 
 const path = require('path');
 const { log } = require('console');
-const ejs = require('ejs')
+const ejs = require('ejs');
+
 
 const pdfDownload = async (req, res) => {
     try {
-        const Data = { data: customSalesWithProductInfo };
+        // Fetch data for the sales report (replace this with your actual data-fetching logic)
+        const data = { data: customSalesWithProductInfo };
 
+        // Render the sales report template using EJS
         const ejsTemplate = path.resolve(__dirname, "../views/admin/salesreport.ejs");
-        const ejsData = await ejs.renderFile(ejsTemplate, Data);
+        const ejsData = await ejs.renderFile(ejsTemplate, { data});
 
+        // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
-            headless: "new", // Set headless mode to true
+            headless: true, // Set headless mode to true
             executablePath: '/snap/bin/chromium', // Specify the path to Chromium executable
-          });
-
+        });
         const page = await browser.newPage();
         await page.setContent(ejsData, { waitUntil: "networkidle0" });
         const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
@@ -500,14 +503,16 @@ const pdfDownload = async (req, res) => {
         // Close the browser
         await browser.close();
 
+        // Set headers and send the PDF buffer in the response
         res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
+        res.setHeader("Content-Disposition", "inline; filename=sales_report.pdf");
         res.send(pdfBuffer);
     } catch (error) {
         console.error('Error generating PDF:', error);
         res.status(500).send('Error generating PDF');
     }
 }
+
 
 
 
