@@ -18,7 +18,7 @@ const mongoose = require('mongoose');
 
 const ExcelJS = require('exceljs');
 
-const puppeteer=require('puppeteer-core')
+const puppeteer=require('Puppeteer-core')
 
 const XLSX = require('xlsx');
 // const { jsPDF } = require('jspdf');
@@ -488,41 +488,37 @@ const ejs = require('ejs')
 
 const pdfDownload = async (req, res) => {
     try {
-
-       
-
-
-
-        console.log("customSalesWithProductInfo",customSalesWithProductInfo)
-      
-       
-        const Data = {
-            data: customSalesWithProductInfo
-        };
+        // Ensure proper path to Chromium executable
+        const executablePath = '/snap/bin/chromium';
         
+        // Prepare data object
+        
+        const Data = { data: customSalesWithProductInfo };
+
         const ejsTemplate = path.resolve(__dirname, "../views/admin/salesreport.ejs");
         const ejsData = await ejs.renderFile(ejsTemplate, Data);
-        
 
-       const browser = await puppeteer.launch({ headless: 'new' });   
-    const page = await browser.newPage();
-    await page.setContent(ejsData, { waitUntil: "networkidle0" });
-    const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
+        const browser = await puppeteer.launch({ 
+            headless: true, // or false if you want to see the browser window
+            executablePath: executablePath,
+        });
 
-    // Close the browser
-    await browser.close();
+        const page = await browser.newPage();
+        await page.setContent(ejsData, { waitUntil: "networkidle0" });
+        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
-    res.send(pdfBuffer);
+        // Close the browser
+        await browser.close();
 
-
-       
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "inline; filename=order_invoice.pdf");
+        res.send(pdfBuffer);
     } catch (error) {
         console.error('Error generating PDF:', error);
         res.status(500).send('Error generating PDF');
     }
 }
+
 
 
 

@@ -87,11 +87,10 @@
 																				<% if (order.items.status === 'cancelled') { %>
 																					<span style="color: red;">Cancelled</span>
 																				<% } else if (order.items.status === 'delivered') { %>
+																					<!-- Show "Delivered" status -->
 																					<% if (order.items.status !== 'returned') { %>
-																						<!-- Return form and button -->
-																						<form id="returnForm_<%= order._id %>" method="POST" action="/order/return?orderId=<%= order._id %>&productId=<%= order.items.product_id %>">
-																							<button type="button" class="btn btn-sm btn-danger returnButton" data-bs-toggle="modal" data-bs-target="#returnReasonModal_<%= order._id %>">Return</button>
-																						</form>
+																						<!-- Return button -->
+																						<button type="button" class="btn btn-sm btn-danger returnButton" data-bs-toggle="modal" data-bs-target="#returnReasonModal_<%= order._id %>">Return</button>
 																					<% } else { %>
 																						<!-- Show "Returned" status -->
 																						<p style="color: #ff8800;">Returned</p>
@@ -105,40 +104,35 @@
 																			<% } %>
 																			
 																			<!-- Cancel button -->
-																			<% if (order.items.status !== 'returned') { %>
+																			<% if (order.items.status !== 'cancelled' && order.items.status !== 'delivered' && order.items.status !== 'returned') { %>
 																				<form id="cancelForm" method="POST" action="/order/remove/<%= order._id %>">
-																					<button type="button" id="cancelButton">Cancel</button>
+																					<button type="button" id="cancelButton" class="btn btn-sm btn-secondary">Cancel</button>
 																				</form>
 																			<% } %>
-																			
+																		</div>
 																		
-																	</td>
-																	
-																	
-																</tr>
-																<form id="returnForm" method="POST" action="/order/reason?orderId=<%= order._id %>&productId=<%=order.items.product_id%>">
-																	<!-- Your form content goes here -->
-																
-																	<!-- Modal -->
-																	<div class="modal fade" id="returnReasonModal" tabindex="-1" aria-labelledby="returnReasonModalLabel" aria-hidden="true">
-																		<div class="modal-dialog">
-																			<div class="modal-content">
-																				<div class="modal-header">
-																					<h5 class="modal-title" id="returnReasonModalLabel">Return Reason</h5>
-																					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-																				</div>
-																				<div class="modal-body">
-																					<!-- Return reason input -->
-																					<textarea class="form-control" id="returnReason" rows="3" name="returnReason" placeholder="Enter return reason..."></textarea>
-																				</div>
-																				<div class="modal-footer">
-																					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-																					<button type="submit" class="btn btn-primary" id="confirmReturn">Confirm Return</button>
+																		<form id="returnForm" method="POST" action="/order/reason?orderId=<%= order._id %>&productId=<%=order.items.product_id%>">
+																			<!-- Modal -->
+																			<div class="modal fade" id="returnReasonModal_<%= order._id %>" tabindex="-1" aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+																				<div class="modal-dialog">
+																					<div class="modal-content">
+																						<div class="modal-header">
+																							<h5 class="modal-title" id="returnReasonModalLabel">Return Reason</h5>
+																							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																						</div>
+																						<div class="modal-body">
+																							<!-- Return reason input -->
+																							<textarea class="form-control returnReason" id="returnReason_<%= order._id %>" rows="3" name="returnReason" placeholder="Enter return reason..."></textarea>
+																						</div>
+																						<div class="modal-footer">
+																							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																							<button type="button" class="btn btn-primary confirmReturn" data-order-id="<%= order._id %>" data-product-id="<%= order.items.product_id %>">Confirm Return</button>
+																						</div>
+																					</div>
 																				</div>
 																			</div>
-																		</div>
-																	</div>
-																</form>
+																		</form>
+																		
 															
 															<% }); %>
 														</tbody>
@@ -189,49 +183,51 @@
 
 		</script>
 
+
+
 <script>
-    // JavaScript logic to handle button click and display modal
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the return buttons
-        var returnButtons = document.querySelectorAll('.returnButton');
-        
-        // Add event listeners to each return button
-        returnButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                // Show the modal
-                var modal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
-                modal.show();
+	document.addEventListener('DOMContentLoaded', function() {
+
+		console.log("krrrrrrrrrrr")
+    const returnButtons = document.querySelectorAll('.returnButton');
+    returnButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const orderId = button.getAttribute('data-order-id');
+            const modalId = `#returnReasonModal_${orderId}`;
+            const modal = new bootstrap.Modal(document.querySelector(modalId));
+            modal.show();
+        });
+    });
+
+    const confirmButtons = document.querySelectorAll('.confirmReturn');
+    confirmButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const orderId = button.getAttribute('data-order-id');
+            const productId = button.getAttribute('data-product-id');
+            const returnReason = document.querySelector(`#returnReason_${orderId}`).value;
+            // Send AJAX request to update order status and save return reason
+            fetch(`/order/reason?orderId=${orderId}&productId=${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ returnReason: returnReason })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Reload page or update UI as needed
+                    location.reload();
+                } else {
+                    console.error('Failed to update order status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     });
-</script>
+});
 
-<script>
-    // JavaScript logic to handle button click and display modal
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the return buttons
-        var returnButtons = document.querySelectorAll('.returnButton');
-        
-        // Add event listeners to each return button
-        returnButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                // Show the modal
-                var modal = new bootstrap.Modal(document.getElementById('returnReasonModal'));
-                modal.show();
-            });
-        });
-
-        // Get the cancel button
-        var cancelButton = document.getElementById('cancelButton');
-        if (cancelButton) {
-            // Add event listener to the cancel button
-            cancelButton.addEventListener('click', function() {
-                
-                cancelButton.parentElement.style.display = 'none'; // Hide the cancel button
-                document.querySelector('.downloadButton').style.display = 'none'; // Hide the download button
-            });
-        }
-    });
 </script>
 
 
